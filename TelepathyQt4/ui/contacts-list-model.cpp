@@ -19,21 +19,29 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
+#include <contacts-list-model.h>
+
+#include <TelepathyQt4/Types>
+#include <TelepathyQt4/Contact>
+#include <TelepathyQt4/ContactManager>
+#include <TelepathyQt4/PendingConnection>
+#include <TelepathyQt4/PendingContacts>
+#include <TelepathyQt4/PendingOperation>
+#include <TelepathyQt4/PendingReady>
+
+#include <contact-item.h>
+
+
+
 namespace Tp
 {
-
-
-
-#include "contacts-list-model.moc"
-
     ContactsListModel::ContactsListModel(QObject *parent)
-     : QAbstractItemModel(parent)
+     : QAbstractItemModel(parent),
+     m_rootItem(0)
     {
 
 
     }
-
-
 
     void ContactsListModel::onConnectionReady(Tp::PendingOperation *op)
     {
@@ -49,7 +57,7 @@ namespace Tp
                 SLOT(onPresencePublicationRequested(const Tp::Contacts &)));
 
         qDebug() << "Connection ready";
-        RosterItem *item;
+        AbstractTreeItem *item;
         bool exists;
         foreach (const ContactPtr &contact, conn->contactManager()->allKnownContacts()) {
             exists = false;
@@ -60,6 +68,12 @@ namespace Tp
         }
 
         mAddBtn->setEnabled(true);
+    }
+
+    AbstractTreeItem* ContactsListModel::createContactItem(Tp::Contact &contact, bool &exists)
+    {
+
+
     }
 
     QModelIndex ContactsListModel::index(int row, int column, const QModelIndex &parent) const
@@ -184,3 +198,12 @@ namespace Tp
             return data;
         }
     }
+
+    Qt::ItemFlags ContactsListModel::flags(const QModelIndex &index) const
+    {
+        return QAbstractItemModel::flags(index);
+    }
+
+
+}
+#include "contacts-list-model.moc"

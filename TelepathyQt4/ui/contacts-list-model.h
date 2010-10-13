@@ -29,11 +29,55 @@
 
 #include <QtCore/QAbstractItemModel>
 
+#include <TelepathyQt4/Contact>
+#include <abstract-tree-item.h>
+
+namespace Tp
+{
+
 class ContactsListModel : public QAbstractItemModel
 {
     Q_OBJECT
 
+public:
+    enum {
+        ContactRole = Qt::UserRole,
+        IdRole,
+        AliasRole,
+        AvatarRole,
+        PresenceStatusRole,
+        PresenceTypeRole,
+        PresenceMessageRole,
+        SubscriptionStateRole,
+        PublishStateRole,
+        BlockedRole,
+        GroupsRole
+    };
 
+    explicit ContactsListModel(QObject *parent = 0);
+    virtual ~ContactsListModel();
+
+    virtual int columnCount(const QModelIndex &parent = QModelIndex()) const;
+    virtual QVariant data(const QModelIndex &index, int role) const;
+    virtual Qt::ItemFlags flags(const QModelIndex &index) const;
+    virtual QModelIndex index(int row,
+                              int column,
+                              const QModelIndex &parent = QModelIndex()) const;
+    virtual QModelIndex parent(const QModelIndex &index) const;
+    virtual int rowCount(const QModelIndex &parent = QModelIndex()) const;
+
+private Q_SLOTS:
+    void onConnectionReady(Tp::PendingOperation *);
+    void onPresencePublicationRequested(const Tp::Contacts &);
+
+
+private:
+    AbstractTreeItem* ContactsListModel::createContactItem(Tp::Contact &contact, bool &exists = false);
+
+    QList<Tp::ConnectionPtr> mConns;
+
+    AbstractTreeItem *m_rootItem;
+};
 
 }
 
