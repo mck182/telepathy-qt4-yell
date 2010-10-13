@@ -1,8 +1,8 @@
-set(telepathy_qt4_ui_examples_SRCS
+set(telepathy_qt4_ui_examples_accounts_SRCS
     accounts.cpp)
 
-add_executable(telepathy_qt4_ui_examples ${telepathy_qt4_ui_examples_SRCS})
-target_link_libraries(telepathy_qt4_ui_examples
+add_executable(telepathy_qt4_ui_examples_accounts ${telepathy_qt4_ui_examples_accounts_SRCS})
+target_link_libraries(telepathy_qt4_ui_examples_accounts
     ${QT_QTDBUS_LIBRARY}
     ${QT_QTGUI_LIBRARY}
     ${QT_QTCORE_LIBRARY}
