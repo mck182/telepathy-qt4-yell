@@ -25,7 +25,7 @@
 namespace Tp
 {
 
-AccountModel::AccountModel(Tp::AccountManagerPtr am)
+AccountModel::AccountModel(const Tp::AccountManagerPtr &am)
     : mAM(am)
 {
     connect(mAM->becomeReady(),
