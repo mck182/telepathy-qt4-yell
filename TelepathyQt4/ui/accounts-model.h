@@ -7,16 +7,31 @@
 #ifndef ACCOUNTS_MODEL_H
 #define ACCOUNTS_MODEL_H
 
-class AccountsModel : public QAbstractTableModel
+class AccountsModel : public QAbstractListModel
 {
     Q_OBJECT
 
+    enum Role {
+      ValidRole = Qt::UserRole,
+      EnabledRole,
+      ConnectionManagerRole,
+      ProtocolNameRole,
+      DisplayNameRole,
+      NicknameRole,
+      ConnectsAutomaticallyRole,
+      ChangingPresenceRole,
+      AutomaticPresenceRole,
+      CurrentPresenceRole,
+      RequestedPresenceRole,
+      ConnectionStatusRole,
+      ConnectionRole
+    };
+
 public:
 
-    AccountsModel(Tp::AccountManagerPtr am);
+    explicit AccountsModel(Tp::AccountManagerPtr am);
 
     virtual int rowCount(const QModelIndex &parent = QModelIndex()) const;
-    virtual int columnCount(const QModelIndex &parent) const;
     QVariant data(const QModelIndex &index, int role) const;
     QVariant headerData(int section, Qt::Orientation orientation,
             int role = Qt::DisplayRole) const;
