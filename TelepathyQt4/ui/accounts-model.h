@@ -18,14 +18,18 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
+#ifndef _TelepathyQt4_accounts_model_h_HEADER_GUARD_
+#define _TelepathyQt4_accounts_model_h_HEADER_GUARD_
+
+#ifndef IN_TELEPATHY_QT4_HEADER
+#error IN_TELEPATHY_QT4_HEADER
+#endif
+
 #include <QAbstractListModel>
 
 #include <TelepathyQt4/Account>
 #include <TelepathyQt4/AccountManager>
 #include <TelepathyQt4/Types>
-
-#ifndef ACCOUNTS_MODEL_H
-#define ACCOUNTS_MODEL_H
 
 class AccountsModel : public QAbstractListModel
 {
@@ -64,4 +68,5 @@ private Q_SLOTS:
     void onAMReady(Tp::PendingOperation *);
 };
 
-#endif // ACCOUNTS_MODEL_H
+#endif // _TelepathyQt4_accounts_model_h_HEADER_GUARD_
+

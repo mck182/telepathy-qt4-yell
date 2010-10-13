@@ -18,8 +18,7 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#include "accounts-model.h"
-
+#include <TelepathyQt4/ui/AccountsModel>
 #include <TelepathyQt4/PendingReady>
 
 AccountsModel::AccountsModel(Tp::AccountManagerPtr am)
