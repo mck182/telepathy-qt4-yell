@@ -24,7 +24,6 @@
 
 AccountsModel::AccountsModel(Tp::AccountManagerPtr am)
     : mAM(am)
-    , mAccounts(am->allAccounts())
 {
     connect(mAM->becomeReady(),
             SIGNAL(finished(Tp::PendingOperation *)),
@@ -101,19 +100,6 @@ QVariant AccountsModel::data(const QModelIndex &index, int role) const
             return account->connectionObjectPath();
         default:
             return QVariant();
-    }
-}
-
-QVariant AccountsModel::headerData(int section, Qt::Orientation orientation, int role) const
-{
-    switch (role) {
-    case Qt::DisplayRole:
-        if (orientation == Qt::Horizontal)
-            return QString("Column %1").arg(section);
-        else
-            return QVariant();
-    default:
-        return QVariant();
     }
 }
 
