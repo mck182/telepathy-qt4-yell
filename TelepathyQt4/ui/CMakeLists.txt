@@ -6,12 +6,14 @@ set(telepathy_qt4_ui_SRCS
     # contacts-list-model.cpp
 )
 
-set(telepathy_qt4_ui_HEADERS
+set(telepathy_qt4_ui_MOC_SRCS
     # abstract-tree-item.h
     account-model.h
     # contact-item.h
     # contacts-list-model.h
 )
+
+tpqt4_generate_mocs(${telepathy_qt4_ui_MOC_SRCS})
 
 # Create library
 if (ENABLE_COMPILER_COVERAGE)
@@ -44,3 +46,5 @@ endif (WIN32)
 install(FILES ${telepathy_qt4_ui_HEADERS} 
     DESTINATION ${INCLUDE_INSTALL_DIR}/telepathy-1.0/TelepathyQt4/ui
     COMPONENT ui_headers)
+
+add_subdirectory(examples)

@@ -31,7 +31,10 @@
 #include <TelepathyQt4/AccountManager>
 #include <TelepathyQt4/Types>
 
-class AccountModel : public QAbstractListModel
+namespace Tp
+{
+
+class TELEPATHY_QT4_EXPORT AccountModel : public QAbstractListModel
 {
     Q_OBJECT
 
@@ -54,6 +57,7 @@ class AccountModel : public QAbstractListModel
 public:
 
     explicit AccountModel(Tp::AccountManagerPtr am);
+    virtual ~AccountModel();
 
     virtual int rowCount(const QModelIndex &parent = QModelIndex()) const;
     QVariant data(const QModelIndex &index, int role) const;
@@ -67,6 +71,8 @@ private Q_SLOTS:
 
     void onAMReady(Tp::PendingOperation *);
 };
+
+}
 
 #endif // _TelepathyQt4_account_model_h_HEADER_GUARD_
 

@@ -19,7 +19,11 @@
  */
 
 #include <TelepathyQt4/ui/AccountModel>
+#include "TelepathyQt4/ui/_gen/account-model.moc.hpp"
 #include <TelepathyQt4/PendingReady>
+
+namespace Tp
+{
 
 AccountModel::AccountModel(Tp::AccountManagerPtr am)
     : mAM(am)
@@ -42,6 +46,10 @@ AccountModel::AccountModel(Tp::AccountManagerPtr am)
     roles[ConnectionStatusRole] = "connectionStatus";
     roles[ConnectionRole] = "connection";
     setRoleNames(roles);
+}
+
+AccountModel::~AccountModel()
+{
 }
 
 void AccountModel::onAMReady(Tp::PendingOperation *)
@@ -100,5 +108,7 @@ QVariant AccountModel::data(const QModelIndex &index, int role) const
         default:
             return QVariant();
     }
+}
+
 }
 
