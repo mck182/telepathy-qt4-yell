@@ -18,8 +18,8 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#ifndef _TelepathyQt4_accounts_model_h_HEADER_GUARD_
-#define _TelepathyQt4_accounts_model_h_HEADER_GUARD_
+#ifndef _TelepathyQt4_account_model_h_HEADER_GUARD_
+#define _TelepathyQt4_account_model_h_HEADER_GUARD_
 
 #ifndef IN_TELEPATHY_QT4_HEADER
 #error IN_TELEPATHY_QT4_HEADER
@@ -31,7 +31,7 @@
 #include <TelepathyQt4/AccountManager>
 #include <TelepathyQt4/Types>
 
-class AccountsModel : public QAbstractListModel
+class AccountModel : public QAbstractListModel
 {
     Q_OBJECT
 
@@ -53,7 +53,7 @@ class AccountsModel : public QAbstractListModel
 
 public:
 
-    explicit AccountsModel(Tp::AccountManagerPtr am);
+    explicit AccountModel(Tp::AccountManagerPtr am);
 
     virtual int rowCount(const QModelIndex &parent = QModelIndex()) const;
     QVariant data(const QModelIndex &index, int role) const;
@@ -68,5 +68,5 @@ private Q_SLOTS:
     void onAMReady(Tp::PendingOperation *);
 };
 
-#endif // _TelepathyQt4_accounts_model_h_HEADER_GUARD_
+#endif // _TelepathyQt4_account_model_h_HEADER_GUARD_
 

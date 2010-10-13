@@ -18,10 +18,10 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#include <TelepathyQt4/ui/AccountsModel>
+#include <TelepathyQt4/ui/AccountModel>
 #include <TelepathyQt4/PendingReady>
 
-AccountsModel::AccountsModel(Tp::AccountManagerPtr am)
+AccountModel::AccountModel(Tp::AccountManagerPtr am)
     : mAM(am)
 {
     connect(mAM->becomeReady(),
@@ -44,7 +44,7 @@ AccountsModel::AccountsModel(Tp::AccountManagerPtr am)
     setRoleNames(roles);
 }
 
-void AccountsModel::onAMReady(Tp::PendingOperation *)
+void AccountModel::onAMReady(Tp::PendingOperation *)
 {
     QList<Tp::AccountPtr> accounts = mAM->allAccounts();
     beginInsertRows(QModelIndex(), 0, accounts.count() - 1);
@@ -52,13 +52,13 @@ void AccountsModel::onAMReady(Tp::PendingOperation *)
     endInsertRows();
 }
 
-int AccountsModel::rowCount(const QModelIndex &parent) const
+int AccountModel::rowCount(const QModelIndex &parent) const
 {
     Q_UNUSED(parent);
     return mAccounts.count();
 }
 
-QVariant AccountsModel::data(const QModelIndex &index, int role) const
+QVariant AccountModel::data(const QModelIndex &index, int role) const
 {
     if (!index.isValid()) {
         return QVariant();
