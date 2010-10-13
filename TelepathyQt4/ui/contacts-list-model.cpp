@@ -29,7 +29,7 @@
 #include <TelepathyQt4/PendingOperation>
 #include <TelepathyQt4/PendingReady>
 
-#include <contact-item.h>
+#include "contact-item.h"
 
 
 
@@ -61,19 +61,16 @@ namespace Tp
         bool exists;
         foreach (const ContactPtr &contact, conn->contactManager()->allKnownContacts()) {
             exists = false;
-            item = createItemForContact(contact, exists);
-            if (!exists) {
-                connect(item, SIGNAL(changed()), SLOT(updateActions()));
+            item = createContactItem(contact, exists);
             }
-        }
-
-        mAddBtn->setEnabled(true);
     }
 
-    AbstractTreeItem* ContactsListModel::createContactItem(Tp::Contact &contact, bool &exists)
+    AbstractTreeItem* ContactsListModel::createContactItem(const Tp::ContactPtr &contact, bool &exists)
     {
-
-
+        ContactItem* contactItem = new ContactItem();
+        contactItem->setContact(contact);
+        contactItem->setParentItem(m_rootItem);
+        return contactItem;
     }
 
     QModelIndex ContactsListModel::index(int row, int column, const QModelIndex &parent) const
@@ -121,7 +118,6 @@ namespace Tp
         // As stated in the previous comment, something is really wrong if it doesn't have a parent.
         Q_ASSERT(parentOfParentItem);
         if (!parentOfParentItem) {
-            kWarning() << "Impossible parent situation occurred!";
             return createIndex(0, 0, parentItem);
         }
 
@@ -146,6 +142,18 @@ namespace Tp
 
         // Otherwise, return 0
         return 0;
+    }
+
+    AbstractTreeItem* ContactsListModel::item(const QModelIndex &index) const
+    {
+        if (index.isValid()) {
+            AbstractTreeItem *item = static_cast<AbstractTreeItem*>(index.internalPointer());
+             if (item) {
+                 return item;
+             }
+         }
+
+         return m_rootItem;
     }
 
     int ContactsListModel::columnCount(const QModelIndex &parent) const
@@ -174,22 +182,33 @@ namespace Tp
             switch(role)
             {
             case Qt::DisplayRole:
-                data.setValue<QString>(contactItem->accountIdentifier());
+                data.setValue<QString>(contactItem->alias());
                 break;
-            case Qt::DecorationRole:
-                data.setValue<QIcon>(contactItem->presenceIcon());
+//            case Qt::DecorationRole:
+//                data.setValue<QIcon>(contactItem->presenceIcon());
+                break;
+            case ContactsListModel::ContactRole:
+                break;
+            case ContactsListModel::IdRole:
+                break;
+            case ContactsListModel::PresenceStatusRole:
                 break;
             case ContactsListModel::PresenceTypeRole:
                 data.setValue<qint64>(contactItem->presenceType());
+                break;
+            case ContactsListModel::PresenceMessageRole:
+                break;
+            case ContactsListModel::SubscriptionStateRole:
+                break;
+            case ContactsListModel::PublishStateRole:
+                break;
+            case ContactsListModel::BlockedRole:
                 break;
             case ContactsListModel::GroupsRole:
                 data.setValue<QStringList>(contactItem->groups());
                 break;
             case ContactsListModel::AvatarRole:
-                data.setValue<QPixmap>(contactItem->avatar());
-                break;
-            case ContactsListModel::PersonContactResourceRole:
-                data.setValue<QUrl>(contactItem->personContact().resourceUri());
+                data.setValue<QString>(contactItem->avatarData().fileName);
                 break;
             default:
                 break;
@@ -197,6 +216,7 @@ namespace Tp
 
             return data;
         }
+        return QVariant();
     }
 
     Qt::ItemFlags ContactsListModel::flags(const QModelIndex &index) const
@@ -206,4 +226,4 @@ namespace Tp
 
 
 }
-#include "contacts-list-model.moc"
+

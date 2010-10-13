@@ -25,9 +25,14 @@
 
 #include <QtCore/QList>
 
+#include <TelepathyQt4/Contact>
+#include "abstract-tree-item.h"
+
+
 namespace Tp {
 
-class ContactItem
+    class ContactItem : public QObject,
+                        public AbstractTreeItem
 {
     Q_OBJECT
 
@@ -35,7 +40,23 @@ public:
     ContactItem();
     virtual ~ContactItem();
 
+    void setContact(ContactPtr contact);
 
+    QString id() const;
+    ContactPtr contact();
+    QString alias() const;
+    AvatarData avatarData() const;
+    QString presenceStatus() const;
+    uint presenceType() const;
+    QString presenceMessage() const;
+    int subscriptionState() const;
+    int publishState() const;
+    bool isBlocked() const;
+    QStringList groups() const;
+
+
+private:
+    ContactPtr m_contact;
 };
 
 } // namespace Tp

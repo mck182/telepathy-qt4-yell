@@ -24,18 +24,76 @@
 
 using namespace Tp;
 
-AbstractTreeItem::AbstractTreeItem()
- : m_parent(0)
+ContactItem::ContactItem()
+ : m_contact(0)
 {
 
 }
 
-AbstractTreeItem::~AbstractTreeItem()
+void ContactItem::setContact(ContactPtr contact)
 {
-
+    m_contact = contact;
 }
 
+ContactItem::~ContactItem()
+{
+}
 
-#include "contact-item.moc"
+QString ContactItem::id() const
+{
+    return m_contact->id();
+}
+
+ContactPtr ContactItem::contact()
+{
+    return m_contact;
+}
+
+QString ContactItem::alias() const
+{
+    return m_contact->alias();
+}
+
+AvatarData ContactItem::avatarData() const
+{
+    return m_contact->avatarData();
+}
+
+QString ContactItem::presenceStatus() const
+{
+    return m_contact->presenceStatus();
+}
+
+uint ContactItem::presenceType() const
+{
+    return m_contact->presenceType();
+}
+
+QString ContactItem::presenceMessage() const
+{
+    return m_contact->presenceMessage();
+}
+
+int ContactItem::subscriptionState() const
+{
+    return m_contact->subscriptionState();
+}
+
+int ContactItem::publishState() const
+{
+    return m_contact->publishState();
+}
+
+bool ContactItem::isBlocked() const
+{
+    return m_contact->isBlocked();
+}
+
+QStringList ContactItem::groups() const
+{
+    return m_contact->groups();
+}
+
+//#include "contact-item.moc"
 
 

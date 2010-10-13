@@ -22,11 +22,6 @@
 #ifndef CONTACTSLISTMODEL_H
 #define CONTACTSLISTMODEL_H
 
-
-#ifndef IN_TELEPATHY_QT4_HEADER
-#error IN_TELEPATHY_QT4_HEADER
-#endif
-
 #include <QtCore/QAbstractItemModel>
 
 #include <TelepathyQt4/Contact>
@@ -41,8 +36,8 @@ class ContactsListModel : public QAbstractItemModel
 
 public:
     enum {
-        ContactRole = Qt::UserRole,
-        IdRole,
+        IdRole = Qt::UserRole,
+        ContactRole,
         AliasRole,
         AvatarRole,
         PresenceStatusRole,
@@ -72,7 +67,8 @@ private Q_SLOTS:
 
 
 private:
-    AbstractTreeItem* ContactsListModel::createContactItem(Tp::Contact &contact, bool &exists = false);
+    AbstractTreeItem* createContactItem(const Tp::ContactPtr &contact, bool &exists);
+    AbstractTreeItem *item(const QModelIndex &index) const;
 
     QList<Tp::ConnectionPtr> mConns;
 

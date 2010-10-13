@@ -1,16 +1,16 @@
 # Set source files
 set(telepathy_qt4_ui_SRCS
-    # abstract-tree-item.cpp
+    abstract-tree-item.cpp
     account-model.cpp
-    # contact-item.cpp
-    # contacts-list-model.cpp
+    contact-item.cpp
+    contacts-list-model.cpp
 )
 
-set(telepathy_qt4_ui_MOC_SRCS
-    # abstract-tree-item.h
+set(telepathy_qt4_ui_HEADERS
+    abstract-tree-item.h
     account-model.h
-    # contact-item.h
-    # contacts-list-model.h
+    contact-item.h
+    contacts-list-model.h
 )
 
 tpqt4_generate_mocs(${telepathy_qt4_ui_MOC_SRCS})

@@ -42,7 +42,7 @@ public:
     QList<AbstractTreeItem*> childItems() const;
     AbstractTreeItem *parentItem() const;
 
-private:
+protected:
     QList<AbstractTreeItem*> m_children;
     AbstractTreeItem *m_parent;
 };
