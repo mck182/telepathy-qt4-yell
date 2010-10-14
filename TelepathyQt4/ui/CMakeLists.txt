@@ -13,6 +13,10 @@ set(telepathy_qt4_ui_MOC_SRCS
     contacts-list-model.h
 )
 
+set(telepathy_qt4_ui_HEADERS
+    AccountModel
+    ContactsListModel)
+
 tpqt4_generate_mocs(${telepathy_qt4_ui_MOC_SRCS})
 
 # Create library
