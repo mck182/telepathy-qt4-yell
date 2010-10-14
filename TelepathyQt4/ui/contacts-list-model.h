@@ -19,8 +19,12 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#ifndef CONTACTSLISTMODEL_H
-#define CONTACTSLISTMODEL_H
+#ifndef _TelepathyQt4_contacts_list_model_h_HEADER_GUARD_
+#define _TelepathyQt4_contacts_list_model_h_HEADER_GUARD_
+
+#ifndef IN_TELEPATHY_QT4_HEADER
+#error IN_TELEPATHY_QT4_HEADER
+#endif
 
 #include <QtCore/QAbstractItemModel>
 
@@ -77,4 +81,4 @@ private:
 
 }
 
-#endif // CONTACTSLISTMODEL_H
+#endif // _TelepathyQt4_contacts_list_model_h_HEADER_GUARD_
