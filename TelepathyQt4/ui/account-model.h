@@ -56,7 +56,7 @@ class TELEPATHY_QT4_EXPORT AccountModel : public QAbstractListModel
 
 public:
 
-    explicit AccountModel(const Tp::AccountManagerPtr &am);
+    explicit AccountModel(const Tp::AccountManagerPtr &am, QObject *parent = 0);
     virtual ~AccountModel();
 
     virtual int rowCount(const QModelIndex &parent = QModelIndex()) const;

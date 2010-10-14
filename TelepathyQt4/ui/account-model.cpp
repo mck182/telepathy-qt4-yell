@@ -25,8 +25,9 @@
 namespace Tp
 {
 
-AccountModel::AccountModel(const Tp::AccountManagerPtr &am)
-    : mAM(am)
+AccountModel::AccountModel(const Tp::AccountManagerPtr &am, QObject *parent)
+    : QAbstractListModel(parent)
+    , mAM(am)
 {
     connect(mAM->becomeReady(),
             SIGNAL(finished(Tp::PendingOperation *)),
