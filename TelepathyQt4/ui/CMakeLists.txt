@@ -6,7 +6,7 @@ set(telepathy_qt4_ui_SRCS
     contacts-list-model.cpp
 )
 
-set(telepathy_qt4_ui_HEADERS
+set(telepathy_qt4_ui_MOC_SRCS
     abstract-tree-item.h
     account-model.h
     contact-item.h
@@ -17,9 +17,9 @@ tpqt4_generate_mocs(${telepathy_qt4_ui_MOC_SRCS})
 
 # Create library
 if (ENABLE_COMPILER_COVERAGE)
-    add_library(telepathy-qt4-ui STATIC ${telepathy_qt4_ui_SRCS})
+    add_library(telepathy-qt4-ui STATIC ${telepathy_qt4_ui_SRCS} ${telepathy_qt4_ui_MOC_SRCS})
 else (ENABLE_COMPILER_COVERAGE)
-    add_library(telepathy-qt4-ui SHARED ${telepathy_qt4_ui_SRCS})
+    add_library(telepathy-qt4-ui SHARED ${telepathy_qt4_ui_SRCS} ${telepathy_qt4_ui_MOC_SRCS})
 endif (ENABLE_COMPILER_COVERAGE)
 
 # Link

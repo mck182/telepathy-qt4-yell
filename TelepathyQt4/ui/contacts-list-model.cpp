@@ -20,6 +20,7 @@
  */
 
 #include <contacts-list-model.h>
+#include "TelepathyQt4/ui/_gen/contacts-list-model.moc.hpp"
 
 #include <TelepathyQt4/Types>
 #include <TelepathyQt4/Contact>
@@ -42,6 +43,15 @@ namespace Tp
 
 
     }
+
+    ContactsListModel::~ContactsListModel()
+    {
+    }
+
+    void ContactsListModel::onPresencePublicationRequested(const Tp::Contacts &)
+    {
+    }
+
 
     void ContactsListModel::onConnectionReady(Tp::PendingOperation *op)
     {

@@ -21,6 +21,7 @@
  */
 
 #include "contact-item.h"
+#include "TelepathyQt4/ui/_gen/contact-item.moc.hpp"
 
 using namespace Tp;
 
@@ -94,6 +95,5 @@ QStringList ContactItem::groups() const
     return m_contact->groups();
 }
 
-//#include "contact-item.moc"
 
 
