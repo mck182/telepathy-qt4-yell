@@ -1,7 +1,12 @@
 set(telepathy_qt4_ui_examples_accounts_SRCS
     accounts.cpp)
 
-add_executable(telepathy_qt4_ui_examples_accounts ${telepathy_qt4_ui_examples_accounts_SRCS})
+set(telepathy_qt4_ui_examples_accounts_MOC_SRCS)
+
+tpqt4_generate_mocs(${telepathy_qt4_ui_examples_accounts_MOC_SRCS})
+
+add_executable(telepathy_qt4_ui_examples_accounts
+    ${telepathy_qt4_ui_examples_accounts_SRCS} ${telepathy_qt4_ui_examples_accounts_MOC_SRCS})
 target_link_libraries(telepathy_qt4_ui_examples_accounts
     ${QT_QTDBUS_LIBRARY}
     ${QT_QTGUI_LIBRARY}

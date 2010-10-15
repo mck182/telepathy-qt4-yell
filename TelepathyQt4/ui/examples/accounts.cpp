@@ -19,7 +19,10 @@
  */
 
 #include <QApplication>
+#include <QHBoxLayout>
 #include <QDeclarativeContext>
+#include <QDeclarativeEngine>
+#include <qdeclarative.h>
 #include <QDeclarativeView>
 #include <TelepathyQt4/ui/AccountModel>
 
@@ -30,10 +33,18 @@ int main(int argc, char** argv)
     Tp::AccountManagerPtr am(Tp::AccountManager::create());
     Tp::AccountModel* model = new Tp::AccountModel(am);
 
-    QDeclarativeView view;
-    view.rootContext()->setContextProperty(QString::fromLatin1("accountsModel"), model);
-    view.setSource(QUrl::fromLocalFile(QString::fromLatin1("account-view.qml")));
-    view.show();
+    QWidget main;
+    QHBoxLayout* layout = new QHBoxLayout(&main);
 
+    QDeclarativeView* view = new QDeclarativeView(&main);
+    view->setResizeMode(QDeclarativeView::SizeRootObjectToView);
+
+    layout->addWidget(view);
+
+    view->rootContext()->setContextProperty(QString::fromLatin1("accountsModel"), model);
+    view->setSource(QUrl::fromLocalFile(QString::fromLatin1("account-view.qml")));
+
+    main.resize(500, 500);
+    main.show();
     app.exec();
 }

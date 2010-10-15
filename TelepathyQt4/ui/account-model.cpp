@@ -35,7 +35,7 @@ AccountModel::AccountModel(const Tp::AccountManagerPtr &am, QObject *parent)
     QHash<int, QByteArray> roles;
     roles[ValidRole] = "valid";
     roles[EnabledRole] = "enabled";
-    roles[ConnectionManagerRole] = "connection";
+    roles[ConnectionManagerRole] = "connectionManager";
     roles[ProtocolNameRole] = "protocol";
     roles[DisplayNameRole] = "displayName";
     roles[NicknameRole] = "nickname";
@@ -111,5 +111,34 @@ QVariant AccountModel::data(const QModelIndex &index, int role) const
     }
 }
 
+AccountPtr AccountModel::accountForIndex(const QModelIndex &index) const
+{
+    return mAccounts.at(index.row());
 }
 
+Qt::ItemFlags AccountModel::flags(const QModelIndex &index) const
+{
+    if (index.isValid()) {
+        return Qt::ItemIsEnabled;
+    }
+
+    return QAbstractListModel::flags(index) | Qt::ItemIsEditable;
+}
+
+bool AccountModel::setData(const QModelIndex &index, const QVariant &value, int role)
+{
+    if (index.isValid() && role == EnabledRole) {
+        accountForIndex(index)->setEnabled(value.toBool());
+        emit dataChanged(index, index);
+        return true;
+    }
+
+    return false;
+}
+
+void AccountModel::setAccountEnabled(int row, bool value)
+{
+    setData(index(row), value, EnabledRole);
+}
+
+}
