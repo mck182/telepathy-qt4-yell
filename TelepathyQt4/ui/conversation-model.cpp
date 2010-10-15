@@ -20,6 +20,7 @@
 
 #include <TelepathyQt4/ui/ConversationModel>
 #include "TelepathyQt4/ui/_gen/conversation-model.moc.hpp"
+#include "TelepathyQt4/ui/conversation-item.h"
 
 #include <TelepathyQt4/PendingReady>
 
@@ -48,12 +49,17 @@ int ConversationModel::rowCount(const QModelIndex &parent) const
     return 0;
 }
 
-void ConversationModel::sendMessage(const QString& message)
+void ConversationModel::sendMessage(const QString& text)
 {
+    ConversationItem *item = new ConversationItem(ContactPtr(), QDateTime::currentDateTime(), text, this);
+    addItem(item);
+
+    mChannel->send(item->text());
 }
 
-void ConversationModel::addItem(const ConversationItem &item)
+void ConversationModel::addItem(const ConversationItem *item)
 {
+    mItems.append(item);
 }
 
 void ConversationModel::onChannelReady(PendingOperation *op)

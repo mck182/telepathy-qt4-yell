@@ -45,13 +45,14 @@ public:
 
     virtual int rowCount(const QModelIndex &parent = QModelIndex()) const;
     QVariant data(const QModelIndex &index, int role) const;
-    Q_INVOKABLE void sendMessage(const QString& message);
+    Q_INVOKABLE void sendMessage(const QString& text);
 
 private:
 
     TextChannelPtr mChannel;
+    QList<const ConversationItem *> mItems;
 
-    void addItem(const ConversationItem &item);
+    void addItem(const ConversationItem *item);
 
 private Q_SLOTS:
 

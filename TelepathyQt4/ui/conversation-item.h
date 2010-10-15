@@ -18,8 +18,8 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#ifndef _TelepathyQt4_conversation_model_h_HEADER_GUARD_
-#define _TelepathyQt4_conversation_model_h_HEADER_GUARD_
+#ifndef _TelepathyQt4_conversation_item_h_HEADER_GUARD_
+#define _TelepathyQt4_conversation_item_h_HEADER_GUARD_
 
 #include <QDateTime>
 #include <QString>
@@ -28,10 +28,13 @@
 namespace Tp
 {
 
-class TELEPATHY_QT4_EXPORT ConversationItem
+class TELEPATHY_QT4_EXPORT ConversationItem : public QObject
 {
+    Q_OBJECT
+
 public:
-    ConversationItem(const ContactPtr &sender, const QDateTime &time, const QString &text);
+    ConversationItem(const ContactPtr &sender, const QDateTime &time, 
+            const QString &text, QObject *parent = 0);
     virtual ~ConversationItem();
 
     ContactPtr sender() const;
@@ -47,5 +50,5 @@ private:
 
 }
 
-#endif // _TelepathyQt4_conversation_model_h_HEADER_GUARD_
+#endif // _TelepathyQt4_conversation_item_h_HEADER_GUARD_
 

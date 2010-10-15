@@ -13,6 +13,7 @@ set(telepathy_qt4_ui_MOC_SRCS
     account-model.h
     contact-item.h
     contacts-list-model.h
+    conversation-item.h
     conversation-model.h
 )
 
