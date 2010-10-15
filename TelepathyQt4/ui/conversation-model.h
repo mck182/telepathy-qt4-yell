@@ -57,6 +57,7 @@ private:
 private Q_SLOTS:
 
     void onChannelReady(PendingOperation *op);
+    void onMessageReceived(const Tp::ReceivedMessage &message);
 };
 
 }

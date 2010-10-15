@@ -23,6 +23,7 @@
 #include "TelepathyQt4/ui/conversation-item.h"
 
 #include <TelepathyQt4/PendingReady>
+#include <TelepathyQt4/ReceivedMessage>
 
 namespace Tp
 {
@@ -33,6 +34,9 @@ ConversationModel::ConversationModel(const TextChannelPtr &channel)
     connect(mChannel->becomeReady(),
             SIGNAL(finished(Tp::PendingOperation *)),
             SLOT(onChannelReady(Tp::PendingOperation *)));
+    connect(mChannel.data(),
+            SIGNAL(messageReceived(const Tp::ReceivedMessage &)),
+            SLOT(onMessageReceived(const Tp::ReceivedMessage &)));
 }
 
 ConversationModel::~ConversationModel()
@@ -64,6 +68,12 @@ void ConversationModel::addItem(const ConversationItem *item)
 
 void ConversationModel::onChannelReady(PendingOperation *op)
 {
+}
+
+void ConversationModel::onMessageReceived(const Tp::ReceivedMessage &message)
+{
+    ConversationItem *item = new ConversationItem(message.sender(), message.sent(), message.text(), this);
+    addItem(item);
 }
 
 }
