@@ -4,6 +4,8 @@ set(telepathy_qt4_ui_SRCS
     account-model.cpp
     contact-item.cpp
     contacts-list-model.cpp
+    conversation-item.cpp
+    conversation-model.cpp
 )
 
 set(telepathy_qt4_ui_MOC_SRCS
@@ -11,11 +13,14 @@ set(telepathy_qt4_ui_MOC_SRCS
     account-model.h
     contact-item.h
     contacts-list-model.h
+    conversation-model.h
 )
 
 set(telepathy_qt4_ui_HEADERS
     AccountModel
-    ContactsListModel)
+    ContactsListModel
+    ConversationModel
+)
 
 tpqt4_generate_mocs(${telepathy_qt4_ui_MOC_SRCS})
 
