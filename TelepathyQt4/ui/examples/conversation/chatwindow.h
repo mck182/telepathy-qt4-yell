@@ -23,9 +23,13 @@
 
 #include <QScopedPointer>
 #include <QWidget>
+
 #include <TelepathyQt4/Types>
 
-namespace Tp { class ConversationModel; }
+#include <TelepathyQt4/ui/ConversationModel>
+
+class QDeclarativeView;
+class QLineEdit;
 
 class ChatWindow : public QWidget
 {
@@ -43,6 +47,12 @@ public:
 private:
 
     QScopedPointer<Tp::ConversationModel> mModel;
+    QDeclarativeView *mConversation;
+    QLineEdit *mInput;
+
+private Q_SLOTS:
+
+    void onReturnPressed();
 
 };
 

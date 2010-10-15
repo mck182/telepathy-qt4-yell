@@ -21,12 +21,26 @@
 #include "chatwindow.h"
 #include "TelepathyQt4/ui/examples/conversation/_gen/chatwindow.moc.hpp"
 
+#include <QDeclarativeView>
+#include <QLineEdit>
+#include <QVBoxLayout>
+
 #include <TelepathyQt4/TextChannel>
-#include <TelepathyQt4/ui/ConversationModel>
 
 ChatWindow::ChatWindow(QWidget *parent)
     : QWidget(parent)
 {
+    QVBoxLayout *layout = new QVBoxLayout(this);
+
+    mConversation = new QDeclarativeView(this);
+    mInput = new QLineEdit(this);
+
+    layout->addWidget(mConversation);
+    layout->addWidget(mInput);
+
+    mConversation->setSource(QUrl::fromLocalFile(QString::fromLatin1("conversation.qml")));
+    mConversation->setResizeMode(QDeclarativeView::SizeRootObjectToView);
+    connect(mInput, SIGNAL(returnPressed()), SLOT(onReturnPressed()));
 }
 
 void ChatWindow::handleChannels(const Tp::MethodInvocationContextPtr<> &context,
@@ -40,6 +54,14 @@ void ChatWindow::handleChannels(const Tp::MethodInvocationContextPtr<> &context,
     if (channels.size() == 1) {
         Tp::TextChannelPtr channel = Tp::TextChannelPtr::dynamicCast(channels[0]);
         mModel.reset(new Tp::ConversationModel(channel));
+    }
+}
+
+void ChatWindow::onReturnPressed()
+{
+    if (mModel) {
+        mModel->sendMessage(mInput->text());
+        mInput->setText(QString());
     }
 }
 

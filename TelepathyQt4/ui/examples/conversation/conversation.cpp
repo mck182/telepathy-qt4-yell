@@ -19,13 +19,13 @@
  */
 
 #include <QApplication>
-#include <QWidget>
+#include "chatwindow.h"
 
 int main(int argc, char **argv)
 {
     QApplication app(argc, argv);
 
-    QWidget main;
+    ChatWindow main;
     main.show();
 
     return app.exec();
