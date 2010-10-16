@@ -24,6 +24,7 @@
 #define CONTACT_ITEM_H
 
 #include <QtCore/QList>
+#include <QObject>
 
 #include <TelepathyQt4/Contact>
 #include "abstract-tree-item.h"

@@ -29,12 +29,13 @@
 #include <QtCore/QAbstractItemModel>
 
 #include <TelepathyQt4/Contact>
-#include <abstract-tree-item.h>
+#include <TelepathyQt4/Connection>
+#include "abstract-tree-item.h"
 
 namespace Tp
 {
 
-class ContactsListModel : public QAbstractItemModel
+class TELEPATHY_QT4_EXPORT ContactsListModel : public QAbstractItemModel
 {
     Q_OBJECT
 
@@ -65,10 +66,14 @@ public:
     virtual QModelIndex parent(const QModelIndex &index) const;
     virtual int rowCount(const QModelIndex &parent = QModelIndex()) const;
 
+    void addConnection(const Tp::ConnectionPtr &conn);
+    void removeConnection(const Tp::ConnectionPtr &conn);
+
 private Q_SLOTS:
     void onConnectionReady(Tp::PendingOperation *);
-    void onPresencePublicationRequested(const Tp::Contacts &);
-
+    void onPresencePublicationRequested(const Tp::Contacts &contacts);
+    void onConnectionInvalidated(Tp::DBusProxy *,
+            const QString &, const QString &);
 
 private:
     AbstractTreeItem* createContactItem(const Tp::ContactPtr &contact, bool &exists);

@@ -48,10 +48,35 @@ namespace Tp
     {
     }
 
-    void ContactsListModel::onPresencePublicationRequested(const Tp::Contacts &)
+    void ContactsListModel::onPresencePublicationRequested(const Tp::Contacts &contacts)
     {
+        AbstractTreeItem *item;
+        bool exists;
+        foreach (const ContactPtr &contact, contacts) {
+            exists = false;
+            item = createContactItem(contact, exists);
+            }
     }
 
+    void ContactsListModel::addConnection(const ConnectionPtr &conn)
+    {
+        connect(conn->becomeReady(Connection::FeatureRoster),
+                SIGNAL(finished(Tp::PendingOperation *)),
+                SLOT(onConnectionReady(Tp::PendingOperation *)));
+    }
+
+    void ContactsListModel::removeConnection(const ConnectionPtr &conn)
+    {
+        QList<AbstractTreeItem*>::const_iterator it;
+        for(it = m_rootItem->childItems().constBegin(); it != m_rootItem->childItems().constEnd(); ++it ) {
+            ContactItem* item = dynamic_cast<ContactItem*>(*it);
+            if (item->contact()->manager()->connection() == conn) {
+                m_rootItem->removeChildItem(*it);
+                continue;
+            }
+        }
+        mConns.removeOne(conn);
+    }
 
     void ContactsListModel::onConnectionReady(Tp::PendingOperation *op)
     {
@@ -62,6 +87,10 @@ namespace Tp
 
         PendingReady *pr = qobject_cast<PendingReady *>(op);
         ConnectionPtr conn = ConnectionPtr(qobject_cast<Connection *>(pr->object()));
+        mConns.append(conn);
+        connect(conn.data(),
+                SIGNAL(invalidated(Tp::DBusProxy *, const QString &, const QString &)),
+                SLOT(onConnectionInvalidated(Tp::DBusProxy *, const QString &, const QString &)));
         connect(conn->contactManager(),
                 SIGNAL(presencePublicationRequested(const Tp::Contacts &)),
                 SLOT(onPresencePublicationRequested(const Tp::Contacts &)));
@@ -75,11 +104,34 @@ namespace Tp
             }
     }
 
+    void ContactsListModel::onConnectionInvalidated(DBusProxy *proxy,
+            const QString &errorName, const QString &errorMessage)
+    {
+        qDebug() << "onConnectionInvalidated: connection became invalid:" <<
+            errorName << "-" << errorMessage;
+        foreach (const ConnectionPtr &conn, mConns) {
+            if (conn.data() == proxy) {
+                mConns.removeOne(conn);
+            }
+        }
+    }
+
     AbstractTreeItem* ContactsListModel::createContactItem(const Tp::ContactPtr &contact, bool &exists)
     {
+        QList<AbstractTreeItem*>::const_iterator it;
+        for(it = m_rootItem->childItems().constBegin(); it != m_rootItem->childItems().constEnd(); ++it ) {
+            ContactItem* item = dynamic_cast<ContactItem*>(*it);
+            if(item) {
+                if(item->contact() == contact) {
+                    exists = true;
+                    return item;
+                }
+            }
+        }
+
         ContactItem* contactItem = new ContactItem();
         contactItem->setContact(contact);
-        contactItem->setParentItem(m_rootItem);
+        m_rootItem->appendChildItem(contactItem);
         return contactItem;
     }
 
