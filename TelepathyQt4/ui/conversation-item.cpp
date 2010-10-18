@@ -29,7 +29,7 @@ ConversationItem::ConversationItem(const ContactPtr &sender,
                                    QObject *parent)
     : QObject(parent)
     , mSender(sender)
-    , mTime(time)
+    , mTime(time.isValid() ? time : QDateTime::currentDateTime())
     , mText(text)
 {
 }

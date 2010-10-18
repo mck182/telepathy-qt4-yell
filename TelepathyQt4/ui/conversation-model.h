@@ -38,6 +38,13 @@ class TELEPATHY_QT4_EXPORT ConversationModel : public QAbstractListModel
 {
     Q_OBJECT
 
+    enum Role {
+        TextRole = Qt::UserRole,
+        SenderRole,
+        SenderAvatarRole,
+        TimeRole
+    };
+
 public:
 
     explicit ConversationModel(const TextChannelPtr &channel);
@@ -56,7 +63,7 @@ private:
 
 private Q_SLOTS:
 
-    void onChannelReady(PendingOperation *op);
+    void onChannelReady(Tp::PendingOperation *op);
     void onMessageReceived(const Tp::ReceivedMessage &message);
 };
 

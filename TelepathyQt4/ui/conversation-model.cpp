@@ -20,6 +20,9 @@
 
 #include <TelepathyQt4/ui/ConversationModel>
 #include "TelepathyQt4/ui/_gen/conversation-model.moc.hpp"
+
+#include <QPixmap>
+
 #include "TelepathyQt4/ui/conversation-item.h"
 
 #include <TelepathyQt4/PendingReady>
@@ -31,12 +34,22 @@ namespace Tp
 ConversationModel::ConversationModel(const TextChannelPtr &channel)
     : mChannel(channel)
 {
-    connect(mChannel->becomeReady(),
+    Features features;
+    features << TextChannel::FeatureMessageQueue
+             << Channel::FeatureCore;
+    connect(mChannel->becomeReady(features),
             SIGNAL(finished(Tp::PendingOperation *)),
             SLOT(onChannelReady(Tp::PendingOperation *)));
     connect(mChannel.data(),
             SIGNAL(messageReceived(const Tp::ReceivedMessage &)),
             SLOT(onMessageReceived(const Tp::ReceivedMessage &)));
+    
+    QHash<int, QByteArray> roles;
+    roles[TextRole] = "text";
+    roles[SenderRole] = "sender";
+    roles[SenderAvatarRole] = "senderAvatar";
+    roles[TimeRole] = "time";
+    setRoleNames(roles);
 }
 
 ConversationModel::~ConversationModel()
@@ -45,12 +58,34 @@ ConversationModel::~ConversationModel()
 
 QVariant ConversationModel::data(const QModelIndex &index, int role) const
 {
-    return QVariant();
+    if (!index.isValid()) {
+        return QVariant();
+    }
+
+    if (index.row() >= mItems.count()) {
+        return QVariant();
+    }
+
+    const ConversationItem *item = mItems[index.row()];
+    switch (role) {
+    case TextRole:
+        return item->text();
+    case SenderRole:
+        return item->sender() ? item->sender()->id() : QString::fromLatin1("You");
+    case SenderAvatarRole:
+        return QPixmap();
+    case TimeRole:
+        qDebug() << "time" << item->time();
+        return item->time();
+    default:
+        return QVariant();
+    }
+
 }
 
 int ConversationModel::rowCount(const QModelIndex &parent) const
 {
-    return 0;
+    return mItems.count();
 }
 
 void ConversationModel::sendMessage(const QString& text)
@@ -63,10 +98,12 @@ void ConversationModel::sendMessage(const QString& text)
 
 void ConversationModel::addItem(const ConversationItem *item)
 {
+    beginInsertRows(QModelIndex(), mItems.count(), mItems.count());
     mItems.append(item);
+    endInsertRows();
 }
 
-void ConversationModel::onChannelReady(PendingOperation *op)
+void ConversationModel::onChannelReady(Tp::PendingOperation *op)
 {
 }
 

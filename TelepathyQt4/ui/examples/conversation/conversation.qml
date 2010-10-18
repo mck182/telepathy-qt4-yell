@@ -8,17 +8,8 @@ Rectangle {
         id: conversationDelegate
 
         Text {
-            text: model.text
+            text: "[" + model.time + "] " + model.sender + ": " + model.text
         }
-    }
-
-    ListModel {
-        id: dummyModel
-
-        ListElement { text: "1" }
-        ListElement { text: "2" }
-        ListElement { text: "3" }
-        ListElement { text: "4" }
     }
 
     ListView {
