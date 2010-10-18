@@ -26,24 +26,23 @@
 #error IN_TELEPATHY_QT4_HEADER
 #endif
 
-#include <QtCore/QAbstractItemModel>
+#include <QAbstractListModel>
 
 #include <TelepathyQt4/AccountManager>
 #include <TelepathyQt4/Contact>
 #include <TelepathyQt4/Connection>
-#include "abstract-tree-item.h"
+#include <TelepathyQt4/Types>
 
 namespace Tp
 {
 
-class TELEPATHY_QT4_EXPORT ContactsListModel : public QAbstractItemModel
+class TELEPATHY_QT4_EXPORT ContactsListModel : public QAbstractListModel
 {
     Q_OBJECT
 
 public:
     enum {
         IdRole = Qt::UserRole,
-        ContactRole,
         AliasRole,
         AvatarRole,
         PresenceStatusRole,
@@ -58,13 +57,7 @@ public:
     explicit ContactsListModel(const Tp::AccountManagerPtr &am, QObject *parent = 0);
     virtual ~ContactsListModel();
 
-    virtual int columnCount(const QModelIndex &parent = QModelIndex()) const;
-    virtual QVariant data(const QModelIndex &index, int role) const;
-    virtual Qt::ItemFlags flags(const QModelIndex &index) const;
-    virtual QModelIndex index(int row,
-                              int column,
-                              const QModelIndex &parent = QModelIndex()) const;
-    virtual QModelIndex parent(const QModelIndex &index) const;
+    QVariant data(const QModelIndex &index, int role) const;
     virtual int rowCount(const QModelIndex &parent = QModelIndex()) const;
 
     void addConnection(const Tp::ConnectionPtr &conn);
@@ -79,13 +72,12 @@ private Q_SLOTS:
             const QString &, const QString &);
 
 private:
-    AbstractTreeItem* createContactItem(const Tp::ContactPtr &contact, bool &exists);
-    AbstractTreeItem *item(const QModelIndex &index) const;
 
     Tp::AccountManagerPtr mAM;
     QList<Tp::ConnectionPtr> mConns;
+    QList<Tp::ContactPtr> mContacts;
 
-    AbstractTreeItem *mRootItem;
+    //AbstractTreeItem *mRootItem;
 };
 
 }
