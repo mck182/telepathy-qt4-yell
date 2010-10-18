@@ -25,10 +25,13 @@
 #include <qdeclarative.h>
 #include <QDeclarativeView>
 #include <TelepathyQt4/ui/AccountModel>
+#include <TelepathyQt4/ui/ContactsListModel>
 
 int main(int argc, char** argv)
 {
     QApplication app(argc, argv);
+
+    Tp::registerTypes();
 
     Tp::AccountManagerPtr am(Tp::AccountManager::create());
     Tp::AccountModel* model = new Tp::AccountModel(am);
@@ -46,5 +49,13 @@ int main(int argc, char** argv)
 
     main.resize(500, 500);
     main.show();
+
+    Tp::ContactsListModel* contactsModel = new Tp::ContactsListModel(am);
+
+    QDeclarativeView ContactsView;
+    ContactsView.rootContext()->setContextProperty(QString::fromLatin1("contactsListModel"), contactsModel);
+    ContactsView.setSource(QUrl::fromLocalFile(QString::fromLatin1("ContactsView.qml")));
+    ContactsView.show();
+
     app.exec();
 }
