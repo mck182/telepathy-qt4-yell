@@ -25,19 +25,25 @@ Rectangle {
                 }
             }
             Text {
-                id: text
+                id: displayName
                 anchors.left: enabledCheckBox.right
-                anchors.verticalCenter: parent.verticalCenter
+                // anchors.verticalCenter: parent.verticalCenter
                 anchors.margins: 10
                 text: model.displayName
             }
             Text {
                 id: nickname
-                anchors.right: parent.right
-                anchors.verticalCenter: parent.verticalCenter
+                anchors.left: displayName.right
+                // anchors.verticalCenter: parent.verticalCenter
                 anchors.margins: 10
                 text: model.protocol
             }
+            Text {
+                id: status
+                anchors.left: nickname.right
+                text: model.connectionStatus
+            }
+
         }
     }
 
@@ -48,4 +54,5 @@ Rectangle {
         model: accountsModel
         delegate: accountsDelegate
     }
+
 }
