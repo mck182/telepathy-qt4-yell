@@ -9,6 +9,7 @@ tpqt4_generate_mocs(${telepathy_qt4_ui_examples_conversation_MOC_SRCS})
 
 add_executable(telepathy_qt4_ui_examples_conversation
     ${telepathy_qt4_ui_examples_conversation_SRCS} ${telepathy_qt4_ui_examples_conversation_MOC_SRCS})
+
 target_link_libraries(telepathy_qt4_ui_examples_conversation
     ${QT_QTDBUS_LIBRARY}
     ${QT_QTGUI_LIBRARY}
@@ -16,3 +17,4 @@ target_link_libraries(telepathy_qt4_ui_examples_conversation
     ${QT_QTDECLARATIVE_LIBRARY}
     telepathy-qt4
     telepathy-qt4-ui)
+

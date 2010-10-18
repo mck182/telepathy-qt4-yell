@@ -24,6 +24,7 @@
 #include <QScopedPointer>
 #include <QWidget>
 
+#include <TelepathyQt4/AbstractClientHandler>
 #include <TelepathyQt4/Types>
 
 #include <TelepathyQt4/ui/ConversationModel>
@@ -31,7 +32,7 @@
 class QDeclarativeView;
 class QLineEdit;
 
-class ChatWindow : public QWidget
+class ChatWindow : public QWidget, public Tp::AbstractClientHandler
 {
     Q_OBJECT
 public:
@@ -44,11 +45,34 @@ public:
                                 const QList<Tp::ChannelRequestPtr> &requestsSatisfied,
                                 const QDateTime &userActionTime,
                                 const QVariantMap &handlerInfo);
+
+    bool bypassApproval() const { return false; }
 private:
 
     QScopedPointer<Tp::ConversationModel> mModel;
     QDeclarativeView *mConversation;
     QLineEdit *mInput;
+
+    void initialize(const Tp::TextChannelPtr &channel);
+
+    Tp::ChannelClassList channelClassList() {
+        Tp::ChannelClassList filters;
+        QMap<QString, QDBusVariant> filter;
+        filter.insert(QString::fromLatin1(TELEPATHY_INTERFACE_CHANNEL ".ChannelType"),
+                      QDBusVariant(QString::fromLatin1(TELEPATHY_INTERFACE_CHANNEL_TYPE_TEXT)));
+        filter.insert(QString::fromLatin1(TELEPATHY_INTERFACE_CHANNEL ".TargetHandleType"),
+                      QDBusVariant((uint) Tp::HandleTypeContact));
+        filters.append(filter);
+
+        filter.clear();
+        filter.insert(QLatin1String(TELEPATHY_INTERFACE_CHANNEL ".ChannelType"),
+                      QDBusVariant(QString::fromLatin1(TELEPATHY_INTERFACE_CHANNEL_TYPE_TEXT)));
+        filter.insert(QLatin1String(TELEPATHY_INTERFACE_CHANNEL ".TargetHandleType"),
+                      QDBusVariant((uint) Tp::HandleTypeRoom));
+        filters.append(filter);
+
+        return filters;
+    }
 
 private Q_SLOTS:
 

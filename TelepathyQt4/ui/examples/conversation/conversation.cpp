@@ -19,14 +19,37 @@
  */
 
 #include <QApplication>
+
+#include <TelepathyQt4/Channel>
+#include <TelepathyQt4/ClientRegistrar>
+#include <TelepathyQt4/AccountFactory>
+#include <TelepathyQt4/ConnectionFactory>
+
 #include "chatwindow.h"
 
-int main(int argc, char **argv)
+using namespace Tp;
+
+int main(int argc, char *argv[])
 {
+
     QApplication app(argc, argv);
 
-    ChatWindow main;
-    main.show();
+    Tp::registerTypes();
+
+    AccountFactoryPtr  accountFactory = AccountFactory::create(QDBusConnection::sessionBus(),
+                                                               Features() << Account::FeatureCore);
+
+    ConnectionFactoryPtr  connectionFactory = ConnectionFactory::create(QDBusConnection::sessionBus(),
+                                                               Features() <<  Connection::FeatureSelfContact
+                                                               << Connection::FeatureCore);
+
+
+    ClientRegistrarPtr registrar = ClientRegistrar::create(accountFactory, connectionFactory);
+    ChatWindow* mainWindow = new ChatWindow();
+
+    AbstractClientPtr handler(mainWindow);
+    registrar->registerClient(handler, QString::fromLatin1("ExampleChatHandler"));
 
     return app.exec();
+    delete mainWindow;
 }

@@ -21,6 +21,7 @@
 #include "chatwindow.h"
 #include "TelepathyQt4/ui/examples/conversation/_gen/chatwindow.moc.hpp"
 
+#include <QDeclarativeContext>
 #include <QDeclarativeView>
 #include <QLineEdit>
 #include <QVBoxLayout>
@@ -29,6 +30,11 @@
 
 ChatWindow::ChatWindow(QWidget *parent)
     : QWidget(parent)
+    , AbstractClientHandler(channelClassList())
+{
+}
+
+void ChatWindow::initialize(const Tp::TextChannelPtr &channel)
 {
     QVBoxLayout *layout = new QVBoxLayout(this);
 
@@ -38,9 +44,14 @@ ChatWindow::ChatWindow(QWidget *parent)
     layout->addWidget(mConversation);
     layout->addWidget(mInput);
 
+    mModel.reset(new Tp::ConversationModel(channel));
+    mConversation->rootContext()->setContextProperty(QString::fromLatin1("conversationModel"),
+                                                     mModel.data());
     mConversation->setSource(QUrl::fromLocalFile(QString::fromLatin1("conversation.qml")));
     mConversation->setResizeMode(QDeclarativeView::SizeRootObjectToView);
     connect(mInput, SIGNAL(returnPressed()), SLOT(onReturnPressed()));
+
+    show();
 }
 
 void ChatWindow::handleChannels(const Tp::MethodInvocationContextPtr<> &context,
@@ -51,9 +62,14 @@ void ChatWindow::handleChannels(const Tp::MethodInvocationContextPtr<> &context,
                                 const QDateTime &userActionTime,
                                 const QVariantMap &handlerInfo)
 {
+    qDebug() << "handling channel";
     if (channels.size() == 1) {
         Tp::TextChannelPtr channel = Tp::TextChannelPtr::dynamicCast(channels[0]);
-        mModel.reset(new Tp::ConversationModel(channel));
+        initialize(channel);
+        context->setFinished();
+    }
+    else {
+        qDebug() << "more than 1 channel";
     }
 }
 
