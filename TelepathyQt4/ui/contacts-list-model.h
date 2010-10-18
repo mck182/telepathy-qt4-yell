@@ -28,6 +28,7 @@
 
 #include <QtCore/QAbstractItemModel>
 
+#include <TelepathyQt4/AccountManager>
 #include <TelepathyQt4/Contact>
 #include <TelepathyQt4/Connection>
 #include "abstract-tree-item.h"
@@ -54,7 +55,7 @@ public:
         GroupsRole
     };
 
-    explicit ContactsListModel(QObject *parent = 0);
+    explicit ContactsListModel(const Tp::AccountManagerPtr &am, QObject *parent = 0);
     virtual ~ContactsListModel();
 
     virtual int columnCount(const QModelIndex &parent = QModelIndex()) const;
@@ -70,6 +71,8 @@ public:
     void removeConnection(const Tp::ConnectionPtr &conn);
 
 private Q_SLOTS:
+    void onAccountManagerReady(Tp::PendingOperation *);
+    void onAccountReady(Tp::PendingOperation* op);
     void onConnectionReady(Tp::PendingOperation *);
     void onPresencePublicationRequested(const Tp::Contacts &contacts);
     void onConnectionInvalidated(Tp::DBusProxy *,
@@ -79,9 +82,10 @@ private:
     AbstractTreeItem* createContactItem(const Tp::ContactPtr &contact, bool &exists);
     AbstractTreeItem *item(const QModelIndex &index) const;
 
+    Tp::AccountManagerPtr mAM;
     QList<Tp::ConnectionPtr> mConns;
 
-    AbstractTreeItem *m_rootItem;
+    AbstractTreeItem *mRootItem;
 };
 
 }

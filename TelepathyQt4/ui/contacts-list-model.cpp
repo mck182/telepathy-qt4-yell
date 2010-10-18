@@ -36,16 +36,69 @@
 
 namespace Tp
 {
-    ContactsListModel::ContactsListModel(QObject *parent)
+    ContactsListModel::ContactsListModel(const Tp::AccountManagerPtr &am, QObject *parent)
      : QAbstractItemModel(parent),
-     m_rootItem(0)
+     mAM(am),
+     mRootItem(new AbstractTreeItem())
     {
+        connect(mAM->becomeReady(),
+                SIGNAL(finished(Tp::PendingOperation *)),
+                SLOT(onAccountManagerReady(Tp::PendingOperation *)));
 
-
+        QHash<int, QByteArray> roles;
+        roles[IdRole] = "id";
+        roles[ContactRole] = "contact";
+        roles[AliasRole] = "aliasName";
+        roles[AvatarRole] = "avatar";
+        roles[PresenceStatusRole] = "presenceStatus";
+        roles[PresenceTypeRole] = "presenceType";
+        roles[PresenceMessageRole] = "presenceMessage";
+        roles[SubscriptionStateRole] = "subscriptionState";
+        roles[PublishStateRole] = "publishState";
+        roles[BlockedRole] = "blocked";
+        roles[GroupsRole] = "groups";
+        setRoleNames(roles);
     }
 
     ContactsListModel::~ContactsListModel()
     {
+    }
+
+    void ContactsListModel::onAccountManagerReady(Tp::PendingOperation *)
+    {
+        Features features;
+        features << Account::FeatureCore
+                << Account::FeatureAvatar
+                << Account::FeatureProtocolInfo
+                << Account::FeatureCapabilities
+                << Account::FeatureProfile;
+
+        QList<AccountPtr> accountsList = mAM->allAccounts();
+        QList<AccountPtr>::ConstIterator ac_it;
+        for(ac_it = accountsList.constBegin(); ac_it != accountsList.constEnd(); ++ac_it) {
+            AccountPtr accountPtr = (*ac_it);
+
+            if(accountPtr->connectionStatus() == Tp::ConnectionStatusConnected) {
+                connect(accountPtr->becomeReady(features),
+                        SIGNAL(finished(Tp::PendingOperation *)),
+                        SLOT(onAccountReady(Tp::PendingOperation *)));
+            }
+        }
+    }
+
+    void ContactsListModel::onAccountReady(Tp::PendingOperation* op)
+    {
+        if (op->isError()) {
+            qWarning() << "Account cannot become ready";
+            return;
+        }
+
+        PendingReady *pr = qobject_cast<PendingReady *>(op);
+        AccountPtr accountPtr = AccountPtr(qobject_cast<Account *>(pr->object()));
+
+        if(accountPtr->haveConnection()) {
+           addConnection(accountPtr->connection());
+        }
     }
 
     void ContactsListModel::onPresencePublicationRequested(const Tp::Contacts &contacts)
@@ -60,7 +113,14 @@ namespace Tp
 
     void ContactsListModel::addConnection(const ConnectionPtr &conn)
     {
-        connect(conn->becomeReady(Connection::FeatureRoster),
+        Features features;
+        features << Connection::FeatureCore
+                << Connection::FeatureSelfContact
+                << Connection::FeatureSimplePresence
+                << Connection::FeatureRoster
+                << Connection::FeatureRosterGroups
+                << Connection::FeatureAccountBalance;
+        connect(conn->becomeReady(features),
                 SIGNAL(finished(Tp::PendingOperation *)),
                 SLOT(onConnectionReady(Tp::PendingOperation *)));
     }
@@ -68,10 +128,10 @@ namespace Tp
     void ContactsListModel::removeConnection(const ConnectionPtr &conn)
     {
         QList<AbstractTreeItem*>::const_iterator it;
-        for(it = m_rootItem->childItems().constBegin(); it != m_rootItem->childItems().constEnd(); ++it ) {
+        for(it = mRootItem->childItems().constBegin(); it != mRootItem->childItems().constEnd(); ++it ) {
             ContactItem* item = dynamic_cast<ContactItem*>(*it);
             if (item->contact()->manager()->connection() == conn) {
-                m_rootItem->removeChildItem(*it);
+                mRootItem->removeChildItem(*it);
                 continue;
             }
         }
@@ -95,7 +155,6 @@ namespace Tp
                 SIGNAL(presencePublicationRequested(const Tp::Contacts &)),
                 SLOT(onPresencePublicationRequested(const Tp::Contacts &)));
 
-        qDebug() << "Connection ready";
         AbstractTreeItem *item;
         bool exists;
         foreach (const ContactPtr &contact, conn->contactManager()->allKnownContacts()) {
@@ -107,7 +166,7 @@ namespace Tp
     void ContactsListModel::onConnectionInvalidated(DBusProxy *proxy,
             const QString &errorName, const QString &errorMessage)
     {
-        qDebug() << "onConnectionInvalidated: connection became invalid:" <<
+        qWarning() << "onConnectionInvalidated: connection became invalid:" <<
             errorName << "-" << errorMessage;
         foreach (const ConnectionPtr &conn, mConns) {
             if (conn.data() == proxy) {
@@ -119,7 +178,7 @@ namespace Tp
     AbstractTreeItem* ContactsListModel::createContactItem(const Tp::ContactPtr &contact, bool &exists)
     {
         QList<AbstractTreeItem*>::const_iterator it;
-        for(it = m_rootItem->childItems().constBegin(); it != m_rootItem->childItems().constEnd(); ++it ) {
+        for(it = mRootItem->childItems().constBegin(); it != mRootItem->childItems().constEnd(); ++it ) {
             ContactItem* item = dynamic_cast<ContactItem*>(*it);
             if(item) {
                 if(item->contact() == contact) {
@@ -131,7 +190,7 @@ namespace Tp
 
         ContactItem* contactItem = new ContactItem();
         contactItem->setContact(contact);
-        m_rootItem->appendChildItem(contactItem);
+        mRootItem->appendChildItem(contactItem);
         return contactItem;
     }
 
@@ -170,7 +229,7 @@ namespace Tp
 
         // If the parent is the root item, then the parent index of the index we were passed is
         // by definition an invalid index.
-        if (parentItem == m_rootItem) {
+        if (parentItem == mRootItem) {
             return QModelIndex();
         }
 
@@ -191,7 +250,7 @@ namespace Tp
     {
         // If the parent is invalid, then this request is for the root item.
         if (!parent.isValid()) {
-            return m_rootItem->childItems().length();
+            return mRootItem->childItems().length();
         }
 
         // Get the item from the internal pointer of the ModelIndex.
@@ -215,7 +274,7 @@ namespace Tp
              }
          }
 
-         return m_rootItem;
+         return mRootItem;
     }
 
     int ContactsListModel::columnCount(const QModelIndex &parent) const
