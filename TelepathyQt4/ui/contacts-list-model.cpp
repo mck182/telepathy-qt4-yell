@@ -25,6 +25,7 @@
 #include <TelepathyQt4/Contact>
 #include <TelepathyQt4/ContactManager>
 #include <TelepathyQt4/PendingReady>
+#include <TelepathyQt4/PendingContacts>
 
 namespace Tp
 {
@@ -132,11 +133,38 @@ namespace Tp
                 SIGNAL(presencePublicationRequested(const Tp::Contacts &)),
                 SLOT(onPresencePublicationRequested(const Tp::Contacts &)));
 
-         qDebug("known contacts: %d", conn->contactManager()->allKnownContacts().count());
+        qDebug("known contacts: %d", conn->contactManager()->allKnownContacts().count());
 
-        Contacts contacts = conn->contactManager()->allKnownContacts();
+        QList<Tp::ContactPtr> contacts = conn->contactManager()->allKnownContacts().toList();
+
+        //upgrade features for contacts
+        QSet<Contact::Feature> features;
+        features << Contact::FeatureAlias
+                << Contact::FeatureAvatarToken
+                << Contact::FeatureSimplePresence
+                << Contact::FeatureCapabilities
+                << Contact::FeatureLocation
+                << Contact::FeatureInfo
+                << Contact::FeatureAvatarData;
+
+         connect(conn->contactManager()->upgradeContacts(contacts, features),
+                SIGNAL(finished(Tp::PendingOperation *)),
+                SLOT(onContactsUpgraded(Tp::PendingOperation *)));
+    }
+
+    void ContactsListModel::onContactsUpgraded(Tp::PendingOperation *op)
+    {
+        if (op->isError()) {
+            qWarning() << "Contacts cannot be upgraded";
+            return;
+        }
+
+        Tp::PendingContacts *pendingContacts = qobject_cast<PendingContacts *>(op);
+        QList<Tp::ContactPtr> contacts = pendingContacts->contacts();
+
+        //add items to model
         beginInsertRows(QModelIndex(), 0, contacts.count() - 1);
-        mContacts = contacts.toList();
+        mContacts = contacts;
         endInsertRows();
     }
 
@@ -168,6 +196,9 @@ namespace Tp
             return QVariant();
 
         Tp::ContactPtr contactItem = mContacts[index.row()];
+
+
+
 
         QVariant data;
 

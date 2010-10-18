@@ -67,6 +67,7 @@ private Q_SLOTS:
     void onAccountManagerReady(Tp::PendingOperation *);
     void onAccountReady(Tp::PendingOperation* op);
     void onConnectionReady(Tp::PendingOperation *);
+    void onContactsUpgraded(Tp::PendingOperation *op);
     void onPresencePublicationRequested(const Tp::Contacts &contacts);
     void onConnectionInvalidated(Tp::DBusProxy *,
             const QString &, const QString &);
