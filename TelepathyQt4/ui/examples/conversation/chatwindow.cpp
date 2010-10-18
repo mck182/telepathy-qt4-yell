@@ -32,6 +32,7 @@ ChatWindow::ChatWindow(QWidget *parent)
     : QWidget(parent)
     , AbstractClientHandler(channelClassList())
 {
+    resize(800, 500);
 }
 
 void ChatWindow::initialize(const Tp::TextChannelPtr &channel)
