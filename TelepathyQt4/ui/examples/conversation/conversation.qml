@@ -8,7 +8,10 @@ Rectangle {
         id: conversationDelegate
 
         Text {
-            text: "[" + model.time + "] " + model.sender + ": " + model.text
+            text: {
+                var time = Qt.formatTime(model.time, "hh:mm:ss");
+                "[" + time + "] " + model.sender + ": " + model.text;
+            }
         }
     }
 
