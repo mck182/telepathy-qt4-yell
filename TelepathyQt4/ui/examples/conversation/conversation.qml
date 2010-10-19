@@ -7,10 +7,28 @@ Rectangle {
     Component {
         id: conversationDelegate
 
-        Text {
-            text: {
-                var time = Qt.formatTime(model.time, "hh:mm:ss");
-                "[" + time + "] " + model.sender + ": " + model.text;
+        Rectangle {
+            height: childrenRect.height + 8
+            width: parent.width
+
+            Image {
+                id: avatar
+                width: 24
+                height: 24
+                anchors.left: parent.left
+                anchors.top: parent.top
+
+                source: model.senderAvatarUrl
+            }
+            Text {
+                id: message
+                anchors.left: avatar.right
+                anchors.leftMargin: 4
+                anchors.top: parent.top
+                text: {
+                    var time = Qt.formatTime(model.time, "hh:mm:ss");
+                    "[" + time + "] " + model.sender + ": " + model.text;
+                }
             }
         }
     }
@@ -18,6 +36,7 @@ Rectangle {
     ListView {
         id: conversation
         anchors.fill: parent
+        anchors.margins: 5
 
         model: conversationModel
         delegate: conversationDelegate
