@@ -21,6 +21,8 @@ set(telepathy_qt4_ui_HEADERS
     AccountModel
     ContactsListModel
     ConversationModel
+    account-model.h
+    contacts-list-model.h
 )
 
 tpqt4_generate_mocs(${telepathy_qt4_ui_MOC_SRCS})
