@@ -35,6 +35,7 @@ int main(int argc, char** argv)
 
     Tp::AccountManagerPtr am(Tp::AccountManager::create());
     Tp::AccountModel* model = new Tp::AccountModel(am);
+    Tp::ContactsListModel* contactsModel = new Tp::ContactsListModel(am);
 
     QWidget main;
     QHBoxLayout* layout = new QHBoxLayout(&main);
@@ -46,16 +47,10 @@ int main(int argc, char** argv)
 
     view->rootContext()->setContextProperty(QString::fromLatin1("accountsModel"), model);
     view->setSource(QUrl::fromLocalFile(QString::fromLatin1("account-view.qml")));
+    view->rootContext()->setContextProperty(QString::fromLatin1("contactsListModel"), contactsModel);
 
     main.resize(500, 500);
     main.show();
-
-    Tp::ContactsListModel* contactsModel = new Tp::ContactsListModel(am);
-
-    QDeclarativeView ContactsView;
-    ContactsView.rootContext()->setContextProperty(QString::fromLatin1("contactsListModel"), contactsModel);
-    ContactsView.setSource(QUrl::fromLocalFile(QString::fromLatin1("ContactsView.qml")));
-    ContactsView.show();
 
     app.exec();
 }

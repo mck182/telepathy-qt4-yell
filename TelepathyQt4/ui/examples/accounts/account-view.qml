@@ -49,10 +49,17 @@ Rectangle {
 
     ListView {
         id: accounts
-        anchors.fill: parent
+        anchors.top: parent.top
+        width: parent.width
+        height: 100
 
         model: accountsModel
         delegate: accountsDelegate
+    }
+
+    ContactsView {
+        anchors.top: accounts.bottom
+
     }
 
 }

@@ -17,19 +17,19 @@ Item {
                 anchors.left: parent.left
                 // anchors.verticalCenter: parent.verticalCenter
                 anchors.margins: 10
-                text: "alias: " + model.aliasName
+                text: model.aliasName
             }
             Text {
                 id: presenceMessage
                 anchors.left: aliasName.right
                 // anchors.verticalCenter: parent.verticalCenter
                 anchors.margins: 10
-                text: "presence: " + model.presenceMessage
+                text: " - " + model.presenceMessage
             }
             Text {
                 id: status
                 anchors.left: presenceMessage.right
-                text: "status: " + model.presenceStatus
+                text: " - " + model.presenceStatus
             }
 
         }
