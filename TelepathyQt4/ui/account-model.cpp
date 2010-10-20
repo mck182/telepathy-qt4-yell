@@ -62,6 +62,8 @@ void AccountModel::onAMReady(Tp::PendingOperation *)
     mAccounts = accounts;
     endInsertRows();
 
+    emit accountCountChanged();
+
     connect(mAM.data(),
             SIGNAL(newAccount(const Tp::AccountPtr &)),
             SLOT(onNewAccount(const Tp::AccountPtr &)));
@@ -140,6 +142,7 @@ void AccountModel::onNewAccount(const Tp::AccountPtr &account)
     endInsertRows();
 
     setupAccount(account);
+    emit accountCountChanged();
 }
 
 void AccountModel::onAccountRemoved()
@@ -154,6 +157,8 @@ void AccountModel::onAccountRemoved()
             endRemoveRows();
         }
     }
+
+    emit accountCountChanged();
 }
 
 void AccountModel::onAccountChanged()
@@ -169,6 +174,11 @@ void AccountModel::onAccountChanged()
     }
 
     qWarning() << "Received change notification from unknown account";
+}
+
+int AccountModel::accountCount() const
+{
+    return mAccounts.count();
 }
 
 int AccountModel::rowCount(const QModelIndex &parent) const

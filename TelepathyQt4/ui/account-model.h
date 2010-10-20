@@ -38,6 +38,7 @@ namespace Tp
 class TELEPATHY_QT4_EXPORT AccountModel : public QAbstractListModel
 {
     Q_OBJECT
+    Q_PROPERTY(int accountCount READ accountCount NOTIFY accountCountChanged)
 
     enum Role {
       ValidRole = Qt::UserRole,
@@ -72,6 +73,11 @@ public:
     Q_INVOKABLE void setAccountEnabled(int row, bool value);
     Q_INVOKABLE void setAccountStatus(int row, const QString &value);
     Q_INVOKABLE void setAccountStatusMessage(int row, const QString &value);
+
+    int accountCount() const;
+
+Q_SIGNALS:
+    void accountCountChanged();
 
 private:
 
