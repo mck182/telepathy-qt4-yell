@@ -42,7 +42,8 @@ AccountModel::AccountModel(const Tp::AccountManagerPtr &am, QObject *parent)
     roles[ConnectsAutomaticallyRole] = "connectsAutomatically";
     roles[ChangingPresenceRole] = "changingPresence";
     roles[AutomaticPresenceRole] = "automaticPresence";
-    roles[CurrentPresenceRole] = "currentPresence";
+    roles[CurrentPresenceRole] = "status";
+    roles[CurrentStatusMessage] = "statusMessage";
     roles[RequestedPresenceRole] = "requestedPresence";
     roles[ConnectionStatusRole] = "connectionStatus";
     roles[ConnectionRole] = "connection";
@@ -208,6 +209,8 @@ QVariant AccountModel::data(const QModelIndex &index, int role) const
             return account->automaticPresence().status;
         case CurrentPresenceRole:
             return account->currentPresence().status;
+        case CurrentStatusMessage:
+            return account->currentPresence().statusMessage;
         case RequestedPresenceRole:
             return account->requestedPresence().status;
         case ConnectionStatusRole:

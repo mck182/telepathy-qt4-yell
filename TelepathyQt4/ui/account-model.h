@@ -50,6 +50,7 @@ class TELEPATHY_QT4_EXPORT AccountModel : public QAbstractListModel
       ChangingPresenceRole,
       AutomaticPresenceRole,
       CurrentPresenceRole,
+      CurrentStatusMessage,
       RequestedPresenceRole,
       ConnectionStatusRole,
       ConnectionRole
