@@ -63,16 +63,111 @@ void AccountModel::onAMReady(Tp::PendingOperation *)
     connect(mAM.data(),
             SIGNAL(newAccount(const Tp::AccountPtr &)),
             SLOT(onNewAccount(const Tp::AccountPtr &)));
+
+    foreach (Tp::AccountPtr account, mAccounts) {
+        setupAccount(account);
+    }
+}
+
+void AccountModel::setupAccount(const Tp::AccountPtr &account)
+{
+    connect(account.data(),
+            SIGNAL(removed()),
+            SLOT(onAccountRemoved()));
+    connect(account.data(),
+            SIGNAL(serviceNameChanged(QString)),
+            SLOT(onAccountChanged()));
+    connect(account.data(),
+            SIGNAL(profileChanged(const Tp::ProfilePtr &)),
+            SLOT(onAccountChanged()));
+    connect(account.data(),
+            SIGNAL(iconNameChanged(QString)),
+            SLOT(onAccountChanged()));
+    connect(account.data(),
+            SIGNAL(nicknameChanged(QString)),
+            SLOT(onAccountChanged()));
+    connect(account.data(),
+            SIGNAL(normalizedNameChanged(QString)),
+            SLOT(onAccountChanged()));
+    connect(account.data(),
+            SIGNAL(validityChanged(bool)),
+            SLOT(onAccountChanged()));
+    connect(account.data(),
+            SIGNAL(stateChanged(bool)),
+            SLOT(onAccountChanged()));
+    connect(account.data(),
+            SIGNAL(capabilitiesChanged(Tp::ConnectionCapabilities)),
+            SLOT(onAccountChanged()));
+    connect(account.data(),
+            SIGNAL(connectsAutomaticallyPropertyChanged(bool)),
+            SLOT(onAccountChanged()));
+    connect(account.data(),
+            SIGNAL(parametersChanged(QVariantMap)),
+            SLOT(onAccountChanged()));
+    connect(account.data(),
+            SIGNAL(changingPresence(bool)),
+            SLOT(onAccountChanged()));
+    connect(account.data(),
+            SIGNAL(automaticPresenceChanged(Tp::SimplePresence)),
+            SLOT(onAccountChanged()));
+    connect(account.data(),
+            SIGNAL(currentPresenceChanged(Tp::SimplePresence)),
+            SLOT(onAccountChanged()));
+    connect(account.data(),
+            SIGNAL(requestedPresenceChanged(Tp::SimplePresence)),
+            SLOT(onAccountChanged()));
+    connect(account.data(),
+            SIGNAL(onlinenessChanged(bool)),
+            SLOT(onAccountChanged()));
+    connect(account.data(),
+            SIGNAL(avatarChanged(Tp::Avatar)),
+            SLOT(onAccountChanged()));
+    connect(account.data(),
+            SIGNAL(statusChanged(Tp::ConnectionStatus, Tp::ConnectionStatusReason,
+                                 QString, QVariantMap)),
+            SLOT(onAccountChanged()));
+    connect(account.data(),
+            SIGNAL(haveConnectionChanged(bool)),
+            SLOT(onAccountChanged()));
 }
 
 void AccountModel::onNewAccount(const Tp::AccountPtr &account)
 {
-    qDebug() << "new account, enabled:" << account->isEnabled();
     beginInsertRows(QModelIndex(), mAccounts.count(), mAccounts.count());
     mAccounts.append(account);
     endInsertRows();
+
+    setupAccount(account);
 }
 
+void AccountModel::onAccountRemoved()
+{
+    Account *account = qobject_cast<Account *>(sender());
+    Q_ASSERT(account);
+
+    for (int i = 0; i < mAccounts.size(); i++) {
+        if (mAccounts[i].data() == account) {
+            beginRemoveRows(QModelIndex(), i, i);
+            mAccounts.removeAt(i);
+            endRemoveRows();
+        }
+    }
+}
+
+void AccountModel::onAccountChanged()
+{
+    Account *account = qobject_cast<Account *>(sender());
+    Q_ASSERT(account);
+
+    for (int i = 0; i < mAccounts.size(); i++) {
+        if (mAccounts[i].data() == account) {
+            emit dataChanged(index(i), index(i));
+            return;
+        }
+    }
+
+    qWarning() << "Received change notification from unknown account";
+}
 
 int AccountModel::rowCount(const QModelIndex &parent) const
 {

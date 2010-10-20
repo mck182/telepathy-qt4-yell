@@ -73,10 +73,14 @@ private:
     Tp::AccountManagerPtr mAM;
     QList<Tp::AccountPtr> mAccounts;
 
+    void setupAccount(const Tp::AccountPtr &account);
+
 private Q_SLOTS:
 
     void onAMReady(Tp::PendingOperation *);
     void onNewAccount(const Tp::AccountPtr &account);
+    void onAccountChanged();
+    void onAccountRemoved();
 };
 
 }
