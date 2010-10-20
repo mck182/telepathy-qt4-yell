@@ -59,7 +59,20 @@ void AccountModel::onAMReady(Tp::PendingOperation *)
     beginInsertRows(QModelIndex(), 0, accounts.count() - 1);
     mAccounts = accounts;
     endInsertRows();
+
+    connect(mAM.data(),
+            SIGNAL(newAccount(const Tp::AccountPtr &)),
+            SLOT(onNewAccount(const Tp::AccountPtr &)));
 }
+
+void AccountModel::onNewAccount(const Tp::AccountPtr &account)
+{
+    qDebug() << "new account, enabled:" << account->isEnabled();
+    beginInsertRows(QModelIndex(), mAccounts.count(), mAccounts.count());
+    mAccounts.append(account);
+    endInsertRows();
+}
+
 
 int AccountModel::rowCount(const QModelIndex &parent) const
 {
