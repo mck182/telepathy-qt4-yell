@@ -46,8 +46,8 @@ int main(int argc, char** argv)
     layout->addWidget(view);
 
     view->rootContext()->setContextProperty(QString::fromLatin1("accountsModel"), model);
-    view->setSource(QUrl::fromLocalFile(QString::fromLatin1("account-view.qml")));
     view->rootContext()->setContextProperty(QString::fromLatin1("contactsListModel"), contactsModel);
+    view->setSource(QUrl::fromLocalFile(QString::fromLatin1("account-view.qml")));
 
     main.resize(500, 500);
     main.show();
