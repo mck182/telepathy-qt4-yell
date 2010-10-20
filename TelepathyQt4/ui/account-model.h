@@ -52,6 +52,7 @@ class TELEPATHY_QT4_EXPORT AccountModel : public QAbstractListModel
       CurrentPresenceRole,
       CurrentStatusMessage,
       RequestedPresenceRole,
+      RequestedStatusMessage,
       ConnectionStatusRole,
       ConnectionRole
     };
@@ -67,7 +68,10 @@ public:
 
     virtual Qt::ItemFlags flags(const QModelIndex &index) const;
     virtual bool setData(const QModelIndex &index, const QVariant &value, int role = Qt::EditRole);
+
     Q_INVOKABLE void setAccountEnabled(int row, bool value);
+    Q_INVOKABLE void setAccountStatus(int row, const QString &value);
+    Q_INVOKABLE void setAccountStatusMessage(int row, const QString &value);
 
 private:
 

@@ -44,7 +44,8 @@ AccountModel::AccountModel(const Tp::AccountManagerPtr &am, QObject *parent)
     roles[AutomaticPresenceRole] = "automaticPresence";
     roles[CurrentPresenceRole] = "status";
     roles[CurrentStatusMessage] = "statusMessage";
-    roles[RequestedPresenceRole] = "requestedPresence";
+    roles[RequestedPresenceRole] = "requestedStatus";
+    roles[RequestedStatusMessage] = "requestedStausMessage";
     roles[ConnectionStatusRole] = "connectionStatus";
     roles[ConnectionRole] = "connection";
     setRoleNames(roles);
@@ -213,6 +214,8 @@ QVariant AccountModel::data(const QModelIndex &index, int role) const
             return account->currentPresence().statusMessage;
         case RequestedPresenceRole:
             return account->requestedPresence().status;
+        case RequestedStatusMessage:
+            return account->requestedPresence().statusMessage;
         case ConnectionStatusRole:
             return account->connectionStatus();
         case ConnectionRole:
@@ -238,8 +241,31 @@ Qt::ItemFlags AccountModel::flags(const QModelIndex &index) const
 
 bool AccountModel::setData(const QModelIndex &index, const QVariant &value, int role)
 {
-    if (index.isValid() && role == EnabledRole) {
-        accountForIndex(index)->setEnabled(value.toBool());
+    if (index.isValid()) {
+        switch (role) {
+        case EnabledRole:
+            accountForIndex(index)->setEnabled(value.toBool());
+            break;
+        case RequestedPresenceRole:
+        {
+            AccountPtr account = accountForIndex(index);
+            SimplePresence presence = account->currentPresence();
+            presence.status = value.toString();
+            account->setRequestedPresence(presence);
+            break;
+        }
+        case RequestedStatusMessage:
+        {
+            AccountPtr account = accountForIndex(index);
+            SimplePresence presence = account->currentPresence();
+            presence.statusMessage = value.toString();
+            account->setRequestedPresence(presence);
+            break;
+        }
+        default:
+            return false;
+        }
+
         emit dataChanged(index, index);
         return true;
     }
@@ -250,6 +276,16 @@ bool AccountModel::setData(const QModelIndex &index, const QVariant &value, int 
 void AccountModel::setAccountEnabled(int row, bool value)
 {
     setData(index(row), value, EnabledRole);
+}
+
+void AccountModel::setAccountStatus(int row, const QString &value)
+{
+    setData(index(row), value, RequestedPresenceRole);
+}
+
+void AccountModel::setAccountStatusMessage(int row, const QString& value)
+{
+    setData(index(row), value, RequestedStatusMessage);
 }
 
 }

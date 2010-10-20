@@ -63,8 +63,7 @@ Rectangle {
 
                     Keys.onReturnPressed: {
                         statusEdit.visible = false;
-                        // accountsModel.setAccountStatus(index, statusEdit.text);
-                        console.log("status => " + statusEdit.text);
+                        accountsModel.setAccountStatus(index, statusEdit.text);
                     }
                 }
                 Text {
@@ -96,8 +95,7 @@ Rectangle {
 
                     Keys.onReturnPressed: {
                         statusMessageEdit.visible = false;
-                        // accountsModel.setAccountStatusMessage(index, statusMessageEdit.text);
-                        console.log("message => " + statusMessageEdit.text);
+                        accountsModel.setAccountStatusMessage(index, statusMessageEdit.text);
                     }
                 }
             }
