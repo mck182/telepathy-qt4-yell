@@ -133,8 +133,6 @@ namespace Tp
                 SIGNAL(presencePublicationRequested(const Tp::Contacts &)),
                 SLOT(onPresencePublicationRequested(const Tp::Contacts &)));
 
-        qDebug("known contacts: %d", conn->contactManager()->allKnownContacts().count());
-
         QList<Tp::ContactPtr> contacts = conn->contactManager()->allKnownContacts().toList();
 
         //upgrade features for contacts
