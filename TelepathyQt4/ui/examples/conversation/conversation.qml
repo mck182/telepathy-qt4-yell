@@ -18,7 +18,7 @@ Rectangle {
                 anchors.left: parent.left
                 anchors.top: parent.top
 
-                source: model.senderAvatarUrl
+                source: model.senderAvatar
             }
             Text {
                 id: message

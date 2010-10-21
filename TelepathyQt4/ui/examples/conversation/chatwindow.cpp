@@ -26,7 +26,11 @@
 #include <QLineEdit>
 #include <QVBoxLayout>
 
+#include <TelepathyQt4/Connection>
+#include <TelepathyQt4/ContactManager>
 #include <TelepathyQt4/TextChannel>
+#include <TelepathyQt4/PendingContacts>
+#include <TelepathyQt4/PendingReady>
 
 ChatWindow::ChatWindow(QWidget *parent)
     : QWidget(parent)
@@ -53,6 +57,40 @@ void ChatWindow::initialize(const Tp::TextChannelPtr &channel)
     connect(mInput, SIGNAL(returnPressed()), SLOT(onReturnPressed()));
 
     show();
+    mContext->setFinished();
+}
+
+void ChatWindow::initializeConnection(const Tp::ConnectionPtr &connection)
+{
+    Tp::Features features;
+    features << Tp::Connection::FeatureCore
+             << Tp::Connection::FeatureSelfContact
+             << Tp::Connection::FeatureSimplePresence
+             << Tp::Connection::FeatureRoster
+             << Tp::Connection::FeatureRosterGroups
+             << Tp::Connection::FeatureAccountBalance;
+    connect(connection->becomeReady(features),
+            SIGNAL(finished(Tp::PendingOperation *)),
+            SLOT(onConnectionReady(Tp::PendingOperation *)));
+}
+
+void ChatWindow::initializeContacts(Tp::ContactManager *contactManager)
+{
+    QList<Tp::ContactPtr> contacts = contactManager->allKnownContacts().toList();
+    qDebug() << contacts.size() << "known contacts";
+
+    QSet<Tp::Contact::Feature> features;
+    features << Tp::Contact::FeatureAlias
+             << Tp::Contact::FeatureAvatarToken
+             << Tp::Contact::FeatureSimplePresence
+             << Tp::Contact::FeatureCapabilities
+             << Tp::Contact::FeatureLocation
+             << Tp::Contact::FeatureInfo
+             << Tp::Contact::FeatureAvatarData;
+
+    connect(contactManager->upgradeContacts(contacts, features),
+            SIGNAL(finished(Tp::PendingOperation *)),
+            SLOT(onContactsUpgraded(Tp::PendingOperation *)));
 }
 
 void ChatWindow::handleChannels(const Tp::MethodInvocationContextPtr<> &context,
@@ -65,9 +103,10 @@ void ChatWindow::handleChannels(const Tp::MethodInvocationContextPtr<> &context,
 {
     qDebug() << "handling channel";
     if (channels.size() == 1) {
-        Tp::TextChannelPtr channel = Tp::TextChannelPtr::dynamicCast(channels[0]);
-        initialize(channel);
-        context->setFinished();
+        mChannel = Tp::TextChannelPtr::dynamicCast(channels[0]);
+        mConnection = connection;
+        mContext = context;
+        initializeConnection(mConnection);
     }
     else {
         qDebug() << "more than 1 channel";
@@ -80,5 +119,15 @@ void ChatWindow::onReturnPressed()
         mModel->sendMessage(mInput->text());
         mInput->setText(QString());
     }
+}
+
+void ChatWindow::onContactsUpgraded(Tp::PendingOperation *)
+{
+    initialize(mChannel);
+}
+
+void ChatWindow::onConnectionReady(Tp::PendingOperation *)
+{
+    initializeContacts(mConnection->contactManager());
 }
 

@@ -47,13 +47,25 @@ public:
                                 const QVariantMap &handlerInfo);
 
     bool bypassApproval() const { return false; }
+
+private Q_SLOTS:
+
+    void onReturnPressed();
+    void onConnectionReady(Tp::PendingOperation *);
+    void onContactsUpgraded(Tp::PendingOperation *);
+
 private:
 
     QScopedPointer<Tp::ConversationModel> mModel;
+    Tp::ConnectionPtr mConnection;
+    Tp::TextChannelPtr mChannel;
+    Tp::MethodInvocationContextPtr<> mContext;
     QDeclarativeView *mConversation;
     QLineEdit *mInput;
 
     void initialize(const Tp::TextChannelPtr &channel);
+    void initializeConnection(const Tp::ConnectionPtr &connection);
+    void initializeContacts(Tp::ContactManager *contactManager);
 
     Tp::ChannelClassList channelClassList() {
         Tp::ChannelClassList filters;
@@ -73,10 +85,6 @@ private:
 
         return filters;
     }
-
-private Q_SLOTS:
-
-    void onReturnPressed();
 
 };
 

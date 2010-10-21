@@ -73,9 +73,8 @@ QVariant ConversationModel::data(const QModelIndex &index, int role) const
     case SenderRole:
         return item->sender() ? item->sender()->id() : QString::fromLatin1("You");
     case SenderAvatarRole:
-        return QPixmap();
+        return item->sender() ? item->sender()->avatarData().fileName : QString();
     case TimeRole:
-        qDebug() << "time" << item->time();
         return item->time();
     default:
         return QVariant();
