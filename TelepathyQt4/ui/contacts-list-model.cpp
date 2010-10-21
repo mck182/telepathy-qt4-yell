@@ -166,6 +166,7 @@ namespace Tp
         beginInsertRows(QModelIndex(), 0, contacts.count() - 1);
         mContacts = contacts;
         endInsertRows();
+        emit contactCountChanged();
     }
 
     void ContactsListModel::onConnectionInvalidated(DBusProxy *proxy,
@@ -178,6 +179,7 @@ namespace Tp
                 mConns.removeOne(conn);
             }
         }
+        emit contactCountChanged();
     }
 
     int ContactsListModel::rowCount(const QModelIndex &) const

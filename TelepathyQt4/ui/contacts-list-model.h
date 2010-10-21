@@ -63,6 +63,9 @@ public:
     void addConnection(const Tp::ConnectionPtr &conn);
     void removeConnection(const Tp::ConnectionPtr &conn);
 
+Q_SIGNALS:
+    void contactCountChanged(void);
+    
 private Q_SLOTS:
     void onAccountManagerReady(Tp::PendingOperation *);
     void onAccountReady(Tp::PendingOperation* op);
