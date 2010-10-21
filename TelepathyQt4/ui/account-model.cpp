@@ -98,7 +98,7 @@ void AccountModel::setupAccount(const Tp::AccountPtr &account)
             SIGNAL(stateChanged(bool)),
             SLOT(onAccountChanged()));
     connect(account.data(),
-            SIGNAL(capabilitiesChanged(Tp::ConnectionCapabilities)),
+            SIGNAL(capabilitiesChanged(Tp::ConnectionCapabilities *)),
             SLOT(onAccountChanged()));
     connect(account.data(),
             SIGNAL(connectsAutomaticallyPropertyChanged(bool)),
