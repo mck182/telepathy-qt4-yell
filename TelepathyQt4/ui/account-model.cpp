@@ -221,6 +221,7 @@ QVariant AccountModel::data(const QModelIndex &index, int role) const
         case CurrentPresenceRole:
             return account->currentPresence().status;
         case CurrentStatusMessage:
+            qDebug() << "Returning the current status message, which is:" << account->currentPresence().statusMessage;
             return account->currentPresence().statusMessage;
         case RequestedPresenceRole:
             return account->requestedPresence().status;
