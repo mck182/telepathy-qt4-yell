@@ -98,6 +98,38 @@ Rectangle {
                         accountsModel.setAccountStatusMessage(index, statusMessageEdit.text);
                     }
                 }
+                Text {
+                    id: nickname
+                    anchors.left: parent.left
+                    anchors.top: statusMessage.bottom
+                    anchors.margins: 10
+                    visible: !nicknameEdit.visible
+                    text: model.nickname
+
+                    MouseArea {
+                        anchors.fill: parent
+                        onClicked: nicknameEdit.show()
+                    }
+                }
+                TextEdit {
+                    id: nicknameEdit
+                    anchors.fill: nickname
+                    visible: false
+                    z: 1
+
+                    function show() {
+                        nicknameEdit.text = model.nickname
+                        nicknameEdit.cursorPosition = 0;
+                        nicknameEdit.moveCursorSelection(nicknameEdit.text.length);
+                        nicknameEdit.focus = true;
+                        nicknameEdit.visible = true;
+                    }
+
+                    Keys.onReturnPressed: {
+                        nicknameEdit.visible = false;
+                        accountsModel.setAccountNickname(index, nicknameEdit.text);
+                    }
+                }
             }
         }
     }

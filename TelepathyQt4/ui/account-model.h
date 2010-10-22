@@ -73,6 +73,7 @@ public:
     Q_INVOKABLE void setAccountEnabled(int row, bool value);
     Q_INVOKABLE void setAccountStatus(int row, const QString &value);
     Q_INVOKABLE void setAccountStatusMessage(int row, const QString &value);
+    Q_INVOKABLE void setAccountNickname(int row, const QString &value);
 
     int accountCount() const;
 

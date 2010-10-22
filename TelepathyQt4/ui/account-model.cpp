@@ -273,6 +273,9 @@ bool AccountModel::setData(const QModelIndex &index, const QVariant &value, int 
             account->setRequestedPresence(presence);
             break;
         }
+        case NicknameRole:
+            accountForIndex(index)->setNickname(value.toString());
+            break;
         default:
             return false;
         }
@@ -297,6 +300,11 @@ void AccountModel::setAccountStatus(int row, const QString &value)
 void AccountModel::setAccountStatusMessage(int row, const QString& value)
 {
     setData(index(row), value, RequestedStatusMessage);
+}
+
+void AccountModel::setAccountNickname(int row, const QString &value)
+{
+    setData(index(row), value, NicknameRole);
 }
 
 }
