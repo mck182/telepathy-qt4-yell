@@ -231,54 +231,47 @@ namespace Tp
             return QVariant();
 
         Tp::ContactPtr contactItem = mContacts[index.row()];
-
-
-
-
         QVariant data;
 
         switch(role)
         {
-        case Qt::DisplayRole:
-            data.setValue<QString>(contactItem->alias());
-            break;
-        case ContactsListModel::IdRole:
-            data.setValue<QString>(contactItem->id());
-            break;
-        case ContactsListModel::AliasRole:
-            data.setValue<QString>(contactItem->alias());
-            break;
-        case ContactsListModel::PresenceStatusRole:
-            data.setValue<QString>(contactItem->presenceStatus());
-            break;
-        case ContactsListModel::PresenceTypeRole:
-            data.setValue<qint64>(contactItem->presenceType());
-            break;
-        case ContactsListModel::PresenceMessageRole:
-            data.setValue<QString>(contactItem->presenceMessage());
-            break;
-        case ContactsListModel::SubscriptionStateRole:
-            data.setValue<qint64>(contactItem->subscriptionState());
-            break;
-        case ContactsListModel::PublishStateRole:
-            data.setValue<qint64>(contactItem->publishState());
-            break;
-        case ContactsListModel::BlockedRole:
-            data.setValue<bool>(contactItem->block());
-            break;
-        case ContactsListModel::GroupsRole:
-            data.setValue<QStringList>(contactItem->groups());
-            break;
-        case ContactsListModel::AvatarRole:
-            data.setValue<QString>(contactItem->avatarData().fileName);
-            break;
-        default:
-            break;
+            case Qt::DisplayRole:
+                data.setValue<QString>(contactItem->alias());
+                break;
+            case ContactsListModel::IdRole:
+                data.setValue<QString>(contactItem->id());
+                break;
+            case ContactsListModel::AliasRole:
+                data.setValue<QString>(contactItem->alias());
+                break;
+            case ContactsListModel::PresenceStatusRole:
+                data.setValue<QString>(contactItem->presenceStatus());
+                break;
+            case ContactsListModel::PresenceTypeRole:
+                data.setValue<qint64>(contactItem->presenceType());
+                break;
+            case ContactsListModel::PresenceMessageRole:
+                data.setValue<QString>(contactItem->presenceMessage());
+                break;
+            case ContactsListModel::SubscriptionStateRole:
+                data.setValue<qint64>(contactItem->subscriptionState());
+                break;
+            case ContactsListModel::PublishStateRole:
+                data.setValue<qint64>(contactItem->publishState());
+                break;
+            case ContactsListModel::BlockedRole:
+                data.setValue<bool>(contactItem->block());
+                break;
+            case ContactsListModel::GroupsRole:
+                data.setValue<QStringList>(contactItem->groups());
+                break;
+            case ContactsListModel::AvatarRole:
+                data.setValue<QString>(contactItem->avatarData().fileName);
+                break;
+            default:
+                break;
         }
-
         return data;
-
     }
-
 }
 
