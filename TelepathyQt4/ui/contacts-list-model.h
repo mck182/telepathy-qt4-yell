@@ -66,6 +66,14 @@ public:
 Q_SIGNALS:
     void contactCountChanged(void);
     
+public Q_SLOTS:
+    void onAccountStatusChanged(Tp::ConnectionStatus status,
+            Tp::ConnectionStatusReason statusReason,
+            const QString &error, const QVariantMap &errorDetails);
+    
+protected:
+    void upgradeContacts(ContactManager* contactManager, QList<Tp::ContactPtr> &contacts);
+
 private Q_SLOTS:
     void onAccountManagerReady(Tp::PendingOperation *);
     void onAccountReady(Tp::PendingOperation* op);

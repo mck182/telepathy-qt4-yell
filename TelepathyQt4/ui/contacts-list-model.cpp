@@ -74,6 +74,35 @@ namespace Tp
                         SIGNAL(finished(Tp::PendingOperation *)),
                         SLOT(onAccountReady(Tp::PendingOperation *)));
             }
+            
+            connect(accountPtr.data(),
+                    SIGNAL(statusChanged(Tp::ConnectionStatus,
+                    Tp::ConnectionStatusReason, const QString &, const QVariantMap &)),
+                    SLOT(onAccountStatusChanged(statusChanged(Tp::ConnectionStatus,
+                    Tp::ConnectionStatusReason, const QString &, const QVariantMap &))));
+        }
+    }
+
+    void ContactsListModel::onAccountStatusChanged(Tp::ConnectionStatus status,
+            Tp::ConnectionStatusReason statusReason,
+            const QString &error, const QVariantMap &errorDetails)
+    {
+        if(!error.isEmpty()) {
+            qWarning("connection error: %s", qPrintable(error));
+        }
+
+        if(status == Tp::ConnectionStatusConnected) {
+            Features features;
+            features << Account::FeatureCore
+                << Account::FeatureAvatar
+                << Account::FeatureProtocolInfo
+                << Account::FeatureCapabilities
+                << Account::FeatureProfile;
+
+            Tp::Account * account = qobject_cast<Tp::Account*>(sender());
+            connect(account->becomeReady(features),
+                        SIGNAL(finished(Tp::PendingOperation *)),
+                        SLOT(onAccountReady(Tp::PendingOperation *)));
         }
     }
 
@@ -94,7 +123,9 @@ namespace Tp
 
     void ContactsListModel::onPresencePublicationRequested(const Tp::Contacts &contacts)
     {
-        
+        QList<Tp::ContactPtr> contactsList = contacts.toList();
+        Tp::ContactManager* contactManager = qobject_cast<Tp::ContactManager*>(sender());
+        upgradeContacts(contactManager, contactsList);
     }
 
     void ContactsListModel::addConnection(const ConnectionPtr &conn)
@@ -134,7 +165,11 @@ namespace Tp
                 SLOT(onPresencePublicationRequested(const Tp::Contacts &)));
 
         QList<Tp::ContactPtr> contacts = conn->contactManager()->allKnownContacts().toList();
-
+        upgradeContacts(conn->contactManager(), contacts);
+    }
+    
+    void ContactsListModel::upgradeContacts(ContactManager* contactManager, QList<Tp::ContactPtr> &contacts)
+    {
         //upgrade features for contacts
         QSet<Contact::Feature> features;
         features << Contact::FeatureAlias
@@ -145,7 +180,7 @@ namespace Tp
                 << Contact::FeatureInfo
                 << Contact::FeatureAvatarData;
 
-         connect(conn->contactManager()->upgradeContacts(contacts, features),
+        connect(contactManager->upgradeContacts(contacts, features),
                 SIGNAL(finished(Tp::PendingOperation *)),
                 SLOT(onContactsUpgraded(Tp::PendingOperation *)));
     }
@@ -207,9 +242,6 @@ namespace Tp
         case Qt::DisplayRole:
             data.setValue<QString>(contactItem->alias());
             break;
-//            case Qt::DecorationRole:
-//                data.setValue<QIcon>(contactItem->presenceIcon());
-            break;
         case ContactsListModel::IdRole:
             data.setValue<QString>(contactItem->id());
             break;
@@ -231,8 +263,8 @@ namespace Tp
         case ContactsListModel::PublishStateRole:
             data.setValue<qint64>(contactItem->publishState());
             break;
-        //case ContactsListModel::BlockedRole:
-        //    data.setValue(contactItem->block());
+        case ContactsListModel::BlockedRole:
+            data.setValue<bool>(contactItem->block());
             break;
         case ContactsListModel::GroupsRole:
             data.setValue<QStringList>(contactItem->groups());
