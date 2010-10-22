@@ -1,8 +1,6 @@
 # Set source files
 set(telepathy_qt4_ui_SRCS
-    abstract-tree-item.cpp
     account-model.cpp
-    contact-item.cpp
     contacts-list-model.cpp
     conversation-item.cpp
     conversation-model.cpp
@@ -11,7 +9,6 @@ set(telepathy_qt4_ui_SRCS
 set(telepathy_qt4_ui_MOC_SRCS
     abstract-tree-item.h
     account-model.h
-    contact-item.h
     contacts-list-model.h
     conversation-item.h
     conversation-model.h
