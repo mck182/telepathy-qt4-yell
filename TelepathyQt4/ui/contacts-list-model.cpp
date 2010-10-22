@@ -94,7 +94,7 @@ namespace Tp
 
     void ContactsListModel::onPresencePublicationRequested(const Tp::Contacts &contacts)
     {
-
+        
     }
 
     void ContactsListModel::addConnection(const ConnectionPtr &conn)
@@ -162,7 +162,7 @@ namespace Tp
 
         //add items to model
         beginInsertRows(QModelIndex(), 0, contacts.count() - 1);
-        mContacts = contacts;
+        mContacts.append(contacts);
         endInsertRows();
         emit contactCountChanged();
     }
