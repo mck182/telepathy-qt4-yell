@@ -62,6 +62,8 @@ public:
 
     void addConnection(const Tp::ConnectionPtr &conn);
     void removeConnection(const Tp::ConnectionPtr &conn);
+    
+    ContactPtr contactForIndex(const QModelIndex &index) const;
 
 Q_SIGNALS:
     void contactCountChanged(void);

@@ -273,5 +273,10 @@ namespace Tp
         }
         return data;
     }
+    
+    ContactPtr ContactsListModel::contactForIndex(const QModelIndex &index) const
+    {
+        return mContacts.at(index.row());
+    }
 }
 
