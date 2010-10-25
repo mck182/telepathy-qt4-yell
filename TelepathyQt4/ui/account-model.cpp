@@ -29,9 +29,16 @@ AccountModel::AccountModel(const Tp::AccountManagerPtr &am, QObject *parent)
     : QAbstractListModel(parent)
     , mAM(am)
 {
-    connect(mAM->becomeReady(),
-            SIGNAL(finished(Tp::PendingOperation *)),
-            SLOT(onAMReady(Tp::PendingOperation *)));
+    Q_ASSERT(mAM->isReady());
+    mAccounts = mAM->allAccounts();
+    connect(mAM.data(),
+            SIGNAL(newAccount(const Tp::AccountPtr &)),
+            SLOT(onNewAccount(const Tp::AccountPtr &)));
+
+    foreach (Tp::AccountPtr account, mAccounts) {
+        setupAccount(account);
+    }
+
     QHash<int, QByteArray> roles;
     roles[ValidRole] = "valid";
     roles[EnabledRole] = "enabled";
@@ -53,24 +60,6 @@ AccountModel::AccountModel(const Tp::AccountManagerPtr &am, QObject *parent)
 
 AccountModel::~AccountModel()
 {
-}
-
-void AccountModel::onAMReady(Tp::PendingOperation *)
-{
-    QList<Tp::AccountPtr> accounts = mAM->allAccounts();
-    beginInsertRows(QModelIndex(), 0, accounts.count() - 1);
-    mAccounts = accounts;
-    endInsertRows();
-
-    emit accountCountChanged();
-
-    connect(mAM.data(),
-            SIGNAL(newAccount(const Tp::AccountPtr &)),
-            SLOT(onNewAccount(const Tp::AccountPtr &)));
-
-    foreach (Tp::AccountPtr account, mAccounts) {
-        setupAccount(account);
-    }
 }
 
 void AccountModel::setupAccount(const Tp::AccountPtr &account)

@@ -22,10 +22,12 @@
 #include <QHBoxLayout>
 #include <QDeclarativeContext>
 #include <QDeclarativeEngine>
-#include <qdeclarative.h>
 #include <QDeclarativeView>
+
 #include <TelepathyQt4/ui/AccountModel>
 #include <TelepathyQt4/ui/ContactsListModel>
+
+#include "accountwindow.h"
 
 int main(int argc, char** argv)
 {
@@ -33,24 +35,10 @@ int main(int argc, char** argv)
 
     Tp::registerTypes();
 
-    Tp::AccountManagerPtr am(Tp::AccountManager::create());
-    Tp::AccountModel* model = new Tp::AccountModel(am);
-    Tp::ContactsListModel* contactsModel = new Tp::ContactsListModel(am);
+    AccountWindow *main = new AccountWindow;
 
-    QWidget main;
-    QHBoxLayout* layout = new QHBoxLayout(&main);
-
-    QDeclarativeView* view = new QDeclarativeView(&main);
-    view->setResizeMode(QDeclarativeView::SizeRootObjectToView);
-
-    layout->addWidget(view);
-
-    view->rootContext()->setContextProperty(QString::fromLatin1("accountsModel"), model);
-    view->rootContext()->setContextProperty(QString::fromLatin1("contactsListModel"), contactsModel);
-    view->setSource(QUrl::fromLocalFile(QString::fromLatin1("account-view.qml")));
-
-    main.resize(500, 500);
-    main.show();
+    main->resize(500, 500);
+    main->show();
 
     app.exec();
 }

@@ -1,7 +1,9 @@
 set(telepathy_qt4_ui_examples_accounts_SRCS
-    accounts.cpp)
+    accounts.cpp
+    accountwindow.cpp)
 
-set(telepathy_qt4_ui_examples_accounts_MOC_SRCS)
+set(telepathy_qt4_ui_examples_accounts_MOC_SRCS
+    accountwindow.h)
 
 tpqt4_generate_mocs(${telepathy_qt4_ui_examples_accounts_MOC_SRCS})
 

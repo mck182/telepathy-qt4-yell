@@ -90,7 +90,6 @@ private:
 
 private Q_SLOTS:
 
-    void onAMReady(Tp::PendingOperation *);
     void onNewAccount(const Tp::AccountPtr &account);
     void onAccountChanged();
     void onAccountRemoved();
