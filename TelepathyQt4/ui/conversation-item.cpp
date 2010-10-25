@@ -24,14 +24,16 @@
 
 namespace Tp {
 
-ConversationItem::ConversationItem(const ContactPtr &sender,
+ConversationItem::ConversationItem(const ContactPtr &contact,
                                    const QDateTime &time,
                                    const QString &text,
+                                   Type type,
                                    QObject *parent)
     : QObject(parent)
-    , mSender(sender)
+    , mContact(contact)
     , mTime(time.isValid() ? time : QDateTime::currentDateTime())
     , mText(text)
+    , mType(type)
 {
 }
 
@@ -39,9 +41,9 @@ ConversationItem::~ConversationItem()
 {
 }
 
-ContactPtr ConversationItem::sender() const
+ContactPtr ConversationItem::contact() const
 {
-    return mSender;
+    return mContact;
 }
 
 QDateTime ConversationItem::time() const
@@ -52,6 +54,11 @@ QDateTime ConversationItem::time() const
 QString ConversationItem::text() const
 {
     return mText;
+}
+
+ConversationItem::Type ConversationItem::type() const
+{
+    return mType;
 }
 
 }

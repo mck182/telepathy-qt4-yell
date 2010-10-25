@@ -51,9 +51,10 @@ ConversationModel::ConversationModel(const ContactPtr &self, const TextChannelPt
     
     QHash<int, QByteArray> roles;
     roles[TextRole] = "text";
-    roles[SenderRole] = "sender";
-    roles[SenderAvatarRole] = "senderAvatar";
+    roles[ContactRole] = "contact";
+    roles[ContactAvatarRole] = "contactAvatar";
     roles[TimeRole] = "time";
+    roles[TypeRole] = "type";
     setRoleNames(roles);
 }
 
@@ -75,12 +76,21 @@ QVariant ConversationModel::data(const QModelIndex &index, int role) const
     switch (role) {
     case TextRole:
         return item->text();
-    case SenderRole:
-        return item->sender()->alias();
-    case SenderAvatarRole:
-        return item->sender()->avatarData().fileName;
+    case ContactRole:
+        return item->contact()->alias();
+    case ContactAvatarRole:
+        return item->contact()->avatarData().fileName;
     case TimeRole:
         return item->time();
+    case TypeRole:
+        switch (item->type()) {
+        case ConversationItem::MESSAGE:
+            return QString::fromLatin1("message");
+        case ConversationItem::EVENT:
+            return QString::fromLatin1("event");
+        default:
+            return QString();
+        }
     default:
         return QVariant();
     }
@@ -94,7 +104,8 @@ int ConversationModel::rowCount(const QModelIndex &parent) const
 
 void ConversationModel::sendMessage(const QString& text)
 {
-    ConversationItem *item = new ConversationItem(mSelf, QDateTime::currentDateTime(), text, this);
+    ConversationItem *item = new ConversationItem(mSelf, QDateTime::currentDateTime(), 
+                                                  text, ConversationItem::MESSAGE, this);
     addItem(item);
 
     mChannel->send(item->text());
@@ -113,7 +124,8 @@ void ConversationModel::onChannelReady(Tp::PendingOperation *op)
 
 void ConversationModel::onMessageReceived(const Tp::ReceivedMessage &message)
 {
-    ConversationItem *item = new ConversationItem(message.sender(), message.sent(), message.text(), this);
+    ConversationItem *item = new ConversationItem(message.sender(), message.sent(), 
+                                                  message.text(), ConversationItem::MESSAGE, this);
     addItem(item);
 }
 
@@ -125,8 +137,9 @@ void ConversationModel::onChatStateChanged(const Tp::ContactPtr &contact, Channe
     }
 
     if (state == ChannelChatStateGone) {
-        QString message = QString::fromLatin1("left the chat");
-        ConversationItem *item = new ConversationItem(contact, QDateTime::currentDateTime(), message);
+        QString message = QString::fromLatin1("%1 left the chat").arg(contact->alias());
+        ConversationItem *item = new ConversationItem(contact, QDateTime::currentDateTime(), message,
+                                                      ConversationItem::EVENT, this);
         addItem(item);
     }
 }

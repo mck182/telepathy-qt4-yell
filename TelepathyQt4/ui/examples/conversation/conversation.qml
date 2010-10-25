@@ -18,16 +18,24 @@ Rectangle {
                 anchors.left: parent.left
                 anchors.top: parent.top
 
-                source: model.senderAvatar
+                source: model.contactAvatar
             }
             Text {
                 id: message
                 anchors.left: avatar.right
                 anchors.leftMargin: 4
                 anchors.top: parent.top
+                font.italic: model.type == "event"
                 text: {
                     var time = Qt.formatTime(model.time, "hh:mm:ss");
-                    "[" + time + "] " + model.sender + ": " + model.text;
+                    var message;
+                    if (model.type == "message") {
+                        message = model.contact + ": " + model.text;
+                    }
+                    else {
+                        message = model.text;
+                    }
+                    "[" + time + "] " + message;
                 }
             }
         }

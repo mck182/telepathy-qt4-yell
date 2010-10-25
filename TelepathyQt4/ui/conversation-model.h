@@ -40,9 +40,10 @@ class TELEPATHY_QT4_EXPORT ConversationModel : public QAbstractListModel
 
     enum Role {
         TextRole = Qt::UserRole,
-        SenderRole,
-        SenderAvatarRole,
-        TimeRole
+        ContactRole,
+        ContactAvatarRole,
+        TimeRole,
+        TypeRole
     };
 
 public:

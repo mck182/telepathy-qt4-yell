@@ -33,19 +33,26 @@ class TELEPATHY_QT4_EXPORT ConversationItem : public QObject
     Q_OBJECT
 
 public:
-    ConversationItem(const ContactPtr &sender, const QDateTime &time, 
-            const QString &text, QObject *parent = 0);
+    enum Type {
+        MESSAGE,
+        EVENT
+    };
+
+    ConversationItem(const ContactPtr &contact, const QDateTime &time, 
+            const QString &text, Type type, QObject *parent = 0);
     virtual ~ConversationItem();
 
-    ContactPtr sender() const;
+    ContactPtr contact() const;
     QDateTime time() const;
     QString text() const;
+    Type type() const;
 
 private:
-
-    ContactPtr mSender;
+    
+    ContactPtr mContact;
     QDateTime mTime;
     QString mText;
+    Type mType;
 };
 
 }
