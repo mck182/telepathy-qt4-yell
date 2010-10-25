@@ -305,4 +305,15 @@ void AccountModel::setAccountNickname(int row, const QString &value)
     emit dataChanged(index(row), index(row));
 }
 
+void AccountModel::setAccountPresence(int row, int type, const QString &status, const QString &statusMessage)
+{
+    AccountPtr account = mAccounts[row];
+    SimplePresence presence;
+    presence.type = type;
+    presence.status = status;
+    presence.statusMessage = statusMessage;
+    account->setRequestedPresence(presence);
+    emit dataChanged(index(row), index(row));
+}
+
 }
