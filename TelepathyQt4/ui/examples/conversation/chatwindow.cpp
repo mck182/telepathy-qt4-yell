@@ -39,7 +39,7 @@ ChatWindow::ChatWindow(QWidget *parent)
     resize(800, 500);
 }
 
-void ChatWindow::initialize(const Tp::ContactPtr &self, const Tp::TextChannelPtr &channel)
+void ChatWindow::initialize(Tp::ConversationModel *model)
 {
     QVBoxLayout *layout = new QVBoxLayout(this);
 
@@ -49,7 +49,7 @@ void ChatWindow::initialize(const Tp::ContactPtr &self, const Tp::TextChannelPtr
     layout->addWidget(mConversation);
     layout->addWidget(mInput);
 
-    mModel.reset(new Tp::ConversationModel(self, channel));
+    mModel.reset(model);
     mConversation->rootContext()->setContextProperty(QString::fromLatin1("conversationModel"),
                                                      mModel.data());
     mConversation->setSource(QUrl::fromLocalFile(QString::fromLatin1("conversation.qml")));
@@ -57,10 +57,74 @@ void ChatWindow::initialize(const Tp::ContactPtr &self, const Tp::TextChannelPtr
     connect(mInput, SIGNAL(returnPressed()), SLOT(onReturnPressed()));
 
     show();
-    mContext->setFinished();
 }
 
-void ChatWindow::initializeConnection(const Tp::ConnectionPtr &connection)
+
+void ChatWindow::handleChannels(const Tp::MethodInvocationContextPtr<> &context,
+                                const Tp::AccountPtr &account,
+                                const Tp::ConnectionPtr &connection,
+                                const QList<Tp::ChannelPtr> &channels,
+                                const QList<Tp::ChannelRequestPtr> &requestsSatisfied,
+                                const QDateTime &userActionTime,
+                                const QVariantMap &handlerInfo)
+{
+    if (channels.size() == 1) {
+        Tp::TextChannelPtr channel = Tp::TextChannelPtr::dynamicCast(channels[0]);
+        TelepathyInitializer *initializer = new TelepathyInitializer(
+            connection, channel, context);
+        connect(initializer,
+                SIGNAL(finished(Tp::ConversationModel *)),
+                SLOT(initialize(Tp::ConversationModel *)));
+        initializer->run();
+    }
+    else {
+        qDebug() << "more than 1 channel";
+    }
+}
+
+void ChatWindow::onReturnPressed()
+{
+    if (mModel) {
+        mModel->sendMessage(mInput->text());
+        mInput->setText(QString());
+    }
+}
+
+TelepathyInitializer::TelepathyInitializer(const Tp::ConnectionPtr &connection,
+                                           const Tp::TextChannelPtr &channel,
+                                           const Tp::MethodInvocationContextPtr<> &context)
+    : mConnection(connection)
+    , mChannel(channel)
+    , mContext(context)
+    , mModel(0)
+{
+}
+
+void TelepathyInitializer::run()
+{
+    initializeConnection();
+}
+
+void TelepathyInitializer::onContactsUpgraded(Tp::PendingOperation *)
+{
+    Tp::ConversationModel *model =
+        new Tp::ConversationModel(mConnection->selfContact(), mChannel);
+    emit finished(model);
+    mContext->setFinished();
+    deleteLater();
+}
+
+void TelepathyInitializer::onConnectionReady(Tp::PendingOperation *)
+{
+    initializeChannel();
+}
+
+void TelepathyInitializer::onChannelReady(Tp::PendingOperation *)
+{
+    initializeContacts();
+}
+
+void TelepathyInitializer::initializeConnection()
 {
     Tp::Features features;
     features << Tp::Connection::FeatureCore
@@ -69,13 +133,14 @@ void ChatWindow::initializeConnection(const Tp::ConnectionPtr &connection)
              << Tp::Connection::FeatureRoster
              << Tp::Connection::FeatureRosterGroups
              << Tp::Connection::FeatureAccountBalance;
-    connect(connection->becomeReady(features),
+    connect(mConnection->becomeReady(features),
             SIGNAL(finished(Tp::PendingOperation *)),
             SLOT(onConnectionReady(Tp::PendingOperation *)));
 }
 
-void ChatWindow::initializeContacts(Tp::ContactManager *contactManager)
+void TelepathyInitializer::initializeContacts()
 {
+    Tp::ContactManager *contactManager = mConnection->contactManager();
     QList<Tp::ContactPtr> contacts = contactManager->allKnownContacts().toList();
     contacts.append(mConnection->selfContact());
 
@@ -93,41 +158,14 @@ void ChatWindow::initializeContacts(Tp::ContactManager *contactManager)
             SLOT(onContactsUpgraded(Tp::PendingOperation *)));
 }
 
-void ChatWindow::handleChannels(const Tp::MethodInvocationContextPtr<> &context,
-                                const Tp::AccountPtr &account,
-                                const Tp::ConnectionPtr &connection,
-                                const QList<Tp::ChannelPtr> &channels,
-                                const QList<Tp::ChannelRequestPtr> &requestsSatisfied,
-                                const QDateTime &userActionTime,
-                                const QVariantMap &handlerInfo)
+void TelepathyInitializer::initializeChannel()
 {
-    qDebug() << "handling channel";
-    if (channels.size() == 1) {
-        mChannel = Tp::TextChannelPtr::dynamicCast(channels[0]);
-        mConnection = connection;
-        mContext = context;
-        initializeConnection(mConnection);
-    }
-    else {
-        qDebug() << "more than 1 channel";
-    }
-}
-
-void ChatWindow::onReturnPressed()
-{
-    if (mModel) {
-        mModel->sendMessage(mInput->text());
-        mInput->setText(QString());
-    }
-}
-
-void ChatWindow::onContactsUpgraded(Tp::PendingOperation *)
-{
-    initialize(mConnection->selfContact(), mChannel);
-}
-
-void ChatWindow::onConnectionReady(Tp::PendingOperation *)
-{
-    initializeContacts(mConnection->contactManager());
+    Tp::Features features;
+    features << Tp::TextChannel::FeatureMessageQueue
+             << Tp::TextChannel::FeatureChatState
+             << Tp::Channel::FeatureCore;
+    connect(mChannel->becomeReady(features),
+            SIGNAL(finished(Tp::PendingOperation *)),
+            SLOT(onChannelReady(Tp::PendingOperation *)));
 }
 

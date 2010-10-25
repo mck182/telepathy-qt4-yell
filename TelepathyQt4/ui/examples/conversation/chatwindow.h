@@ -50,22 +50,14 @@ public:
 
 private Q_SLOTS:
 
+    void initialize(Tp::ConversationModel *model);
     void onReturnPressed();
-    void onConnectionReady(Tp::PendingOperation *);
-    void onContactsUpgraded(Tp::PendingOperation *);
 
 private:
 
     QScopedPointer<Tp::ConversationModel> mModel;
-    Tp::ConnectionPtr mConnection;
-    Tp::TextChannelPtr mChannel;
-    Tp::MethodInvocationContextPtr<> mContext;
     QDeclarativeView *mConversation;
     QLineEdit *mInput;
-
-    void initialize(const Tp::ContactPtr &self, const Tp::TextChannelPtr &channel);
-    void initializeConnection(const Tp::ConnectionPtr &connection);
-    void initializeContacts(Tp::ContactManager *contactManager);
 
     Tp::ChannelClassList channelClassList() {
         Tp::ChannelClassList filters;
@@ -85,8 +77,42 @@ private:
 
         return filters;
     }
-
 };
+
+class TelepathyInitializer : public QObject
+{
+    Q_OBJECT
+
+public:
+
+    TelepathyInitializer(const Tp::ConnectionPtr &connection,
+                         const Tp::TextChannelPtr &channel,
+                         const Tp::MethodInvocationContextPtr<> &context);
+
+    void run();
+
+Q_SIGNALS:
+
+    void finished(Tp::ConversationModel *);
+
+private:
+
+    void initializeConnection();
+    void initializeChannel();
+    void initializeContacts();
+
+    Tp::ConnectionPtr mConnection;
+    Tp::TextChannelPtr mChannel;
+    Tp::MethodInvocationContextPtr<> mContext;
+    Tp::ConversationModel *mModel;
+
+private Q_SLOTS:
+
+    void onConnectionReady(Tp::PendingOperation *);
+    void onChannelReady(Tp::PendingOperation *);
+    void onContactsUpgraded(Tp::PendingOperation *);
+};
+
 
 #endif // _TelepathyQt4_chatwindow_h_HEADER_GUARD_
 

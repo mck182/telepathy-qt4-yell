@@ -35,13 +35,11 @@ ConversationModel::ConversationModel(const ContactPtr &self, const TextChannelPt
     : mSelf(self)
     , mChannel(channel)
 {
-    Features features;
-    features << TextChannel::FeatureMessageQueue
-             << TextChannel::FeatureChatState
-             << Channel::FeatureCore;
-    connect(mChannel->becomeReady(features),
-            SIGNAL(finished(Tp::PendingOperation *)),
-            SLOT(onChannelReady(Tp::PendingOperation *)));
+    // display messages already in queue
+    foreach (Tp::ReceivedMessage message, mChannel->messageQueue()) {
+        onMessageReceived(message);
+    }
+
     connect(mChannel.data(),
             SIGNAL(messageReceived(const Tp::ReceivedMessage &)),
             SLOT(onMessageReceived(const Tp::ReceivedMessage &)));
@@ -127,6 +125,8 @@ void ConversationModel::onMessageReceived(const Tp::ReceivedMessage &message)
     ConversationItem *item = new ConversationItem(message.sender(), message.sent(), 
                                                   message.text(), ConversationItem::MESSAGE, this);
     addItem(item);
+
+    mChannel->acknowledge(QList<Tp::ReceivedMessage>() << message);
 }
 
 void ConversationModel::onChatStateChanged(const Tp::ContactPtr &contact, ChannelChatState state)
