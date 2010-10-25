@@ -31,8 +31,9 @@
 namespace Tp
 {
 
-ConversationModel::ConversationModel(const TextChannelPtr &channel)
-    : mChannel(channel)
+ConversationModel::ConversationModel(const ContactPtr &self, const TextChannelPtr &channel)
+    : mSelf(self)
+    , mChannel(channel)
 {
     Features features;
     features << TextChannel::FeatureMessageQueue
@@ -75,9 +76,9 @@ QVariant ConversationModel::data(const QModelIndex &index, int role) const
     case TextRole:
         return item->text();
     case SenderRole:
-        return item->sender() ? item->sender()->id() : QString::fromLatin1("You");
+        return item->sender()->alias();
     case SenderAvatarRole:
-        return item->sender() ? item->sender()->avatarData().fileName : QString();
+        return item->sender()->avatarData().fileName;
     case TimeRole:
         return item->time();
     default:
@@ -93,7 +94,7 @@ int ConversationModel::rowCount(const QModelIndex &parent) const
 
 void ConversationModel::sendMessage(const QString& text)
 {
-    ConversationItem *item = new ConversationItem(ContactPtr(), QDateTime::currentDateTime(), text, this);
+    ConversationItem *item = new ConversationItem(mSelf, QDateTime::currentDateTime(), text, this);
     addItem(item);
 
     mChannel->send(item->text());
@@ -118,6 +119,11 @@ void ConversationModel::onMessageReceived(const Tp::ReceivedMessage &message)
 
 void ConversationModel::onChatStateChanged(const Tp::ContactPtr &contact, ChannelChatState state)
 {
+    // ignore events originating from self
+    if (contact == mSelf) {
+        return;
+    }
+
     if (state == ChannelChatStateGone) {
         QString message = QString::fromLatin1("left the chat");
         ConversationItem *item = new ConversationItem(contact, QDateTime::currentDateTime(), message);

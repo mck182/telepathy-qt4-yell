@@ -39,7 +39,7 @@ ChatWindow::ChatWindow(QWidget *parent)
     resize(800, 500);
 }
 
-void ChatWindow::initialize(const Tp::TextChannelPtr &channel)
+void ChatWindow::initialize(const Tp::ContactPtr &self, const Tp::TextChannelPtr &channel)
 {
     QVBoxLayout *layout = new QVBoxLayout(this);
 
@@ -49,7 +49,7 @@ void ChatWindow::initialize(const Tp::TextChannelPtr &channel)
     layout->addWidget(mConversation);
     layout->addWidget(mInput);
 
-    mModel.reset(new Tp::ConversationModel(channel));
+    mModel.reset(new Tp::ConversationModel(self, channel));
     mConversation->rootContext()->setContextProperty(QString::fromLatin1("conversationModel"),
                                                      mModel.data());
     mConversation->setSource(QUrl::fromLocalFile(QString::fromLatin1("conversation.qml")));
@@ -77,7 +77,7 @@ void ChatWindow::initializeConnection(const Tp::ConnectionPtr &connection)
 void ChatWindow::initializeContacts(Tp::ContactManager *contactManager)
 {
     QList<Tp::ContactPtr> contacts = contactManager->allKnownContacts().toList();
-    qDebug() << contacts.size() << "known contacts";
+    contacts.append(mConnection->selfContact());
 
     QSet<Tp::Contact::Feature> features;
     features << Tp::Contact::FeatureAlias
@@ -123,7 +123,7 @@ void ChatWindow::onReturnPressed()
 
 void ChatWindow::onContactsUpgraded(Tp::PendingOperation *)
 {
-    initialize(mChannel);
+    initialize(mConnection->selfContact(), mChannel);
 }
 
 void ChatWindow::onConnectionReady(Tp::PendingOperation *)

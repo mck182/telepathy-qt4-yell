@@ -63,7 +63,7 @@ private:
     QDeclarativeView *mConversation;
     QLineEdit *mInput;
 
-    void initialize(const Tp::TextChannelPtr &channel);
+    void initialize(const Tp::ContactPtr &self, const Tp::TextChannelPtr &channel);
     void initializeConnection(const Tp::ConnectionPtr &connection);
     void initializeContacts(Tp::ContactManager *contactManager);
 
