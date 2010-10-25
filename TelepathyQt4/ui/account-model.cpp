@@ -255,32 +255,21 @@ bool AccountModel::setData(const QModelIndex &index, const QVariant &value, int 
     if (index.isValid()) {
         switch (role) {
         case EnabledRole:
-            accountForIndex(index)->setEnabled(value.toBool());
+            setAccountEnabled(index.row(), value.toBool());
             break;
         case RequestedPresenceRole:
-        {
-            AccountPtr account = accountForIndex(index);
-            SimplePresence presence = account->currentPresence();
-            presence.status = value.toString();
-            account->setRequestedPresence(presence);
+            setAccountStatus(index.row(), value.toString());
             break;
-        }
         case RequestedStatusMessage:
-        {
-            AccountPtr account = accountForIndex(index);
-            SimplePresence presence = account->currentPresence();
-            presence.statusMessage = value.toString();
-            account->setRequestedPresence(presence);
+            setAccountStatusMessage(index.row(), value.toString());
             break;
-        }
         case NicknameRole:
-            accountForIndex(index)->setNickname(value.toString());
+            setAccountNickname(index.row(), value.toString());
             break;
         default:
             return false;
         }
 
-        emit dataChanged(index, index);
         return true;
     }
 
@@ -289,22 +278,32 @@ bool AccountModel::setData(const QModelIndex &index, const QVariant &value, int 
 
 void AccountModel::setAccountEnabled(int row, bool value)
 {
-    setData(index(row), value, EnabledRole);
+    mAccounts[row]->setEnabled(value);
+    emit dataChanged(index(row), index(row));
 }
 
 void AccountModel::setAccountStatus(int row, const QString &value)
 {
-    setData(index(row), value, RequestedPresenceRole);
+    AccountPtr account = mAccounts[row];
+    SimplePresence presence = account->currentPresence();
+    presence.status = value;
+    account->setRequestedPresence(presence);
+    emit dataChanged(index(row), index(row));
 }
 
 void AccountModel::setAccountStatusMessage(int row, const QString& value)
 {
-    setData(index(row), value, RequestedStatusMessage);
+    AccountPtr account = mAccounts[row];
+    SimplePresence presence = account->currentPresence();
+    presence.statusMessage = value;
+    account->setRequestedPresence(presence);
+    emit dataChanged(index(row), index(row));
 }
 
 void AccountModel::setAccountNickname(int row, const QString &value)
 {
-    setData(index(row), value, NicknameRole);
+    mAccounts[row]->setNickname(value);
+    emit dataChanged(index(row), index(row));
 }
 
 }
