@@ -141,8 +141,8 @@ void TelepathyInitializer::initializeConnection()
 void TelepathyInitializer::initializeContacts()
 {
     Tp::ContactManager *contactManager = mConnection->contactManager();
-    QList<Tp::ContactPtr> contacts = contactManager->allKnownContacts().toList();
-    contacts.append(mConnection->selfContact());
+
+    QList<Tp::ContactPtr> contacts = mChannel->groupContacts().toList();
 
     QSet<Tp::Contact::Feature> features;
     features << Tp::Contact::FeatureAlias
