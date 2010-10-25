@@ -36,6 +36,7 @@ ConversationModel::ConversationModel(const TextChannelPtr &channel)
 {
     Features features;
     features << TextChannel::FeatureMessageQueue
+             << TextChannel::FeatureChatState
              << Channel::FeatureCore;
     connect(mChannel->becomeReady(features),
             SIGNAL(finished(Tp::PendingOperation *)),
@@ -43,6 +44,9 @@ ConversationModel::ConversationModel(const TextChannelPtr &channel)
     connect(mChannel.data(),
             SIGNAL(messageReceived(const Tp::ReceivedMessage &)),
             SLOT(onMessageReceived(const Tp::ReceivedMessage &)));
+    connect(mChannel.data(),
+            SIGNAL(chatStateChanged(Tp::ContactPtr, ChannelChatState)),
+            SLOT(onChatStateChanged(Tp::ContactPtr, ChannelChatState)));
     
     QHash<int, QByteArray> roles;
     roles[TextRole] = "text";
@@ -110,6 +114,15 @@ void ConversationModel::onMessageReceived(const Tp::ReceivedMessage &message)
 {
     ConversationItem *item = new ConversationItem(message.sender(), message.sent(), message.text(), this);
     addItem(item);
+}
+
+void ConversationModel::onChatStateChanged(const Tp::ContactPtr &contact, ChannelChatState state)
+{
+    if (state == ChannelChatStateGone) {
+        QString message = QString::fromLatin1("left the chat");
+        ConversationItem *item = new ConversationItem(contact, QDateTime::currentDateTime(), message);
+        addItem(item);
+    }
 }
 
 }

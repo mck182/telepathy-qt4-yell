@@ -61,10 +61,14 @@ private:
 
     void addItem(const ConversationItem *item);
 
+    // work around moc namespace limitations
+    typedef Tp::ChannelChatState ChannelChatState;
+
 private Q_SLOTS:
 
     void onChannelReady(Tp::PendingOperation *op);
     void onMessageReceived(const Tp::ReceivedMessage &message);
+    void onChatStateChanged(const Tp::ContactPtr &contact, ChannelChatState state);
 };
 
 }
