@@ -78,8 +78,8 @@ namespace Tp
             connect(accountPtr.data(),
                     SIGNAL(statusChanged(Tp::ConnectionStatus,
                     Tp::ConnectionStatusReason, const QString &, const QVariantMap &)),
-                    SLOT(onAccountStatusChanged(statusChanged(Tp::ConnectionStatus,
-                    Tp::ConnectionStatusReason, const QString &, const QVariantMap &))));
+                    SLOT(onAccountStatusChanged(Tp::ConnectionStatus,
+                    Tp::ConnectionStatusReason, const QString &, const QVariantMap &)));
         }
     }
 
