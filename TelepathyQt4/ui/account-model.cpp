@@ -20,16 +20,63 @@
 
 #include <TelepathyQt4/ui/AccountModel>
 #include "TelepathyQt4/ui/_gen/account-model.moc.hpp"
+
 #include <TelepathyQt4/PendingReady>
+#include <TelepathyQt4/ContactManager>
 
 namespace Tp
 {
+
+class TreeNode {
+
+public:
+
+    TreeNode()
+        : mParent(0)
+    { }
+
+    ~TreeNode()
+    {
+        foreach (TreeNode *child, mChildren) {
+            delete child;
+        }
+    }
+
+    TreeNode *childAt(int index) const
+    {
+        return mChildren[index];
+    }
+
+    void addChild(TreeNode *node)
+    {
+        // takes ownership of node
+        mChildren.append(node);
+        node->mParent = this;
+    }
+
+    int indexOf(TreeNode *node) const {
+        return mChildren.indexOf(node);
+    }
+
+    int size() const {
+        return mChildren.size();
+    }
+
+    TreeNode *parent() const { return mParent; }
+
+private:
+    
+    QList<TreeNode *> mChildren;
+    TreeNode *mParent;
+
+};
 
 AccountModel::AccountModel(const Tp::AccountManagerPtr &am, QObject *parent)
     : QAbstractItemModel(parent)
     , mAM(am)
 {
     Q_ASSERT(mAM->isReady());
+    mTree = new TreeNode;
     mAccounts = mAM->allAccounts();
     connect(mAM.data(),
             SIGNAL(newAccount(const Tp::AccountPtr &)),
@@ -60,10 +107,21 @@ AccountModel::AccountModel(const Tp::AccountManagerPtr &am, QObject *parent)
 
 AccountModel::~AccountModel()
 {
+    delete mTree;
 }
 
 void AccountModel::setupAccount(const Tp::AccountPtr &account)
 {
+    TreeNode *accountNode = new TreeNode;
+    mTree->addChild(new TreeNode);
+    if (account->haveConnection()) {
+        ContactManager *manager = account->connection()->contactManager();
+        Q_ASSERT(manager);
+        foreach (ContactPtr contact, manager->allKnownContacts()) {
+            accountNode->addChild(new TreeNode);
+        }
+    }
+
     connect(account.data(),
             SIGNAL(removed()),
             SLOT(onAccountRemoved()));
@@ -135,6 +193,17 @@ int AccountModel::rowOf(const Account *account)
     return -1;
 }
 
+ContactManager* AccountModel::contactManager(int row) const
+{
+    Tp::ConnectionPtr connection = mAccounts[row]->connection();
+    if (connection) {
+        return connection->contactManager();
+    }
+    else {
+        return 0;
+    }
+}
+
 void AccountModel::onNewAccount(const Tp::AccountPtr &account)
 {
     beginInsertRows(QModelIndex(), mAccounts.count(), mAccounts.count());
@@ -188,14 +257,7 @@ int AccountModel::columnCount(const QModelIndex &parent) const
 
 int AccountModel::rowCount(const QModelIndex &parent) const
 {
-    if (!parent.isValid())
-    {
-        return mAccounts.count();
-    }
-    else
-    {
-        return 0;
-    }
+    return node(parent)->size();
 }
 
 QVariant AccountModel::data(const QModelIndex &index, int role) const
@@ -204,8 +266,7 @@ QVariant AccountModel::data(const QModelIndex &index, int role) const
         return QVariant();
     }
 
-    if (!index.parent().isValid())
-    {
+    if (!index.parent().isValid()) {
         if (index.row() >= mAccounts.count()) {
             return QVariant();
         }
@@ -245,6 +306,11 @@ QVariant AccountModel::data(const QModelIndex &index, int role) const
                 return account->connectionObjectPath();
             default:
                 return QVariant();
+        }
+    }
+    else {
+        if (role == Qt::DisplayRole) {
+            return QString::fromLatin1("test");
         }
     }
 
@@ -293,12 +359,32 @@ bool AccountModel::setData(const QModelIndex &index, const QVariant &value, int 
 
 QModelIndex AccountModel::index(int row, int column, const QModelIndex &parent) const
 {
-    return createIndex(row, column, mAccounts[row].data());
+    TreeNode *parentNode = node(parent);
+    return createIndex(row, column, parentNode->childAt(row));
 }
 
 QModelIndex AccountModel::parent(const QModelIndex &index) const
 {
+    if (!index.isValid()) {
+        return QModelIndex();
+    }
+
+    TreeNode *currentNode = node(index);
+    if (currentNode->parent()) {
+        TreeNode *grandparent = currentNode->parent()->parent();
+        if (grandparent) {
+            return createIndex(grandparent->indexOf(currentNode->parent()), 0, currentNode->parent());
+        }
+    }
+
+    // no parent or grandparent: return root node
     return QModelIndex();
+}
+
+TreeNode* AccountModel::node(const QModelIndex &index) const
+{
+    TreeNode *node = reinterpret_cast<TreeNode *>(index.internalPointer());
+    return node ? node : mTree;
 }
 
 void AccountModel::setAccountEnabled(int row, bool value)

@@ -88,9 +88,13 @@ private:
 
     Tp::AccountManagerPtr mAM;
     QList<Tp::AccountPtr> mAccounts;
+    class TreeNode *mTree;
+
+    class TreeNode *node(const QModelIndex &index) const;
 
     void setupAccount(const Tp::AccountPtr &account);
     int rowOf(const Account *account);
+    ContactManager *contactManager(int row) const;
 
 private Q_SLOTS:
 
