@@ -35,7 +35,7 @@ public:
         : mParent(0)
     { }
 
-    ~TreeNode()
+    virtual ~TreeNode()
     {
         foreach (TreeNode *child, mChildren) {
             delete child;
@@ -64,11 +64,64 @@ public:
 
     TreeNode *parent() const { return mParent; }
 
+    virtual QVariant data(int role) const { return QVariant(); }
+
 private:
     
     QList<TreeNode *> mChildren;
     TreeNode *mParent;
+};
 
+class AccountNode : public TreeNode {
+
+public:
+
+    AccountNode(const AccountPtr &account)
+        : mAccount(account)
+    { }
+
+    virtual QVariant data(int role) const
+    {
+        switch (role) {
+            case AccountModel::ValidRole:
+                return mAccount->isValid();
+            case AccountModel::EnabledRole:
+                return mAccount->isEnabled();
+            case AccountModel::ConnectionManagerRole:
+                return mAccount->cmName();
+            case AccountModel::ProtocolNameRole:
+                return mAccount->protocolName();
+            case AccountModel::DisplayNameRole:
+            case Qt::DisplayRole:
+                return mAccount->displayName();
+            case AccountModel::NicknameRole:
+                return mAccount->nickname();
+            case AccountModel::ConnectsAutomaticallyRole:
+                return mAccount->connectsAutomatically();
+            case AccountModel::ChangingPresenceRole:
+                return mAccount->isChangingPresence();
+            case AccountModel::AutomaticPresenceRole:
+                return mAccount->automaticPresence().status;
+            case AccountModel::CurrentPresenceRole:
+                return mAccount->currentPresence().status;
+            case AccountModel::CurrentStatusMessage:
+                return mAccount->currentPresence().statusMessage;
+            case AccountModel::RequestedPresenceRole:
+                return mAccount->requestedPresence().status;
+            case AccountModel::RequestedStatusMessage:
+                return mAccount->requestedPresence().statusMessage;
+            case AccountModel::ConnectionStatusRole:
+                return mAccount->connectionStatus();
+            case AccountModel::ConnectionRole:
+                return mAccount->connectionObjectPath();
+            default:
+                return QVariant();
+        }
+    }
+
+private:
+
+    AccountPtr mAccount;
 };
 
 AccountModel::AccountModel(const Tp::AccountManagerPtr &am, QObject *parent)
@@ -112,14 +165,14 @@ AccountModel::~AccountModel()
 
 void AccountModel::setupAccount(const Tp::AccountPtr &account)
 {
-    TreeNode *accountNode = new TreeNode;
-    mTree->addChild(new TreeNode);
+    TreeNode *accountNode = new AccountNode(account);
     if (account->haveConnection()) {
         ContactManager *manager = account->connection()->contactManager();
         foreach (ContactPtr contact, manager->allKnownContacts()) {
             accountNode->addChild(new TreeNode);
         }
     }
+    mTree->addChild(accountNode);
 
     connect(account.data(),
             SIGNAL(removed()),
@@ -264,56 +317,8 @@ QVariant AccountModel::data(const QModelIndex &index, int role) const
     if (!index.isValid()) {
         return QVariant();
     }
-
-    if (!index.parent().isValid()) {
-        if (index.row() >= mAccounts.count()) {
-            return QVariant();
-        }
-
-        Tp::AccountPtr account = mAccounts[index.row()];
-        switch (role) {
-            case ValidRole:
-                return account->isValid();
-            case EnabledRole:
-                return account->isEnabled();
-            case ConnectionManagerRole:
-                return account->cmName();
-            case ProtocolNameRole:
-                return account->protocolName();
-            case DisplayNameRole:
-            case Qt::DisplayRole:
-                return account->displayName();
-            case NicknameRole:
-                return account->nickname();
-            case ConnectsAutomaticallyRole:
-                return account->connectsAutomatically();
-            case ChangingPresenceRole:
-                return account->isChangingPresence();
-            case AutomaticPresenceRole:
-                return account->automaticPresence().status;
-            case CurrentPresenceRole:
-                return account->currentPresence().status;
-            case CurrentStatusMessage:
-                return account->currentPresence().statusMessage;
-            case RequestedPresenceRole:
-                return account->requestedPresence().status;
-            case RequestedStatusMessage:
-                return account->requestedPresence().statusMessage;
-            case ConnectionStatusRole:
-                return account->connectionStatus();
-            case ConnectionRole:
-                return account->connectionObjectPath();
-            default:
-                return QVariant();
-        }
-    }
-    else {
-        if (role == Qt::DisplayRole) {
-            return QString::fromLatin1("test");
-        }
-    }
-
-    return QVariant();
+    
+    return node(index)->data(role);
 }
 
 AccountPtr AccountModel::accountForIndex(const QModelIndex &index) const

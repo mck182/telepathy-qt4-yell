@@ -40,6 +40,8 @@ class TELEPATHY_QT4_EXPORT AccountModel : public QAbstractItemModel
     Q_OBJECT
     Q_PROPERTY(int accountCount READ accountCount NOTIFY accountCountChanged)
 
+public:
+
     enum Role {
       ValidRole = Qt::UserRole,
       EnabledRole,
@@ -57,8 +59,6 @@ class TELEPATHY_QT4_EXPORT AccountModel : public QAbstractItemModel
       ConnectionStatusRole,
       ConnectionRole
     };
-
-public:
 
     explicit AccountModel(const Tp::AccountManagerPtr &am, QObject *parent = 0);
     virtual ~AccountModel();
