@@ -116,7 +116,6 @@ void AccountModel::setupAccount(const Tp::AccountPtr &account)
     mTree->addChild(new TreeNode);
     if (account->haveConnection()) {
         ContactManager *manager = account->connection()->contactManager();
-        Q_ASSERT(manager);
         foreach (ContactPtr contact, manager->allKnownContacts()) {
             accountNode->addChild(new TreeNode);
         }

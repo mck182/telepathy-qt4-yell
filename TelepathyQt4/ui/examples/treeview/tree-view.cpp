@@ -21,8 +21,11 @@
 #include "tree-view.h"
 #include "TelepathyQt4/ui/examples/treeview/_gen/tree-view.moc.hpp"
 
-#include <TelepathyQt4/ui/AccountModel>
 #include <TelepathyQt4/PendingReady>
+#include <TelepathyQt4/PendingContacts>
+#include <TelepathyQt4/ContactManager>
+
+#include <TelepathyQt4/ui/AccountModel>
 
 #include <QTreeView>
 #include <QVBoxLayout>
@@ -72,7 +75,6 @@ Tp::AccountModel *TelepathyInitializer::accountModel() const
 
 void TelepathyInitializer::onAMReady(Tp::PendingOperation *)
 {
-    mAccountModel = new Tp::AccountModel(mAM);
     Tp::Features features;
     features << Tp::Account::FeatureCore
              << Tp::Account::FeatureAvatar
@@ -114,8 +116,28 @@ void TelepathyInitializer::onConnectionReady(Tp::PendingOperation *op)
     Tp::PendingReady *pr = qobject_cast<Tp::PendingReady *>(op);
     Tp::ConnectionPtr connection(qobject_cast<Tp::Connection *>(pr->object()));
 
+    Tp::ContactManager *manager = connection->contactManager();
+    QList<Tp::ContactPtr> contacts = manager->allKnownContacts().toList();
+
+    QSet<Tp::Contact::Feature> features;
+    features << Tp::Contact::FeatureAlias
+             << Tp::Contact::FeatureAvatarToken
+             << Tp::Contact::FeatureSimplePresence
+             << Tp::Contact::FeatureCapabilities
+             << Tp::Contact::FeatureLocation
+             << Tp::Contact::FeatureInfo
+             << Tp::Contact::FeatureAvatarData;
+    connect(manager->upgradeContacts(contacts, features),
+            SIGNAL(finished(Tp::PendingOperation *)),
+            SLOT(onContactsUpgraded(Tp::PendingOperation *)));
+}
+
+void TelepathyInitializer::onContactsUpgraded(Tp::PendingOperation *op)
+{
+    qDebug() << "contacts upgraded";
     numConnections--;
     if (numConnections <= 0) {
+        mAccountModel = new Tp::AccountModel(mAM);
         emit finished(this);
         deleteLater();
     }

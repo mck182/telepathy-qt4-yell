@@ -66,6 +66,7 @@ private Q_SLOTS:
     void onAMReady(Tp::PendingOperation *);
     void onAccountReady(Tp::PendingOperation *);
     void onConnectionReady(Tp::PendingOperation *);
+    void onContactsUpgraded(Tp::PendingOperation *);
 
 private:
     
