@@ -26,7 +26,7 @@ namespace Tp
 {
 
 AccountModel::AccountModel(const Tp::AccountManagerPtr &am, QObject *parent)
-    : QAbstractListModel(parent)
+    : QAbstractItemModel(parent)
     , mAM(am)
 {
     Q_ASSERT(mAM->isReady());
@@ -124,6 +124,17 @@ void AccountModel::setupAccount(const Tp::AccountPtr &account)
             SLOT(onAccountChanged()));
 }
 
+int AccountModel::rowOf(const Account *account)
+{
+    for (int i = 0; i < mAccounts.size(); i++) {
+        if (mAccounts[i].data() == account) {
+            return i;
+        }
+    }
+
+    return -1;
+}
+
 void AccountModel::onNewAccount(const Tp::AccountPtr &account)
 {
     beginInsertRows(QModelIndex(), mAccounts.count(), mAccounts.count());
@@ -170,10 +181,21 @@ int AccountModel::accountCount() const
     return mAccounts.count();
 }
 
+int AccountModel::columnCount(const QModelIndex &parent) const
+{
+    return 1;
+}
+
 int AccountModel::rowCount(const QModelIndex &parent) const
 {
-    Q_UNUSED(parent);
-    return mAccounts.count();
+    if (!parent.isValid())
+    {
+        return mAccounts.count();
+    }
+    else
+    {
+        return 0;
+    }
 }
 
 QVariant AccountModel::data(const QModelIndex &index, int role) const
@@ -182,46 +204,51 @@ QVariant AccountModel::data(const QModelIndex &index, int role) const
         return QVariant();
     }
 
-    if (index.row() >= mAccounts.count()) {
-        return QVariant();
+    if (!index.parent().isValid())
+    {
+        if (index.row() >= mAccounts.count()) {
+            return QVariant();
+        }
+
+        Tp::AccountPtr account = mAccounts[index.row()];
+        switch (role) {
+            case ValidRole:
+                return account->isValid();
+            case EnabledRole:
+                return account->isEnabled();
+            case ConnectionManagerRole:
+                return account->cmName();
+            case ProtocolNameRole:
+                return account->protocolName();
+            case DisplayNameRole:
+            case Qt::DisplayRole:
+                return account->displayName();
+            case NicknameRole:
+                return account->nickname();
+            case ConnectsAutomaticallyRole:
+                return account->connectsAutomatically();
+            case ChangingPresenceRole:
+                return account->isChangingPresence();
+            case AutomaticPresenceRole:
+                return account->automaticPresence().status;
+            case CurrentPresenceRole:
+                return account->currentPresence().status;
+            case CurrentStatusMessage:
+                return account->currentPresence().statusMessage;
+            case RequestedPresenceRole:
+                return account->requestedPresence().status;
+            case RequestedStatusMessage:
+                return account->requestedPresence().statusMessage;
+            case ConnectionStatusRole:
+                return account->connectionStatus();
+            case ConnectionRole:
+                return account->connectionObjectPath();
+            default:
+                return QVariant();
+        }
     }
 
-    Tp::AccountPtr account = mAccounts[index.row()];
-    switch (role) {
-        case ValidRole:
-            return account->isValid();
-        case EnabledRole:
-            return account->isEnabled();
-        case ConnectionManagerRole:
-            return account->cmName();
-        case ProtocolNameRole:
-            return account->protocolName();
-        case DisplayNameRole:
-        case Qt::DisplayRole:
-            return account->displayName();
-        case NicknameRole:
-            return account->nickname();
-        case ConnectsAutomaticallyRole:
-            return account->connectsAutomatically();
-        case ChangingPresenceRole:
-            return account->isChangingPresence();
-        case AutomaticPresenceRole:
-            return account->automaticPresence().status;
-        case CurrentPresenceRole:
-            return account->currentPresence().status;
-        case CurrentStatusMessage:
-            return account->currentPresence().statusMessage;
-        case RequestedPresenceRole:
-            return account->requestedPresence().status;
-        case RequestedStatusMessage:
-            return account->requestedPresence().statusMessage;
-        case ConnectionStatusRole:
-            return account->connectionStatus();
-        case ConnectionRole:
-            return account->connectionObjectPath();
-        default:
-            return QVariant();
-    }
+    return QVariant();
 }
 
 AccountPtr AccountModel::accountForIndex(const QModelIndex &index) const
@@ -235,7 +262,7 @@ Qt::ItemFlags AccountModel::flags(const QModelIndex &index) const
         return Qt::ItemIsEnabled;
     }
 
-    return QAbstractListModel::flags(index) | Qt::ItemIsEditable;
+    return QAbstractItemModel::flags(index) | Qt::ItemIsEditable;
 }
 
 bool AccountModel::setData(const QModelIndex &index, const QVariant &value, int role)
@@ -262,6 +289,16 @@ bool AccountModel::setData(const QModelIndex &index, const QVariant &value, int 
     }
 
     return false;
+}
+
+QModelIndex AccountModel::index(int row, int column, const QModelIndex &parent) const
+{
+    return createIndex(row, column, mAccounts[row].data());
+}
+
+QModelIndex AccountModel::parent(const QModelIndex &index) const
+{
+    return QModelIndex();
 }
 
 void AccountModel::setAccountEnabled(int row, bool value)

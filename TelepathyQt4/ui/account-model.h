@@ -35,7 +35,7 @@
 namespace Tp
 {
 
-class TELEPATHY_QT4_EXPORT AccountModel : public QAbstractListModel
+class TELEPATHY_QT4_EXPORT AccountModel : public QAbstractItemModel
 {
     Q_OBJECT
     Q_PROPERTY(int accountCount READ accountCount NOTIFY accountCountChanged)
@@ -64,11 +64,14 @@ public:
     virtual ~AccountModel();
 
     virtual int rowCount(const QModelIndex &parent = QModelIndex()) const;
+    virtual int columnCount(const QModelIndex &parent = QModelIndex()) const;
     QVariant data(const QModelIndex &index, int role) const;
     AccountPtr accountForIndex(const QModelIndex &index) const;
 
     virtual Qt::ItemFlags flags(const QModelIndex &index) const;
     virtual bool setData(const QModelIndex &index, const QVariant &value, int role = Qt::EditRole);
+    virtual QModelIndex index(int row, int column = 0, const QModelIndex &parent = QModelIndex()) const;
+    virtual QModelIndex parent(const QModelIndex &index) const;
 
     Q_INVOKABLE void setAccountEnabled(int row, bool value);
     Q_INVOKABLE void setAccountStatus(int row, const QString &value);
@@ -87,6 +90,7 @@ private:
     QList<Tp::AccountPtr> mAccounts;
 
     void setupAccount(const Tp::AccountPtr &account);
+    int rowOf(const Account *account);
 
 private Q_SLOTS:
 
