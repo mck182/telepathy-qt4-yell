@@ -21,10 +21,12 @@
 #ifndef _TelepathyQt4_tree_node_h_HEADER_GUARD_
 #define _TelepathyQt4_tree_node_h_HEADER_GUARD_
 
+#include <QObject>
 #include <QVariant>
 
-class TreeNode {
-
+class TreeNode : public QObject
+{
+    Q_OBJECT
 public:
 
     TreeNode();
@@ -43,6 +45,12 @@ public:
 
     virtual QVariant data(int role) const;
     virtual bool setData(int role, const QVariant &value);
+    virtual void remove();
+
+Q_SIGNALS:
+
+    void removed(TreeNode *);
+    void changed(TreeNode *);
 
 private:
     

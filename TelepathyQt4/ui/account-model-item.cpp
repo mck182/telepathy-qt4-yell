@@ -22,15 +22,84 @@
 #include "TelepathyQt4/ui/_gen/account-model-item.moc.hpp"
 
 #include <TelepathyQt4/Account>
+#include <TelepathyQt4/ContactManager>
 
 #include <TelepathyQt4/ui/AccountModel>
+
+#include "contact-model-item.h"
 
 namespace Tp
 {
 
 AccountModelItem::AccountModelItem(const AccountPtr &account)
     : mAccount(account)
-{ }
+{
+    if (mAccount->haveConnection()) {
+        ContactManager *manager = account->connection()->contactManager();
+        foreach (ContactPtr contact, manager->allKnownContacts()) {
+            addChild(new ContactModelItem(contact));
+        }
+    }
+
+    connect(mAccount.data(),
+            SIGNAL(removed()),
+            SLOT(onRemoved()));
+    connect(mAccount.data(),
+            SIGNAL(serviceNameChanged(QString)),
+            SLOT(onChanged()));
+    connect(mAccount.data(),
+            SIGNAL(profileChanged(const Tp::ProfilePtr &)),
+            SLOT(onChanged()));
+    connect(mAccount.data(),
+            SIGNAL(iconNameChanged(QString)),
+            SLOT(onChanged()));
+    connect(mAccount.data(),
+            SIGNAL(nicknameChanged(QString)),
+            SLOT(onChanged()));
+    connect(mAccount.data(),
+            SIGNAL(normalizedNameChanged(QString)),
+            SLOT(onChanged()));
+    connect(mAccount.data(),
+            SIGNAL(validityChanged(bool)),
+            SLOT(onChanged()));
+    connect(mAccount.data(),
+            SIGNAL(stateChanged(bool)),
+            SLOT(onChanged()));
+    connect(mAccount.data(),
+            SIGNAL(capabilitiesChanged(Tp::ConnectionCapabilities *)),
+            SLOT(onChanged()));
+    connect(mAccount.data(),
+            SIGNAL(connectsAutomaticallyPropertyChanged(bool)),
+            SLOT(onChanged()));
+    connect(mAccount.data(),
+            SIGNAL(parametersChanged(QVariantMap)),
+            SLOT(onChanged()));
+    connect(mAccount.data(),
+            SIGNAL(changingPresence(bool)),
+            SLOT(onChanged()));
+    connect(mAccount.data(),
+            SIGNAL(automaticPresenceChanged(Tp::SimplePresence)),
+            SLOT(onChanged()));
+    connect(mAccount.data(),
+            SIGNAL(currentPresenceChanged(Tp::SimplePresence)),
+            SLOT(onChanged()));
+    connect(mAccount.data(),
+            SIGNAL(requestedPresenceChanged(Tp::SimplePresence)),
+            SLOT(onChanged()));
+    connect(mAccount.data(),
+            SIGNAL(onlinenessChanged(bool)),
+            SLOT(onChanged()));
+    connect(mAccount.data(),
+            SIGNAL(avatarChanged(Tp::Avatar)),
+            SLOT(onChanged()));
+    connect(mAccount.data(),
+            SIGNAL(statusChanged(Tp::ConnectionStatus, Tp::ConnectionStatusReason,
+                                 QString, QVariantMap)),
+            SLOT(onChanged()));
+    connect(mAccount.data(),
+            SIGNAL(haveConnectionChanged(bool)),
+            SLOT(onChanged()));
+}
 
 QVariant AccountModelItem::data(int role) const
 {
@@ -126,6 +195,17 @@ void AccountModelItem::setPresence(int type, const QString &status, const QStrin
     presence.status = status;
     presence.statusMessage = statusMessage;
     mAccount->setRequestedPresence(presence);
+}
+
+void AccountModelItem::onChanged()
+{
+    emit changed(this);
+}
+
+
+void AccountModelItem::onRemoved()
+{
+    emit removed(this);
 }
 
 }

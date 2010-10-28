@@ -112,8 +112,8 @@ private:
 private Q_SLOTS:
 
     void onNewAccount(const Tp::AccountPtr &account);
-    void onAccountChanged();
-    void onAccountRemoved();
+    void onItemChanged(TreeNode *node);
+    void onItemRemoved(TreeNode *node);
 };
 
 }

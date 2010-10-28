@@ -21,7 +21,6 @@
 #include "tree-node.h"
 #include "TelepathyQt4/ui/_gen/tree-node.moc.hpp"
 
-
 TreeNode::TreeNode()
     : mParent(0)
 { }
@@ -43,6 +42,14 @@ void TreeNode::addChild(TreeNode *node)
     // takes ownership of node
     mChildren.append(node);
     node->mParent = this;
+
+    // chain changed and removed signals
+    connect(node,
+            SIGNAL(changed(TreeNode *)),
+            SIGNAL(changed(TreeNode *)));
+    connect(node,
+            SIGNAL(removed(TreeNode *)),
+            SIGNAL(removed(TreeNode *)));
 }
 
 int TreeNode::indexOf(TreeNode *node) const {
@@ -66,5 +73,21 @@ QVariant TreeNode::data(int role) const
 bool TreeNode::setData(int role, const QVariant &value)
 {
     return false;
+}
+
+void TreeNode::remove()
+{
+    if (mParent) {
+        mParent->mChildren.removeOne(this);
+        disconnect(this,
+                   SIGNAL(changed(TreeNode *)),
+                   mParent,
+                   SLOT(changed(TreeNode *)));
+        disconnect(this,
+                   SIGNAL(removed(TreeNode *)),
+                   mParent,
+                   SLOT(removed(TreeNode *)));
+    }
+    deleteLater();
 }
 

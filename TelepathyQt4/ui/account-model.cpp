@@ -34,8 +34,14 @@ AccountModel::AccountModel(const Tp::AccountManagerPtr &am, QObject *parent)
     : QAbstractItemModel(parent)
     , mAM(am)
 {
-    Q_ASSERT(mAM->isReady());
     mTree = new TreeNode;
+    connect(mTree,
+            SIGNAL(changed(TreeNode *)),
+            SLOT(onItemChanged(TreeNode *)));
+    connect(mTree,
+            SIGNAL(removed(TreeNode *)),
+            SLOT(onItemRemoved(TreeNode *)));
+
     mAccounts = mAM->allAccounts();
     connect(mAM.data(),
             SIGNAL(newAccount(const Tp::AccountPtr &)),
@@ -83,72 +89,7 @@ AccountModel::~AccountModel()
 void AccountModel::setupAccount(const Tp::AccountPtr &account)
 {
     TreeNode *accountNode = new AccountModelItem(account);
-    if (account->haveConnection()) {
-        ContactManager *manager = account->connection()->contactManager();
-        foreach (ContactPtr contact, manager->allKnownContacts()) {
-            accountNode->addChild(new ContactModelItem(contact));
-        }
-    }
     mTree->addChild(accountNode);
-
-    connect(account.data(),
-            SIGNAL(removed()),
-            SLOT(onAccountRemoved()));
-    connect(account.data(),
-            SIGNAL(serviceNameChanged(QString)),
-            SLOT(onAccountChanged()));
-    connect(account.data(),
-            SIGNAL(profileChanged(const Tp::ProfilePtr &)),
-            SLOT(onAccountChanged()));
-    connect(account.data(),
-            SIGNAL(iconNameChanged(QString)),
-            SLOT(onAccountChanged()));
-    connect(account.data(),
-            SIGNAL(nicknameChanged(QString)),
-            SLOT(onAccountChanged()));
-    connect(account.data(),
-            SIGNAL(normalizedNameChanged(QString)),
-            SLOT(onAccountChanged()));
-    connect(account.data(),
-            SIGNAL(validityChanged(bool)),
-            SLOT(onAccountChanged()));
-    connect(account.data(),
-            SIGNAL(stateChanged(bool)),
-            SLOT(onAccountChanged()));
-    connect(account.data(),
-            SIGNAL(capabilitiesChanged(Tp::ConnectionCapabilities *)),
-            SLOT(onAccountChanged()));
-    connect(account.data(),
-            SIGNAL(connectsAutomaticallyPropertyChanged(bool)),
-            SLOT(onAccountChanged()));
-    connect(account.data(),
-            SIGNAL(parametersChanged(QVariantMap)),
-            SLOT(onAccountChanged()));
-    connect(account.data(),
-            SIGNAL(changingPresence(bool)),
-            SLOT(onAccountChanged()));
-    connect(account.data(),
-            SIGNAL(automaticPresenceChanged(Tp::SimplePresence)),
-            SLOT(onAccountChanged()));
-    connect(account.data(),
-            SIGNAL(currentPresenceChanged(Tp::SimplePresence)),
-            SLOT(onAccountChanged()));
-    connect(account.data(),
-            SIGNAL(requestedPresenceChanged(Tp::SimplePresence)),
-            SLOT(onAccountChanged()));
-    connect(account.data(),
-            SIGNAL(onlinenessChanged(bool)),
-            SLOT(onAccountChanged()));
-    connect(account.data(),
-            SIGNAL(avatarChanged(Tp::Avatar)),
-            SLOT(onAccountChanged()));
-    connect(account.data(),
-            SIGNAL(statusChanged(Tp::ConnectionStatus, Tp::ConnectionStatusReason,
-                                 QString, QVariantMap)),
-            SLOT(onAccountChanged()));
-    connect(account.data(),
-            SIGNAL(haveConnectionChanged(bool)),
-            SLOT(onAccountChanged()));
 }
 
 int AccountModel::rowOf(const Account *account)
@@ -183,35 +124,20 @@ void AccountModel::onNewAccount(const Tp::AccountPtr &account)
     emit accountCountChanged();
 }
 
-void AccountModel::onAccountRemoved()
+void AccountModel::onItemRemoved(TreeNode *node)
 {
-    Account *account = qobject_cast<Account *>(sender());
-    Q_ASSERT(account);
-
-    for (int i = 0; i < mAccounts.size(); i++) {
-        if (mAccounts[i].data() == account) {
-            beginRemoveRows(QModelIndex(), i, i);
-            mAccounts.removeAt(i);
-            endRemoveRows();
-        }
-    }
+    QModelIndex accountIndex = index(node);
+    beginRemoveRows(accountIndex.parent(), accountIndex.row(), accountIndex.row());
+    node->remove();
+    endRemoveRows();
 
     emit accountCountChanged();
 }
 
-void AccountModel::onAccountChanged()
+void AccountModel::onItemChanged(TreeNode *node)
 {
-    Account *account = qobject_cast<Account *>(sender());
-    Q_ASSERT(account);
-
-    for (int i = 0; i < mAccounts.size(); i++) {
-        if (mAccounts[i].data() == account) {
-            emit dataChanged(index(i), index(i));
-            return;
-        }
-    }
-
-    qWarning() << "Received change notification from unknown account";
+    QModelIndex accountIndex = index(node);
+    emit dataChanged(accountIndex, accountIndex);
 }
 
 int AccountModel::accountCount() const

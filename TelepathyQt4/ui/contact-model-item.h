@@ -22,14 +22,13 @@
 #define _TelepathyQt4_contact_model_item_h_HEADER_GUARD_
 
 #include "tree-node.h"
-#include <QObject>
 
 #include <TelepathyQt4/Types>
 
 namespace Tp
 {
 
-class ContactModelItem : public QObject, public TreeNode
+class ContactModelItem : public TreeNode
 {
     Q_OBJECT
 

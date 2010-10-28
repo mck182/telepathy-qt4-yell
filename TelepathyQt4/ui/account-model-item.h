@@ -22,14 +22,13 @@
 #define _TelepathyQt4_account_model_item_h_HEADER_GUARD_
 
 #include "tree-node.h"
-#include <QObject>
 
 #include <TelepathyQt4/Types>
 
 namespace Tp
 {
 
-class AccountModelItem : public QObject, public TreeNode
+class AccountModelItem : public TreeNode
 {
     Q_OBJECT
 
@@ -49,6 +48,11 @@ public:
     Q_INVOKABLE void setNickname(const QString &value);
 
     Q_INVOKABLE void setPresence(int type, const QString &status, const QString &statusMessage);
+
+private Q_SLOTS:
+
+    void onRemoved();
+    void onChanged();
 
 private:
 
