@@ -32,6 +32,8 @@
 #include <TelepathyQt4/Types>
 #include <TelepathyQt4/TextChannel>
 
+#include "account-model-item.h"
+
 namespace Tp
 {
 
@@ -43,8 +45,11 @@ class TELEPATHY_QT4_EXPORT AccountModel : public QAbstractItemModel
 public:
 
     enum Role {
+        // general roles
+        ItemRole = Qt::UserRole,
+
         // account roles
-        ValidRole = Qt::UserRole,
+        ValidRole,
         EnabledRole,
         ConnectionManagerRole,
         ProtocolNameRole,

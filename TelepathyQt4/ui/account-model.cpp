@@ -24,204 +24,11 @@
 #include <TelepathyQt4/PendingReady>
 #include <TelepathyQt4/ContactManager>
 
+#include "account-model-item.h"
+#include "contact-model-item.h"
+
 namespace Tp
 {
-
-class TreeNode {
-
-public:
-
-    TreeNode()
-        : mParent(0)
-    { }
-
-    virtual ~TreeNode()
-    {
-        foreach (TreeNode *child, mChildren) {
-            delete child;
-        }
-    }
-
-    TreeNode *childAt(int index) const
-    {
-        return mChildren[index];
-    }
-
-    void addChild(TreeNode *node)
-    {
-        // takes ownership of node
-        mChildren.append(node);
-        node->mParent = this;
-    }
-
-    int indexOf(TreeNode *node) const {
-        return mChildren.indexOf(node);
-    }
-
-    int size() const {
-        return mChildren.size();
-    }
-
-    TreeNode *parent() const { return mParent; }
-
-    virtual QVariant data(int role) const { return QVariant(); }
-    virtual bool setData(int role, const QVariant &value) { return false; }
-
-private:
-    
-    QList<TreeNode *> mChildren;
-    TreeNode *mParent;
-};
-
-class AccountNode : public TreeNode {
-
-public:
-
-    AccountNode(const AccountPtr &account)
-        : mAccount(account)
-    { }
-
-    virtual QVariant data(int role) const
-    {
-        switch (role) {
-            case AccountModel::ValidRole:
-                return mAccount->isValid();
-            case AccountModel::EnabledRole:
-                return mAccount->isEnabled();
-            case AccountModel::ConnectionManagerRole:
-                return mAccount->cmName();
-            case AccountModel::ProtocolNameRole:
-                return mAccount->protocolName();
-            case AccountModel::DisplayNameRole:
-            case Qt::DisplayRole:
-                return mAccount->displayName();
-            case AccountModel::NicknameRole:
-                return mAccount->nickname();
-            case AccountModel::ConnectsAutomaticallyRole:
-                return mAccount->connectsAutomatically();
-            case AccountModel::ChangingPresenceRole:
-                return mAccount->isChangingPresence();
-            case AccountModel::AutomaticPresenceRole:
-                return mAccount->automaticPresence().status;
-            case AccountModel::CurrentPresenceRole:
-                return mAccount->currentPresence().status;
-            case AccountModel::CurrentStatusMessage:
-                return mAccount->currentPresence().statusMessage;
-            case AccountModel::RequestedPresenceRole:
-                return mAccount->requestedPresence().status;
-            case AccountModel::RequestedStatusMessage:
-                return mAccount->requestedPresence().statusMessage;
-            case AccountModel::ConnectionStatusRole:
-                return mAccount->connectionStatus();
-            case AccountModel::ConnectionRole:
-                return mAccount->connectionObjectPath();
-            default:
-                return QVariant();
-        }
-    }
-
-    virtual bool setData(int role, const QVariant &value)
-    {
-        switch (role) {
-        case AccountModel::EnabledRole:
-            setEnabled(value.toBool());
-            return true;
-        case AccountModel::RequestedPresenceRole:
-            setStatus(value.toString());
-            return true;
-        case AccountModel::RequestedStatusMessage:
-            setStatusMessage(value.toString());
-            return true;
-        case AccountModel::NicknameRole:
-            setNickname(value.toString());
-            return true;
-        default:
-            return false;
-        }
-    }
-
-    void setEnabled(bool value)
-    {
-        mAccount->setEnabled(value);
-    }
-
-    void setStatus(const QString &value)
-    {
-        SimplePresence presence = mAccount->currentPresence();
-        presence.status = value;
-        mAccount->setRequestedPresence(presence);
-    }
-
-    void setStatusMessage(const QString& value)
-    {
-        SimplePresence presence = mAccount->currentPresence();
-        presence.statusMessage = value;
-        mAccount->setRequestedPresence(presence);
-    }
-
-    void setNickname(const QString &value)
-    {
-        mAccount->setNickname(value);
-    }
-
-    void setPresence(int type, const QString &status, const QString &statusMessage)
-    {
-        SimplePresence presence;
-        presence.type = type;
-        presence.status = status;
-        presence.statusMessage = statusMessage;
-        mAccount->setRequestedPresence(presence);
-    }
-
-private:
-
-    AccountPtr mAccount;
-};
-
-class ContactNode : public TreeNode
-{
-public:
-    
-    ContactNode(const Tp::ContactPtr &contact)
-        : mContact(contact)
-    { }
-
-    virtual QVariant data(int role) const
-    {
-        switch(role)
-        {
-            case AccountModel::IdRole:
-                return mContact->id();
-            case Qt::DisplayRole:
-            case AccountModel::AliasRole:
-                return mContact->alias();
-            case AccountModel::PresenceStatusRole:
-                return mContact->presenceStatus();
-            case AccountModel::PresenceTypeRole:
-                return mContact->presenceType();
-            case AccountModel::PresenceMessageRole:
-                return mContact->presenceMessage();
-            case AccountModel::SubscriptionStateRole:
-                return mContact->subscriptionState();
-            case AccountModel::PublishStateRole:
-                return mContact->publishState();
-            case AccountModel::BlockedRole:
-                return !!mContact->block();
-            case AccountModel::GroupsRole:
-                return mContact->groups();
-            case AccountModel::AvatarRole:
-                return mContact->avatarData().fileName;
-            default:
-                break;
-        }
-
-        return QVariant();
-    }
-
-private:
-    
-    ContactPtr mContact;
-};
 
 AccountModel::AccountModel(const Tp::AccountManagerPtr &am, QObject *parent)
     : QAbstractItemModel(parent)
@@ -239,6 +46,7 @@ AccountModel::AccountModel(const Tp::AccountManagerPtr &am, QObject *parent)
     }
 
     QHash<int, QByteArray> roles;
+    roles[ItemRole] = "item";
     roles[ValidRole] = "valid";
     roles[EnabledRole] = "enabled";
     roles[ConnectionManagerRole] = "connectionManager";
@@ -274,11 +82,11 @@ AccountModel::~AccountModel()
 
 void AccountModel::setupAccount(const Tp::AccountPtr &account)
 {
-    TreeNode *accountNode = new AccountNode(account);
+    TreeNode *accountNode = new AccountModelItem(account);
     if (account->haveConnection()) {
         ContactManager *manager = account->connection()->contactManager();
         foreach (ContactPtr contact, manager->allKnownContacts()) {
-            accountNode->addChild(new ContactNode(contact));
+            accountNode->addChild(new ContactModelItem(contact));
         }
     }
     mTree->addChild(accountNode);

@@ -42,7 +42,7 @@ Rectangle {
                     anchors.margins: 10
                     text: "(" + value + ")"
                     value: model.status
-                    onChanged: accountsModel.setAccountStatus(index, value)
+                    onChanged: { model.item.setStatus(value) }
                 }
                 EditableText {
                     id: statusMessage
@@ -51,7 +51,7 @@ Rectangle {
                     anchors.margins: 10
                     text: "message: " + value
                     value: model.statusMessage
-                    onChanged: accountsModel.setAccountStatusMessage(index, value)
+                    onChanged: model.item.setStatusMessage(value)
                 }
                 EditableText {
                     id: nickname
@@ -59,7 +59,7 @@ Rectangle {
                     anchors.top: statusMessage.bottom
                     anchors.margins: 10
                     value: model.nickname
-                    onChanged: accountsModel.setAccountNickname(index, value)
+                    onChanged: model.item.setNickname(value)
                 }
             }
         }
