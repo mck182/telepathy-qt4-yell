@@ -4,6 +4,7 @@ set(telepathy_qt4_ui_SRCS
     contacts-list-model.cpp
     conversation-item.cpp
     conversation-model.cpp
+    flat-model-proxy.cpp
 )
 
 set(telepathy_qt4_ui_MOC_SRCS
@@ -12,6 +13,7 @@ set(telepathy_qt4_ui_MOC_SRCS
     contacts-list-model.h
     conversation-item.h
     conversation-model.h
+    flat-model-proxy.h
 )
 
 set(telepathy_qt4_ui_HEADERS
