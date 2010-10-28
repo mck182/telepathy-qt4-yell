@@ -89,6 +89,7 @@ public:
     virtual Qt::ItemFlags flags(const QModelIndex &index) const;
     virtual bool setData(const QModelIndex &index, const QVariant &value, int role = Qt::EditRole);
     virtual QModelIndex index(int row, int column = 0, const QModelIndex &parent = QModelIndex()) const;
+    virtual QModelIndex index(TreeNode *node) const;
     virtual QModelIndex parent(const QModelIndex &index) const;
 
     int accountCount() const;

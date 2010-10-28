@@ -267,6 +267,16 @@ QModelIndex AccountModel::index(int row, int column, const QModelIndex &parent) 
     return createIndex(row, column, parentNode->childAt(row));
 }
 
+QModelIndex AccountModel::index(TreeNode *node) const
+{
+    if (node->parent()) {
+        return createIndex(node->parent()->indexOf(node), 0, node);
+    }
+    else {
+        return QModelIndex();
+    }
+}
+
 QModelIndex AccountModel::parent(const QModelIndex &index) const
 {
     if (!index.isValid()) {
@@ -275,14 +285,12 @@ QModelIndex AccountModel::parent(const QModelIndex &index) const
 
     TreeNode *currentNode = node(index);
     if (currentNode->parent()) {
-        TreeNode *grandparent = currentNode->parent()->parent();
-        if (grandparent) {
-            return createIndex(grandparent->indexOf(currentNode->parent()), 0, currentNode->parent());
-        }
+        return AccountModel::index(currentNode->parent());
     }
-
-    // no parent or grandparent: return root node
-    return QModelIndex();
+    else {
+        // no parent: return root node
+        return QModelIndex();
+    }
 }
 
 TreeNode* AccountModel::node(const QModelIndex &index) const
