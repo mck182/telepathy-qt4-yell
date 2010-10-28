@@ -1,8 +1,11 @@
 set(telepathy_qt4_ui_examples_treeview_SRCS
     main.cpp
+    telepathy-initializer.cpp
     tree-view.cpp)
 
-set(telepathy_qt4_ui_examples_treeview_MOC_SRCS tree-view.h)
+set(telepathy_qt4_ui_examples_treeview_MOC_SRCS
+    telepathy-initializer.h
+    tree-view.h)
 
 tpqt4_generate_mocs(${telepathy_qt4_ui_examples_treeview_MOC_SRCS})
 

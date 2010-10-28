@@ -18,33 +18,42 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#ifndef _TelepathyQt4_tree_view_h_HEADER_GUARD_
-#define _TelepathyQt4_tree_view_h_HEADER_GUARD_
+#ifndef _TelepathyQt4_telepathy_initializer_h_HEADER_GUARD_
+#define _TelepathyQt4_telepathy_initializer_h_HEADER_GUARD_
 
-#include <QTreeView>
-#include <QWidget>
-
-#include <TelepathyQt4/Types>
 #include <TelepathyQt4/ui/AccountModel>
+#include <TelepathyQt4/Types>
 
-class TelepathyInitializer;
-
-class TreeView : public QWidget
+class TelepathyInitializer : public QObject
 {
     Q_OBJECT
 
 public:
     
-    TreeView(QWidget *parent = 0);
+    TelepathyInitializer(const Tp::AccountManagerPtr &am);
+
+    void run();
+    Tp::AccountModel *accountModel() const;
+
+Q_SIGNALS:
+    
+    void finished(TelepathyInitializer *initializer);
 
 private Q_SLOTS:
 
-    void onInitializationFinished(TelepathyInitializer *initializer);
+    void onAMReady(Tp::PendingOperation *);
+    void onAccountReady(Tp::PendingOperation *);
+    void onConnectionReady(Tp::PendingOperation *);
+    void onContactsUpgraded(Tp::PendingOperation *);
 
 private:
+    
+    void initializeConnections();
 
-    QTreeView *mView;
+    Tp::AccountManagerPtr mAM;
+    Tp::AccountModel *mAccountModel;
+    int numConnections;
 };
 
-#endif // _TelepathyQt4_tree_view_h_HEADER_GUARD_
+#endif // _TelepathyQt4_telepathy_initializer_h_HEADER_GUARD_
 
