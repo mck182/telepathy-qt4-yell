@@ -97,6 +97,9 @@ AccountModelItem::AccountModelItem(const AccountPtr &account)
                                  QString, QVariantMap)),
             SLOT(onChanged()));
     connect(mAccount.data(),
+            SIGNAL(statusChanged(Tp::ConnectionStatus,Tp::ConnectionStatusReason,QString,QVariantMap)),
+            SLOT(onStatusChanged(Tp::ConnectionStatus,Tp::ConnectionStatusReason,QString,QVariantMap)));
+    connect(mAccount.data(),
             SIGNAL(haveConnectionChanged(bool)),
             SLOT(onChanged()));
 }
@@ -206,6 +209,23 @@ void AccountModelItem::onChanged()
 void AccountModelItem::onRemoved()
 {
     emit removed(this);
+}
+
+void AccountModelItem::onStatusChanged(Tp::ConnectionStatus status,
+                                       Tp::ConnectionStatusReason statusReason,
+                                       const QString &error,
+                                       const QVariantMap &errorDetails)
+{
+    if (mAccount->haveConnection()) {
+        ContactManager *manager = mAccount->connection()->contactManager();
+        foreach (ContactPtr contact, manager->allKnownContacts()) {
+            addChild(new ContactModelItem(contact));
+        }
+    } else {
+        while(size() > 0) {
+            childAt(0)->remove();
+        }
+    }
 }
 
 }

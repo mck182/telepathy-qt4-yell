@@ -23,6 +23,7 @@
 
 #include "tree-node.h"
 
+#include <TelepathyQt4/Constants>
 #include <TelepathyQt4/Types>
 
 namespace Tp
@@ -53,6 +54,9 @@ private Q_SLOTS:
 
     void onRemoved();
     void onChanged();
+    void onStatusChanged(Tp::ConnectionStatus status,
+                         Tp::ConnectionStatusReason statusReason,
+                         const QString &error, const QVariantMap &errorDetails);
 
 private:
 
