@@ -124,6 +124,51 @@ private:
     AccountPtr mAccount;
 };
 
+class ContactNode : public TreeNode
+{
+public:
+    
+    ContactNode(const Tp::ContactPtr &contact)
+        : mContact(contact)
+    { }
+
+    virtual QVariant data(int role) const
+    {
+        switch(role)
+        {
+            case AccountModel::IdRole:
+                return mContact->id();
+            case Qt::DisplayRole:
+            case AccountModel::AliasRole:
+                return mContact->alias();
+            case AccountModel::PresenceStatusRole:
+                return mContact->presenceStatus();
+            case AccountModel::PresenceTypeRole:
+                return mContact->presenceType();
+            case AccountModel::PresenceMessageRole:
+                return mContact->presenceMessage();
+            case AccountModel::SubscriptionStateRole:
+                return mContact->subscriptionState();
+            case AccountModel::PublishStateRole:
+                return mContact->publishState();
+            case AccountModel::BlockedRole:
+                return !!mContact->block();
+            case AccountModel::GroupsRole:
+                return mContact->groups();
+            case AccountModel::AvatarRole:
+                return mContact->avatarData().fileName;
+            default:
+                break;
+        }
+
+        return QVariant();
+    }
+
+private:
+    
+    ContactPtr mContact;
+};
+
 AccountModel::AccountModel(const Tp::AccountManagerPtr &am, QObject *parent)
     : QAbstractItemModel(parent)
     , mAM(am)
@@ -155,6 +200,16 @@ AccountModel::AccountModel(const Tp::AccountManagerPtr &am, QObject *parent)
     roles[RequestedStatusMessage] = "requestedStausMessage";
     roles[ConnectionStatusRole] = "connectionStatus";
     roles[ConnectionRole] = "connection";
+    roles[IdRole] = "id";
+    roles[AliasRole] = "aliasName";
+    roles[AvatarRole] = "avatar";
+    roles[PresenceStatusRole] = "presenceStatus";
+    roles[PresenceTypeRole] = "presenceType";
+    roles[PresenceMessageRole] = "presenceMessage";
+    roles[SubscriptionStateRole] = "subscriptionState";
+    roles[PublishStateRole] = "publishState";
+    roles[BlockedRole] = "blocked";
+    roles[GroupsRole] = "groups";
     setRoleNames(roles);
 }
 
@@ -169,7 +224,7 @@ void AccountModel::setupAccount(const Tp::AccountPtr &account)
     if (account->haveConnection()) {
         ContactManager *manager = account->connection()->contactManager();
         foreach (ContactPtr contact, manager->allKnownContacts()) {
-            accountNode->addChild(new TreeNode);
+            accountNode->addChild(new ContactNode(contact));
         }
     }
     mTree->addChild(accountNode);

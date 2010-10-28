@@ -43,21 +43,34 @@ class TELEPATHY_QT4_EXPORT AccountModel : public QAbstractItemModel
 public:
 
     enum Role {
-      ValidRole = Qt::UserRole,
-      EnabledRole,
-      ConnectionManagerRole,
-      ProtocolNameRole,
-      DisplayNameRole,
-      NicknameRole,
-      ConnectsAutomaticallyRole,
-      ChangingPresenceRole,
-      AutomaticPresenceRole,
-      CurrentPresenceRole,
-      CurrentStatusMessage,
-      RequestedPresenceRole,
-      RequestedStatusMessage,
-      ConnectionStatusRole,
-      ConnectionRole
+        // account roles
+        ValidRole = Qt::UserRole,
+        EnabledRole,
+        ConnectionManagerRole,
+        ProtocolNameRole,
+        DisplayNameRole,
+        NicknameRole,
+        ConnectsAutomaticallyRole,
+        ChangingPresenceRole,
+        AutomaticPresenceRole,
+        CurrentPresenceRole,
+        CurrentStatusMessage,
+        RequestedPresenceRole,
+        RequestedStatusMessage,
+        ConnectionStatusRole,
+        ConnectionRole,
+
+        // contact roles
+        IdRole,
+        AliasRole,
+        AvatarRole,
+        PresenceStatusRole,
+        PresenceTypeRole,
+        PresenceMessageRole,
+        SubscriptionStateRole,
+        PublishStateRole,
+        BlockedRole,
+        GroupsRole
     };
 
     explicit AccountModel(const Tp::AccountManagerPtr &am, QObject *parent = 0);
