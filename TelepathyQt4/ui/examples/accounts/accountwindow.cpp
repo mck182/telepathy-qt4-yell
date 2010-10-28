@@ -52,7 +52,7 @@ AccountWindow::AccountWindow()
 void AccountWindow::onInitializationFinished(TelepathyInitializer *initializer)
 {
     QAbstractItemModel *contactModel =
-        new FlatModelProxy(initializer->accountModel());
+        new Tp::FlatModelProxy(initializer->accountModel());
     mView->rootContext()->setContextProperty(
         QString::fromLatin1("accountsModel"),
         initializer->accountModel());

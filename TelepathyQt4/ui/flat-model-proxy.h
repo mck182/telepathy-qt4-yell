@@ -24,6 +24,9 @@
 #include <QAbstractProxyModel>
 #include <TelepathyQt4/Global>
 
+namespace Tp
+{
+
 class TELEPATHY_QT4_EXPORT FlatModelProxy : public QAbstractProxyModel
 {
     Q_OBJECT
@@ -44,6 +47,7 @@ private:
     int offsetOf(int index) const;
 };
 
+}
 
 #endif // _TelepathyQt4_flat_model_proxy_h_HEADER_GUARD_
 

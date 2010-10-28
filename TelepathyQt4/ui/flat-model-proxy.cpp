@@ -21,6 +21,9 @@
 #include "flat-model-proxy.h"
 #include "TelepathyQt4/ui/_gen/flat-model-proxy.moc.hpp"
 
+namespace Tp
+{
+
 FlatModelProxy::FlatModelProxy(QAbstractItemModel *source)
     : QAbstractProxyModel(source)
 {
@@ -88,5 +91,7 @@ int FlatModelProxy::offsetOf(int index) const
         offset += sourceModel()->rowCount(sourceModel()->index(i, 0, QModelIndex()));
     }
     return offset;
+}
+
 }
 
