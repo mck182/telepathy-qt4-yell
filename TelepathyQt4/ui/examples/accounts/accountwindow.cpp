@@ -29,7 +29,8 @@
 #include <TelepathyQt4/AccountManager>
 #include <TelepathyQt4/PendingReady>
 
-#include "TelepathyQt4/ui/flat-model-proxy.h"
+#include <TelepathyQt4/ui/FlatModelProxy>
+
 #include "telepathy-initializer.h"
 
 AccountWindow::AccountWindow()

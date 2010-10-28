@@ -23,7 +23,10 @@ set(telepathy_qt4_ui_MOC_SRCS
 set(telepathy_qt4_ui_HEADERS
     AccountModel
     ConversationModel
+    FlatModelProxy
     account-model.h
+    conversation-model.h
+    flatmodelproxy.h
 )
 
 tpqt4_generate_mocs(${telepathy_qt4_ui_MOC_SRCS})
