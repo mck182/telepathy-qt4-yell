@@ -63,6 +63,7 @@ AccountModel::AccountModel(const Tp::AccountManagerPtr &am, QObject *parent)
     roles[ChangingPresenceRole] = "changingPresence";
     roles[AutomaticPresenceRole] = "automaticPresence";
     roles[CurrentPresenceRole] = "status";
+    roles[CurrentPresenceTypeRole] = "statusType";
     roles[CurrentStatusMessage] = "statusMessage";
     roles[RequestedPresenceRole] = "requestedStatus";
     roles[RequestedStatusMessage] = "requestedStausMessage";

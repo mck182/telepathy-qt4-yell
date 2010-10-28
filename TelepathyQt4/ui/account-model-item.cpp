@@ -137,6 +137,8 @@ QVariant AccountModelItem::data(int role) const
             return mAccount->automaticPresence().status;
         case AccountModel::CurrentPresenceRole:
             return mAccount->currentPresence().status;
+        case AccountModel::CurrentPresenceTypeRole:
+            return mAccount->currentPresence().type;
         case AccountModel::CurrentStatusMessage:
             return mAccount->currentPresence().statusMessage;
         case AccountModel::RequestedPresenceRole:

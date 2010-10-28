@@ -59,6 +59,7 @@ public:
         ChangingPresenceRole,
         AutomaticPresenceRole,
         CurrentPresenceRole,
+        CurrentPresenceTypeRole,
         CurrentStatusMessage,
         RequestedPresenceRole,
         RequestedStatusMessage,
