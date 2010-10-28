@@ -65,6 +65,7 @@ public:
     TreeNode *parent() const { return mParent; }
 
     virtual QVariant data(int role) const { return QVariant(); }
+    virtual bool setData(int role, const QVariant &value) { return false; }
 
 private:
     
@@ -117,6 +118,59 @@ public:
             default:
                 return QVariant();
         }
+    }
+
+    virtual bool setData(int role, const QVariant &value)
+    {
+        switch (role) {
+        case AccountModel::EnabledRole:
+            setEnabled(value.toBool());
+            return true;
+        case AccountModel::RequestedPresenceRole:
+            setStatus(value.toString());
+            return true;
+        case AccountModel::RequestedStatusMessage:
+            setStatusMessage(value.toString());
+            return true;
+        case AccountModel::NicknameRole:
+            setNickname(value.toString());
+            return true;
+        default:
+            return false;
+        }
+    }
+
+    void setEnabled(bool value)
+    {
+        mAccount->setEnabled(value);
+    }
+
+    void setStatus(const QString &value)
+    {
+        SimplePresence presence = mAccount->currentPresence();
+        presence.status = value;
+        mAccount->setRequestedPresence(presence);
+    }
+
+    void setStatusMessage(const QString& value)
+    {
+        SimplePresence presence = mAccount->currentPresence();
+        presence.statusMessage = value;
+        mAccount->setRequestedPresence(presence);
+    }
+
+    void setNickname(const QString &value)
+    {
+        mAccount->setNickname(value);
+    }
+
+    void setPresence(int type, const QString &status, const QString &statusMessage)
+    {
+        SimplePresence presence;
+        presence.type = type;
+        presence.status = status;
+        presence.statusMessage = statusMessage;
+        mAccount->setRequestedPresence(presence);
     }
 
 private:
@@ -393,24 +447,7 @@ Qt::ItemFlags AccountModel::flags(const QModelIndex &index) const
 bool AccountModel::setData(const QModelIndex &index, const QVariant &value, int role)
 {
     if (index.isValid()) {
-        switch (role) {
-        case EnabledRole:
-            setAccountEnabled(index.row(), value.toBool());
-            break;
-        case RequestedPresenceRole:
-            setAccountStatus(index.row(), value.toString());
-            break;
-        case RequestedStatusMessage:
-            setAccountStatusMessage(index.row(), value.toString());
-            break;
-        case NicknameRole:
-            setAccountNickname(index.row(), value.toString());
-            break;
-        default:
-            return false;
-        }
-
-        return true;
+        node(index)->setData(role, value);
     }
 
     return false;
@@ -444,47 +481,6 @@ TreeNode* AccountModel::node(const QModelIndex &index) const
 {
     TreeNode *node = reinterpret_cast<TreeNode *>(index.internalPointer());
     return node ? node : mTree;
-}
-
-void AccountModel::setAccountEnabled(int row, bool value)
-{
-    mAccounts[row]->setEnabled(value);
-    emit dataChanged(index(row), index(row));
-}
-
-void AccountModel::setAccountStatus(int row, const QString &value)
-{
-    AccountPtr account = mAccounts[row];
-    SimplePresence presence = account->currentPresence();
-    presence.status = value;
-    account->setRequestedPresence(presence);
-    emit dataChanged(index(row), index(row));
-}
-
-void AccountModel::setAccountStatusMessage(int row, const QString& value)
-{
-    AccountPtr account = mAccounts[row];
-    SimplePresence presence = account->currentPresence();
-    presence.statusMessage = value;
-    account->setRequestedPresence(presence);
-    emit dataChanged(index(row), index(row));
-}
-
-void AccountModel::setAccountNickname(int row, const QString &value)
-{
-    mAccounts[row]->setNickname(value);
-    emit dataChanged(index(row), index(row));
-}
-
-void AccountModel::setAccountPresence(int row, int type, const QString &status, const QString &statusMessage)
-{
-    AccountPtr account = mAccounts[row];
-    SimplePresence presence;
-    presence.type = type;
-    presence.status = status;
-    presence.statusMessage = statusMessage;
-    account->setRequestedPresence(presence);
-    emit dataChanged(index(row), index(row));
 }
 
 }

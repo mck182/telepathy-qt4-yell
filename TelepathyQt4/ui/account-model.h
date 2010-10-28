@@ -86,12 +86,6 @@ public:
     virtual QModelIndex index(int row, int column = 0, const QModelIndex &parent = QModelIndex()) const;
     virtual QModelIndex parent(const QModelIndex &index) const;
 
-    Q_INVOKABLE void setAccountEnabled(int row, bool value);
-    Q_INVOKABLE void setAccountStatus(int row, const QString &value);
-    Q_INVOKABLE void setAccountStatusMessage(int row, const QString &value);
-    Q_INVOKABLE void setAccountNickname(int row, const QString &value);
-    Q_INVOKABLE void setAccountPresence(int row, int type, const QString &status, const QString &statusMessage);
-
     int accountCount() const;
 
 Q_SIGNALS:
