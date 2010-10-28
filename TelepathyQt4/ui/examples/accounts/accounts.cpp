@@ -24,9 +24,6 @@
 #include <QDeclarativeEngine>
 #include <QDeclarativeView>
 
-#include <TelepathyQt4/ui/AccountModel>
-#include <TelepathyQt4/ui/ContactsListModel>
-
 #include "accountwindow.h"
 
 int main(int argc, char** argv)

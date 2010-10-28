@@ -21,12 +21,16 @@
 #include "accountwindow.h"
 #include "TelepathyQt4/ui/examples/accounts/_gen/accountwindow.moc.hpp"
 
+#include <QAbstractItemModel>
 #include <QDeclarativeContext>
 #include <QDeclarativeView>
 #include <QVBoxLayout>
 
 #include <TelepathyQt4/AccountManager>
 #include <TelepathyQt4/PendingReady>
+
+#include "TelepathyQt4/ui/flat-model-proxy.h"
+#include "telepathy-initializer.h"
 
 AccountWindow::AccountWindow()
     : QWidget(0)
@@ -47,44 +51,15 @@ AccountWindow::AccountWindow()
 
 void AccountWindow::onInitializationFinished(TelepathyInitializer *initializer)
 {
+    QAbstractItemModel *contactModel =
+        new FlatModelProxy(initializer->accountModel());
     mView->rootContext()->setContextProperty(
-        QString::fromLatin1("accountsModel"), initializer->accountModel());
+        QString::fromLatin1("accountsModel"),
+        initializer->accountModel());
     mView->rootContext()->setContextProperty(
-        QString::fromLatin1("contactsListModel"), initializer->contactsListModel());
+        QString::fromLatin1("contactsListModel"),
+        contactModel);
     mView->setSource(QUrl::fromLocalFile(
         QString::fromLatin1("account-view.qml")));
-}
-
-TelepathyInitializer::TelepathyInitializer(const Tp::AccountManagerPtr &am)
-    : QObject(0)
-    , mAM(am)
-    , mAccountModel(0)
-    , mContactsListModel(0)
-{
-}
-
-void TelepathyInitializer::run()
-{
-    connect(mAM->becomeReady(),
-            SIGNAL(finished(Tp::PendingOperation *)),
-            SLOT(onAMReady(Tp::PendingOperation *)));
-}
-
-Tp::AccountModel *TelepathyInitializer::accountModel() const
-{
-    return mAccountModel;
-}
-
-Tp::ContactsListModel *TelepathyInitializer::contactsListModel() const
-{
-    return mContactsListModel;
-}
-
-void TelepathyInitializer::onAMReady(Tp::PendingOperation *)
-{
-    mAccountModel = new Tp::AccountModel(mAM);
-    mContactsListModel = new Tp::ContactsListModel(mAM);
-    emit finished(this);
-    deleteLater();
 }
 

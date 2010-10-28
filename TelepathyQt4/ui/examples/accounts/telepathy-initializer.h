@@ -18,34 +18,42 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#ifndef _TelepathyQt4_mainwindow_h_HEADER_GUARD_
-#define _TelepathyQt4_mainwindow_h_HEADER_GUARD_
-
-#include <QWidget>
-#include <TelepathyQt4/Types>
+#ifndef _TelepathyQt4_telepathy_initializer_h_HEADER_GUARD_
+#define _TelepathyQt4_telepathy_initializer_h_HEADER_GUARD_
 
 #include <TelepathyQt4/ui/AccountModel>
+#include <TelepathyQt4/Types>
 
-class TelepathyInitializer;
-class QDeclarativeView;
-
-class AccountWindow : public QWidget
+class TelepathyInitializer : public QObject
 {
     Q_OBJECT
 
 public:
     
-    AccountWindow();
+    TelepathyInitializer(const Tp::AccountManagerPtr &am);
+
+    void run();
+    Tp::AccountModel *accountModel() const;
+
+Q_SIGNALS:
+    
+    void finished(TelepathyInitializer *initializer);
 
 private Q_SLOTS:
 
-    void onInitializationFinished(TelepathyInitializer *initializer);
+    void onAMReady(Tp::PendingOperation *);
+    void onAccountReady(Tp::PendingOperation *);
+    void onConnectionReady(Tp::PendingOperation *);
+    void onContactsUpgraded(Tp::PendingOperation *);
 
 private:
     
-    QDeclarativeView *mView;
+    void initializeConnections();
 
+    Tp::AccountManagerPtr mAM;
+    Tp::AccountModel *mAccountModel;
+    int numConnections;
 };
 
-#endif // _TelepathyQt4_mainwindow_h_HEADER_GUARD_
+#endif // _TelepathyQt4_telepathy_initializer_h_HEADER_GUARD_
 
