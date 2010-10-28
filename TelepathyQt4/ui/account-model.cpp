@@ -67,6 +67,7 @@ AccountModel::AccountModel(const Tp::AccountManagerPtr &am, QObject *parent)
     roles[RequestedPresenceRole] = "requestedStatus";
     roles[RequestedStatusMessage] = "requestedStausMessage";
     roles[ConnectionStatusRole] = "connectionStatus";
+    roles[ConnectionStatusReasonRole] = "connectionStatusReason";
     roles[ConnectionRole] = "connection";
     roles[IdRole] = "id";
     roles[AliasRole] = "aliasName";

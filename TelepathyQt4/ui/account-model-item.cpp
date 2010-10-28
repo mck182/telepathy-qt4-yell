@@ -145,6 +145,8 @@ QVariant AccountModelItem::data(int role) const
             return mAccount->requestedPresence().statusMessage;
         case AccountModel::ConnectionStatusRole:
             return mAccount->connectionStatus();
+        case AccountModel::ConnectionStatusReasonRole:
+            return mAccount->connectionStatusReason();
         case AccountModel::ConnectionRole:
             return mAccount->connectionObjectPath();
         default:
