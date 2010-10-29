@@ -121,12 +121,8 @@ ContactManager* AccountModel::contactManager(int row) const
 
 void AccountModel::onNewAccount(const Tp::AccountPtr &account)
 {
-    beginInsertRows(QModelIndex(), mAccounts.count(), mAccounts.count());
-    mAccounts.append(account);
-    endInsertRows();
-
-    setupAccount(account);
-    emit accountCountChanged();
+    TreeNode *accountNode = new AccountModelItem(account);
+    onItemsAdded(mTree, QList<TreeNode *>() << accountNode);
 }
 
 void AccountModel::onItemChanged(TreeNode *node)
