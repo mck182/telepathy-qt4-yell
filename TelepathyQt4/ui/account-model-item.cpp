@@ -132,6 +132,8 @@ QVariant AccountModelItem::data(int role) const
         case AccountModel::DisplayNameRole:
         case Qt::DisplayRole:
             return mAccount->displayName();
+        case AccountModel::IconRole:
+            return mAccount->icon();
         case AccountModel::NicknameRole:
             return mAccount->nickname();
         case AccountModel::ConnectsAutomaticallyRole:

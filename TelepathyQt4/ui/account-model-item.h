@@ -31,7 +31,7 @@
 namespace Tp
 {
 
-class AccountModelItem : public TreeNode
+class TELEPATHY_QT4_EXPORT AccountModelItem : public TreeNode
 {
     Q_OBJECT
 
@@ -41,7 +41,7 @@ public:
 
     Q_INVOKABLE virtual QVariant data(int role) const;
     virtual bool setData(int role, const QVariant &value);
-    AccountPtr account() const { return mAccount; }
+    Q_INVOKABLE AccountPtr account() const { return mAccount; }
 
     void setEnabled(bool value);
 
@@ -55,7 +55,7 @@ public:
 
 Q_SIGNALS:
     void connectionStatusChanged(const QString &accountId,
-                                 Tp::ConnectionStatus status, Tp::ConnectionStatusReason);
+                                 int status, int statusReason);
 
 private Q_SLOTS:
 

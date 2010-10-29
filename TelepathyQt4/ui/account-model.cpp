@@ -47,12 +47,8 @@ AccountModel::AccountModel(const Tp::AccountManagerPtr &am, QObject *parent)
 
     foreach (Tp::AccountPtr account, mAM->allAccounts()) {
         AccountModelItem *item = new AccountModelItem(account);
-        connect(item, SIGNAL(connectionStatusChanged(const QString&, 
-                                                     Tp::ConnectionStatus, 
-                                                     Tp::ConnectionStatusReason)),
-                this, SIGNAL(accountConnectionStatusChanged(const QString&,
-                                                            Tp::ConnectionStatus,
-                                                            Tp::ConnectionStatusReason)));
+        connect(item, SIGNAL(connectionStatusChanged(const QString&, int, int)), 
+                this, SIGNAL(accountConnectionStatusChanged(const QString&, int, int)));
         mTree->addChild(item);
     }
 
@@ -68,6 +64,7 @@ AccountModel::AccountModel(const Tp::AccountManagerPtr &am, QObject *parent)
     roles[ConnectionManagerRole] = "connectionManager";
     roles[ProtocolNameRole] = "protocol";
     roles[DisplayNameRole] = "displayName";
+    roles[IconRole] = "icon";
     roles[NicknameRole] = "nickname";
     roles[ConnectsAutomaticallyRole] = "connectsAutomatically";
     roles[ChangingPresenceRole] = "changingPresence";
@@ -101,12 +98,9 @@ void AccountModel::onNewAccount(const Tp::AccountPtr &account)
 {
     AccountModelItem *accountNode = new AccountModelItem(account);
 
-    connect(accountNode, SIGNAL(connectionStatusChanged(const QString&, 
-                                                        Tp::ConnectionStatus, 
-                                                        Tp::ConnectionStatusReason)),
-            this, SIGNAL(accountConnectionStatusChanged(const QString&,
-                                                        Tp::ConnectionStatus,
-                                                        Tp::ConnectionStatusReason)));
+    connect(accountNode, SIGNAL(connectionStatusChanged(const QString&, int, int)), 
+            this, SIGNAL(accountConnectionStatusChanged(const QString&, int, int)));
+
     onItemsAdded(mTree, QList<TreeNode *>() << accountNode);
 }
 

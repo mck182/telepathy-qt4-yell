@@ -57,6 +57,7 @@ public:
         ConnectionManagerRole,
         ProtocolNameRole,
         DisplayNameRole,
+        IconRole,
         NicknameRole,
         ConnectsAutomaticallyRole,
         ChangingPresenceRole,
@@ -101,7 +102,7 @@ public:
 Q_SIGNALS:
     void accountCountChanged();
     void accountConnectionStatusChanged(const QString &accountId, 
-                                        Tp::ConnectionStatus status, Tp::ConnectionStatusReason);
+                                        int status, int statusReason);
 
 private:
 
