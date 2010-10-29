@@ -30,6 +30,7 @@ namespace Tp
 class TELEPATHY_QT4_EXPORT FlatModelProxy : public QAbstractProxyModel
 {
     Q_OBJECT
+    Q_PROPERTY(int rowCount READ rowCount NOTIFY rowCountChanged)
 
 public:
     
@@ -41,6 +42,11 @@ public:
     virtual QModelIndex parent(const QModelIndex &index) const;
     virtual int rowCount(const QModelIndex &parent) const;
     virtual int columnCount(const QModelIndex &parent) const;
+
+    int rowCount() const;
+
+Q_SIGNALS:
+    void rowCountChanged();
 
 private:
     

@@ -79,6 +79,11 @@ int FlatModelProxy::columnCount(const QModelIndex &parent) const
     return 1;
 }
 
+int FlatModelProxy::rowCount() const
+{
+    return rowCount(QModelIndex());
+}
+
 int FlatModelProxy::rowCount(const QModelIndex &parent) const
 {
     return offsetOf(sourceModel()->rowCount(QModelIndex()));
