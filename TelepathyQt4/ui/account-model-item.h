@@ -41,6 +41,7 @@ public:
 
     virtual QVariant data(int role) const;
     virtual bool setData(int role, const QVariant &value);
+    AccountPtr account() const { return mAccount; }
 
     void setEnabled(bool value);
 

@@ -102,7 +102,6 @@ Q_SIGNALS:
 private:
 
     Tp::AccountManagerPtr mAM;
-    QList<Tp::AccountPtr> mAccounts;
     class TreeNode *mTree;
 
     class TreeNode *node(const QModelIndex &index) const;

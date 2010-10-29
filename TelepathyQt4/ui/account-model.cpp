@@ -45,14 +45,13 @@ AccountModel::AccountModel(const Tp::AccountManagerPtr &am, QObject *parent)
             SIGNAL(childrenRemoved(TreeNode *, int, int)),
             SLOT(onItemsRemoved(TreeNode *, int, int)));
 
-    mAccounts = mAM->allAccounts();
+    foreach (Tp::AccountPtr account, mAM->allAccounts()) {
+        mTree->addChild(new AccountModelItem(account));
+    }
+
     connect(mAM.data(),
             SIGNAL(newAccount(const Tp::AccountPtr &)),
             SLOT(onNewAccount(const Tp::AccountPtr &)));
-
-    foreach (Tp::AccountPtr account, mAccounts) {
-        mTree->addChild(new AccountModelItem(account));
-    }
 
     QHash<int, QByteArray> roles;
     roles[ItemRole] = "item";
@@ -89,28 +88,6 @@ AccountModel::AccountModel(const Tp::AccountManagerPtr &am, QObject *parent)
 AccountModel::~AccountModel()
 {
     delete mTree;
-}
-
-int AccountModel::rowOf(const Account *account)
-{
-    for (int i = 0; i < mAccounts.size(); i++) {
-        if (mAccounts[i].data() == account) {
-            return i;
-        }
-    }
-
-    return -1;
-}
-
-ContactManager* AccountModel::contactManager(int row) const
-{
-    Tp::ConnectionPtr connection = mAccounts[row]->connection();
-    if (connection) {
-        return connection->contactManager();
-    }
-    else {
-        return 0;
-    }
 }
 
 void AccountModel::onNewAccount(const Tp::AccountPtr &account)
@@ -152,7 +129,7 @@ void AccountModel::onItemsRemoved(TreeNode *parent, int first, int last)
 
 int AccountModel::accountCount() const
 {
-    return mAccounts.count();
+    return mTree->size();
 }
 
 int AccountModel::columnCount(const QModelIndex &parent) const
@@ -176,7 +153,14 @@ QVariant AccountModel::data(const QModelIndex &index, int role) const
 
 AccountPtr AccountModel::accountForIndex(const QModelIndex &index) const
 {
-    return mAccounts.at(index.row());
+    TreeNode *accountNode = node(index);
+    AccountModelItem *item = qobject_cast<AccountModelItem *>(accountNode);
+    if (item) {
+        return item->account();
+    }
+    else {
+        return AccountPtr();
+    }
 }
 
 Qt::ItemFlags AccountModel::flags(const QModelIndex &index) const
