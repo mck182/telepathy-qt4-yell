@@ -41,6 +41,7 @@ class TELEPATHY_QT4_EXPORT AccountModel : public QAbstractItemModel
 {
     Q_OBJECT
     Q_PROPERTY(int accountCount READ accountCount NOTIFY accountCountChanged)
+    Q_ENUMS(Role)
 
 public:
 
@@ -95,9 +96,12 @@ public:
     virtual QModelIndex parent(const QModelIndex &index) const;
 
     int accountCount() const;
+    Q_INVOKABLE QObject *accountItemForId(const QString &id) const;
 
 Q_SIGNALS:
     void accountCountChanged();
+    void accountConnectionStatusChanged(const QString &accountId, 
+                                        Tp::ConnectionStatus status, Tp::ConnectionStatusReason);
 
 private:
 

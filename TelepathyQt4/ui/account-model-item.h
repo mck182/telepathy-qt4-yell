@@ -39,7 +39,7 @@ public:
 
     AccountModelItem(const AccountPtr &account);
 
-    virtual QVariant data(int role) const;
+    Q_INVOKABLE virtual QVariant data(int role) const;
     virtual bool setData(int role, const QVariant &value);
     AccountPtr account() const { return mAccount; }
 
@@ -52,6 +52,10 @@ public:
     Q_INVOKABLE void setNickname(const QString &value);
 
     Q_INVOKABLE void setPresence(int type, const QString &status, const QString &statusMessage);
+
+Q_SIGNALS:
+    void connectionStatusChanged(const QString &accountId,
+                                 Tp::ConnectionStatus status, Tp::ConnectionStatusReason);
 
 private Q_SLOTS:
 

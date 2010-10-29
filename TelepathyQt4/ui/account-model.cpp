@@ -46,7 +46,14 @@ AccountModel::AccountModel(const Tp::AccountManagerPtr &am, QObject *parent)
             SLOT(onItemsRemoved(TreeNode *, int, int)));
 
     foreach (Tp::AccountPtr account, mAM->allAccounts()) {
-        mTree->addChild(new AccountModelItem(account));
+        AccountModelItem *item = new AccountModelItem(account);
+        connect(item, SIGNAL(connectionStatusChanged(const QString&, 
+                                                     Tp::ConnectionStatus, 
+                                                     Tp::ConnectionStatusReason)),
+                this, SIGNAL(accountConnectionStatusChanged(const QString&,
+                                                            Tp::ConnectionStatus,
+                                                            Tp::ConnectionStatusReason)));
+        mTree->addChild(item);
     }
 
     connect(mAM.data(),
@@ -92,7 +99,14 @@ AccountModel::~AccountModel()
 
 void AccountModel::onNewAccount(const Tp::AccountPtr &account)
 {
-    TreeNode *accountNode = new AccountModelItem(account);
+    AccountModelItem *accountNode = new AccountModelItem(account);
+
+    connect(accountNode, SIGNAL(connectionStatusChanged(const QString&, 
+                                                        Tp::ConnectionStatus, 
+                                                        Tp::ConnectionStatusReason)),
+            this, SIGNAL(accountConnectionStatusChanged(const QString&,
+                                                        Tp::ConnectionStatus,
+                                                        Tp::ConnectionStatusReason)));
     onItemsAdded(mTree, QList<TreeNode *>() << accountNode);
 }
 
@@ -130,6 +144,22 @@ void AccountModel::onItemsRemoved(TreeNode *parent, int first, int last)
 int AccountModel::accountCount() const
 {
     return mTree->size();
+}
+
+QObject *AccountModel::accountItemForId(const QString &id) const
+{
+    for (int i = 0; i < mTree->size(); ++i) {
+        AccountModelItem *item = qobject_cast<AccountModelItem*>(mTree->childAt(i));
+        if (!item) {
+            continue;
+        }
+
+        if (item->data(IdRole) == id) {
+            return item;
+        }
+    }
+
+    return 0;
 }
 
 int AccountModel::columnCount(const QModelIndex &parent) const

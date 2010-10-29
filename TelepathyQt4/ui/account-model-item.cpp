@@ -261,6 +261,7 @@ void AccountModelItem::onStatusChanged(Tp::ConnectionStatus status,
     else {
         emit childrenRemoved(this, 0, size() - 1);
     }
+    emit connectionStatusChanged(mAccount->uniqueIdentifier(), status, statusReason);
 }
 
 }
