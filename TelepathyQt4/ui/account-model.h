@@ -107,7 +107,6 @@ private:
 
     class TreeNode *node(const QModelIndex &index) const;
 
-    void setupAccount(const Tp::AccountPtr &account);
     int rowOf(const Account *account);
     ContactManager *contactManager(int row) const;
 

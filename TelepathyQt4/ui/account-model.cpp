@@ -51,7 +51,7 @@ AccountModel::AccountModel(const Tp::AccountManagerPtr &am, QObject *parent)
             SLOT(onNewAccount(const Tp::AccountPtr &)));
 
     foreach (Tp::AccountPtr account, mAccounts) {
-        setupAccount(account);
+        mTree->addChild(new AccountModelItem(account));
     }
 
     QHash<int, QByteArray> roles;
@@ -89,12 +89,6 @@ AccountModel::AccountModel(const Tp::AccountManagerPtr &am, QObject *parent)
 AccountModel::~AccountModel()
 {
     delete mTree;
-}
-
-void AccountModel::setupAccount(const Tp::AccountPtr &account)
-{
-    TreeNode *accountNode = new AccountModelItem(account);
-    mTree->addChild(accountNode);
 }
 
 int AccountModel::rowOf(const Account *account)
