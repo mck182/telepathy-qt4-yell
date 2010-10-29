@@ -30,9 +30,15 @@ Rectangle {
                 anchors.margins: 10
                 height: childrenRect.height
 
+                Image {
+                    id: avatar
+                    anchors.left: parent.left
+                    anchors.margins: 10
+                    source: model.avatar
+                }
                 Text {
                     id: displayName
-                    anchors.left: parent.left
+                    anchors.left: avatar.right
                     anchors.margins: 10
                     text: model.displayName
                 }

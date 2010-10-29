@@ -27,6 +27,7 @@
 #include <TelepathyQt4/ui/AccountModel>
 
 #include "contact-model-item.h"
+#include "TelepathyQt4/ui/avatar-image-provider.h"
 
 namespace Tp
 {
@@ -118,6 +119,8 @@ QVariant AccountModelItem::data(int role) const
                     static_cast<const QObject *>(this)));
         case AccountModel::IdRole:
             return mAccount->uniqueIdentifier();
+        case AccountModel::AvatarRole:
+            return AvatarImageProvider::urlFor(mAccount);
         case AccountModel::ValidRole:
             return mAccount->isValid();
         case AccountModel::EnabledRole:

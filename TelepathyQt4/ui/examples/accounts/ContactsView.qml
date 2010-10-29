@@ -18,7 +18,7 @@ Item {
                 anchors.margins: 10
                 height: 30
                 width: 30
-                source: { console.log("avatar: " + model.avatar); model.avatar }
+                source: model.avatar
             }
             Text {
                 id: aliasName

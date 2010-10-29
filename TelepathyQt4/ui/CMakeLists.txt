@@ -2,6 +2,7 @@
 set(telepathy_qt4_ui_SRCS
     account-model.cpp
     account-model-item.cpp
+    avatar-image-provider.cpp
     contact-model-item.cpp
     conversation-item.cpp
     conversation-model.cpp
@@ -22,10 +23,12 @@ set(telepathy_qt4_ui_MOC_SRCS
 
 set(telepathy_qt4_ui_HEADERS
     AccountModel
+    AvatarImageProvider
     ConversationModel
     FlatModelProxy
     account-model.h
     account-model-item.h
+    avatar-image-provider.cpp
     contact-model-item.h
     conversation-item.h
     conversation-model.h

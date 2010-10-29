@@ -23,6 +23,8 @@
 
 #include <TelepathyQt4/ui/AccountModel>
 
+#include <QImage>
+
 namespace Tp
 {
 
@@ -59,6 +61,8 @@ QVariant ContactModelItem::data(int role) const
             return mContact->groups();
         case AccountModel::AvatarRole:
             return mContact->avatarData().fileName;
+        case Qt::DecorationRole:
+            return QImage(mContact->avatarData().fileName);
         default:
             break;
     }

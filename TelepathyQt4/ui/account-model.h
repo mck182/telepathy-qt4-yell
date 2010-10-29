@@ -47,6 +47,7 @@ public:
     enum Role {
         // general roles
         ItemRole = Qt::UserRole,
+        AvatarRole,
         IdRole,
 
         // account roles
@@ -70,7 +71,6 @@ public:
 
         // contact roles
         AliasRole,
-        AvatarRole,
         PresenceStatusRole,
         PresenceTypeRole,
         PresenceMessageRole,

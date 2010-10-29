@@ -23,6 +23,7 @@
 
 #include <QAbstractItemModel>
 #include <QDeclarativeContext>
+#include <QDeclarativeEngine>
 #include <QDeclarativeView>
 #include <QVBoxLayout>
 
@@ -31,7 +32,9 @@
 
 #include <TelepathyQt4/ui/FlatModelProxy>
 
+#include "TelepathyQt4/ui/avatar-image-provider.h"
 #include "telepathy-initializer.h"
+
 
 AccountWindow::AccountWindow()
     : QWidget(0)
@@ -48,6 +51,10 @@ AccountWindow::AccountWindow()
             SIGNAL(finished(TelepathyInitializer *)),
             SLOT(onInitializationFinished(TelepathyInitializer *)));
     initializer->run();
+
+    mView->engine()->addImageProvider(
+        QString::fromLatin1("avatars"),
+        new Tp::AvatarImageProvider(am));
 }
 
 void AccountWindow::onInitializationFinished(TelepathyInitializer *initializer)
