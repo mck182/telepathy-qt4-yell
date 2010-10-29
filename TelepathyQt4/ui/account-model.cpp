@@ -140,6 +140,17 @@ void AccountModel::onItemChanged(TreeNode *node)
     emit dataChanged(accountIndex, accountIndex);
 }
 
+void AccountModel::onItemsAdded(TreeNode *parent, const QList<TreeNode *>& nodes)
+{
+    QModelIndex parentIndex = index(parent);
+    int currentSize = rowCount(parentIndex);
+    beginInsertRows(parentIndex, currentSize, currentSize + nodes.size() - 1);
+    foreach (TreeNode *node, nodes) {
+        parent->addChild(node);
+    }
+    endInsertRows();
+}
+
 int AccountModel::accountCount() const
 {
     return mAccounts.count();

@@ -51,8 +51,9 @@ Q_SIGNALS:
 
     void removed(TreeNode *);
     void changed(TreeNode *);
+    void childrenAdded(TreeNode *parent, QList<TreeNode *>& nodes);
 
-private:
+protected:
     
     QList<TreeNode *> mChildren;
     TreeNode *mParent;

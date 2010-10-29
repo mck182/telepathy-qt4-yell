@@ -25,6 +25,8 @@
 
 #include <TelepathyQt4/Constants>
 #include <TelepathyQt4/Types>
+#include <TelepathyQt4/Contact>
+
 
 namespace Tp
 {
@@ -57,6 +59,9 @@ private Q_SLOTS:
     void onStatusChanged(Tp::ConnectionStatus status,
                          Tp::ConnectionStatusReason statusReason,
                          const QString &error, const QVariantMap &errorDetails);
+
+    void onContactsChanged(const Tp::Contacts &added,
+                           const Tp::Contacts &removed);
 
 private:
 

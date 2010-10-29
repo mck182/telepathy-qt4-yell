@@ -39,6 +39,11 @@ AccountModelItem::AccountModelItem(const AccountPtr &account)
         foreach (ContactPtr contact, manager->allKnownContacts()) {
             addChild(new ContactModelItem(contact));
         }
+
+        connect(manager,
+                SIGNAL(allKnownContactsChanged(Tp::Contacts, Tp::Contacts,
+                                               Tp::Channel::GroupMemberChangeDetails)),
+                SLOT(onContactsChanged(Tp::Contacts, Tp::Contacts)));
     }
 
     connect(mAccount.data(),
@@ -200,15 +205,34 @@ void AccountModelItem::setPresence(int type, const QString &status, const QStrin
     mAccount->setRequestedPresence(presence);
 }
 
+void AccountModelItem::onRemoved()
+{
+    emit removed(this);
+}
+
 void AccountModelItem::onChanged()
 {
     emit changed(this);
 }
 
-
-void AccountModelItem::onRemoved()
+void AccountModelItem::onContactsChanged(const Tp::Contacts &addedContacts,
+                                         const Tp::Contacts &removedContacts)
 {
-    emit removed(this);
+    foreach (ContactPtr contact, removedContacts) {
+        foreach (TreeNode *child, mChildren) {
+            ContactModelItem *item = qobject_cast<ContactModelItem *>(child);
+            if (item->contact() == contact) {
+                emit removed(item);
+                break;
+            }
+        }
+    }
+
+    QList<TreeNode *> newNodes;
+    foreach (ContactPtr contact, addedContacts) {
+        newNodes.append(new ContactModelItem(contact));
+    }
+    emit childrenAdded(this, newNodes);
 }
 
 void AccountModelItem::onStatusChanged(Tp::ConnectionStatus status,
@@ -216,6 +240,7 @@ void AccountModelItem::onStatusChanged(Tp::ConnectionStatus status,
                                        const QString &error,
                                        const QVariantMap &errorDetails)
 {
+    qDebug() << "status changed";
     if (mAccount->haveConnection()) {
         ContactManager *manager = mAccount->connection()->contactManager();
         foreach (ContactPtr contact, manager->allKnownContacts()) {

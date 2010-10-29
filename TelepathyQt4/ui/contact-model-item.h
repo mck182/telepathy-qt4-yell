@@ -38,6 +38,8 @@ public:
 
     virtual QVariant data(int role) const;
 
+    ContactPtr contact() const { return mContact; }
+
 private:
     
     ContactPtr mContact;
