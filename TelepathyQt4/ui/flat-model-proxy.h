@@ -46,7 +46,15 @@ public:
     int rowCount() const;
 
 Q_SIGNALS:
+
     void rowCountChanged();
+
+private Q_SLOTS:
+
+    void onRowsAboutToBeInserted(const QModelIndex &index, int first, int last);
+    void onRowsInserted(const QModelIndex &index, int first, int last);
+    void onRowsAboutToBeRemoved(const QModelIndex &index, int first, int last);
+    void onRowsRemoved(const QModelIndex &index, int first, int last);
 
 private:
     

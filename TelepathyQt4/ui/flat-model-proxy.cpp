@@ -28,6 +28,19 @@ FlatModelProxy::FlatModelProxy(QAbstractItemModel *source)
     : QAbstractProxyModel(source)
 {
     setSourceModel(source);
+
+    connect(source,
+            SIGNAL(rowsAboutToBeInserted(QModelIndex, int, int)),
+            SLOT(onRowsAboutToBeInserted(QModelIndex, int, int)));
+    connect(source,
+            SIGNAL(rowsInserted(QModelIndex, int, int)),
+            SLOT(onRowsInserted(QModelIndex, int, int)));
+    connect(source,
+            SIGNAL(rowsAboutToBeRemoved(QModelIndex, int, int)),
+            SLOT(onRowsAboutToBeRemoved(QModelIndex, int, int)));
+    connect(source,
+            SIGNAL(rowsRemoved(QModelIndex, int, int)),
+            SLOT(onRowsRemoved(QModelIndex, int, int)));
 }
 
 QModelIndex FlatModelProxy::mapFromSource(const QModelIndex &index) const
@@ -96,6 +109,45 @@ int FlatModelProxy::offsetOf(int index) const
         offset += sourceModel()->rowCount(sourceModel()->index(i, 0, QModelIndex()));
     }
     return offset;
+}
+
+void FlatModelProxy::onRowsAboutToBeInserted(const QModelIndex &index, int first, int last)
+{
+    if (index.isValid()) {
+        int offset = offsetOf(index.row()); 
+        int firstIndex = offset + first;
+        int lastIndex = offset + last;
+
+        beginInsertRows(QModelIndex(), firstIndex, lastIndex);
+    }
+}
+
+
+void FlatModelProxy::onRowsAboutToBeRemoved(const QModelIndex &index, int first, int last)
+{
+    if (index.isValid()) {
+        int offset = offsetOf(index.row()); 
+        int firstIndex = offset + first;
+        int lastIndex = offset + last;
+
+        beginRemoveRows(QModelIndex(), firstIndex, lastIndex);
+    }
+}
+
+
+void FlatModelProxy::onRowsInserted(const QModelIndex &index, int first, int last)
+{
+    if (index.isValid()) {
+        endInsertRows();
+    }
+}
+
+
+void FlatModelProxy::onRowsRemoved(const QModelIndex &index, int first, int last)
+{
+    if (index.isValid()) {
+        endRemoveRows();
+    }
 }
 
 }
