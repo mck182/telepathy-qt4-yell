@@ -48,8 +48,11 @@ void TreeNode::addChild(TreeNode *node)
             SIGNAL(changed(TreeNode *)),
             SIGNAL(changed(TreeNode *)));
     connect(node,
-            SIGNAL(removed(TreeNode *)),
-            SIGNAL(removed(TreeNode *)));
+            SIGNAL(childrenAdded(TreeNode *, QList<TreeNode *>)),
+            SIGNAL(childrenAdded(TreeNode *, QList<TreeNode *>)));
+    connect(node,
+            SIGNAL(childrenRemoved(TreeNode *, int, int)),
+            SIGNAL(childrenRemoved(TreeNode *, int, int)));
 }
 
 int TreeNode::indexOf(TreeNode *node) const {
@@ -82,11 +85,15 @@ void TreeNode::remove()
         disconnect(this,
                    SIGNAL(changed(TreeNode *)),
                    mParent,
-                   SLOT(changed(TreeNode *)));
+                   SIGNAL(changed(TreeNode *)));
         disconnect(this,
-                   SIGNAL(removed(TreeNode *)),
+                   SIGNAL(childrenAdded(TreeNode *, QList<TreeNode *>)),
                    mParent,
-                   SLOT(removed(TreeNode *)));
+                   SIGNAL(childrenAdded(TreeNode *, QList<TreeNode *>)));
+        disconnect(this,
+                   SIGNAL(childrenRemoved(TreeNode *, int, int)),
+                   mParent,
+                   SIGNAL(childrenRemoved(TreeNode *, int, int)));
     }
     deleteLater();
 }

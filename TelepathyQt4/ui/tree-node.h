@@ -49,9 +49,9 @@ public:
 
 Q_SIGNALS:
 
-    void removed(TreeNode *);
     void changed(TreeNode *);
-    void childrenAdded(TreeNode *parent, QList<TreeNode *>& nodes);
+    void childrenAdded(TreeNode *parent, const QList<TreeNode *>& nodes);
+    void childrenRemoved(TreeNode *parent, int first, int last);
 
 protected:
     

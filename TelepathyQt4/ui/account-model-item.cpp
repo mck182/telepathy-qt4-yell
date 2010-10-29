@@ -211,7 +211,8 @@ void AccountModelItem::setPresence(int type, const QString &status, const QStrin
 
 void AccountModelItem::onRemoved()
 {
-    emit removed(this);
+    int index = parent()->indexOf(this);
+    emit childrenRemoved(parent(), index, index);
 }
 
 void AccountModelItem::onChanged()
@@ -223,10 +224,10 @@ void AccountModelItem::onContactsChanged(const Tp::Contacts &addedContacts,
                                          const Tp::Contacts &removedContacts)
 {
     foreach (ContactPtr contact, removedContacts) {
-        foreach (TreeNode *child, mChildren) {
-            ContactModelItem *item = qobject_cast<ContactModelItem *>(child);
+        for (int i = 0; i < mChildren.size(); i++) {
+            ContactModelItem *item = qobject_cast<ContactModelItem *>(childAt(i));
             if (item->contact() == contact) {
-                emit removed(item);
+                emit childrenRemoved(this, i, i);
                 break;
             }
         }
@@ -244,16 +245,16 @@ void AccountModelItem::onStatusChanged(Tp::ConnectionStatus status,
                                        const QString &error,
                                        const QVariantMap &errorDetails)
 {
-    qDebug() << "status changed";
     if (mAccount->haveConnection()) {
         ContactManager *manager = mAccount->connection()->contactManager();
+        QList<TreeNode *> newNodes;
         foreach (ContactPtr contact, manager->allKnownContacts()) {
-            addChild(new ContactModelItem(contact));
+            newNodes.append(new ContactModelItem(contact));
         }
-    } else {
-        while(size() > 0) {
-            childAt(0)->remove();
-        }
+        emit(childrenAdded(this, newNodes));
+    }
+    else {
+        emit childrenRemoved(this, 0, size() - 1);
     }
 }
 
