@@ -61,6 +61,7 @@ void TelepathyInitializer::onAMReady(Tp::PendingOperation *)
                 SIGNAL(finished(Tp::PendingOperation *)),
                 SLOT(onAccountReady(Tp::PendingOperation *)));
     }
+    checkFinished();
 }
 
 void TelepathyInitializer::onAccountReady(Tp::PendingOperation *op)
@@ -108,13 +109,16 @@ void TelepathyInitializer::onConnectionReady(Tp::PendingOperation *op)
 
 void TelepathyInitializer::onContactsUpgraded(Tp::PendingOperation *op)
 {
-    qDebug() << "contacts upgraded";
     numConnections--;
+    checkFinished();
+}
+
+void TelepathyInitializer::checkFinished()
+{
     if (numConnections <= 0) {
         mAccountModel = new Tp::AccountModel(mAM);
         emit finished(this);
         deleteLater();
     }
 }
-
 

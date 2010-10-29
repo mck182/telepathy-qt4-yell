@@ -49,6 +49,7 @@ private Q_SLOTS:
 private:
     
     void initializeConnections();
+    void checkFinished();
 
     Tp::AccountManagerPtr mAM;
     Tp::AccountModel *mAccountModel;
