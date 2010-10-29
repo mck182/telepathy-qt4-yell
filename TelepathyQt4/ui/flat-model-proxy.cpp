@@ -68,14 +68,12 @@ QModelIndex FlatModelProxy::mapToSource(const QModelIndex &index) const
 
 QModelIndex FlatModelProxy::index(int row, int column, const QModelIndex &parent) const
 {
+    int count = 0;
     for (int i = 0; i < sourceModel()->rowCount(QModelIndex()); i++) {
         QModelIndex sourceIndex = sourceModel()->index(i, 0, QModelIndex());
-        const int count = sourceModel()->rowCount(sourceIndex);
+        count += sourceModel()->rowCount(sourceIndex);
         if (row < count) {
             return createIndex(row, column, i);
-        }
-        else {
-            row -= count;
         }
     }
 
