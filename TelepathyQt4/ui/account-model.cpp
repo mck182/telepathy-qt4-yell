@@ -55,6 +55,7 @@ AccountModel::AccountModel(const Tp::AccountManagerPtr &am, QObject *parent)
 
     QHash<int, QByteArray> roles;
     roles[ItemRole] = "item";
+    roles[IdRole] = "id";
     roles[ValidRole] = "valid";
     roles[EnabledRole] = "enabled";
     roles[ConnectionManagerRole] = "connectionManager";
@@ -72,7 +73,6 @@ AccountModel::AccountModel(const Tp::AccountManagerPtr &am, QObject *parent)
     roles[ConnectionStatusRole] = "connectionStatus";
     roles[ConnectionStatusReasonRole] = "connectionStatusReason";
     roles[ConnectionRole] = "connection";
-    roles[IdRole] = "id";
     roles[AliasRole] = "aliasName";
     roles[AvatarRole] = "avatar";
     roles[PresenceStatusRole] = "presenceStatus";

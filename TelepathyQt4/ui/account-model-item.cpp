@@ -116,6 +116,8 @@ QVariant AccountModelItem::data(int role) const
             return QVariant::fromValue(
                 const_cast<QObject *>(
                     static_cast<const QObject *>(this)));
+        case AccountModel::IdRole:
+            return mAccount->uniqueIdentifier();
         case AccountModel::ValidRole:
             return mAccount->isValid();
         case AccountModel::EnabledRole:
