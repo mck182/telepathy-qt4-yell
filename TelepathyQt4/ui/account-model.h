@@ -78,7 +78,12 @@ public:
         SubscriptionStateRole,
         PublishStateRole,
         BlockedRole,
-        GroupsRole
+        GroupsRole,
+        TextChatCapabilityRole,
+        MediaCallCapabilityRole,
+        AudioCallCapabilityRole,
+        VideoCallCapabilityRole,
+        UpgradeCallCapabilityRole
     };
 
     explicit AccountModel(const Tp::AccountManagerPtr &am, QObject *parent = 0);

@@ -22,6 +22,7 @@
 
 #include "TelepathyQt4/ui/_gen/contact-model-item.moc.hpp"
 
+#include <TelepathyQt4/ContactCapabilities>
 #include <TelepathyQt4/ui/AccountModel>
 
 #include <QImage>
@@ -64,6 +65,16 @@ QVariant ContactModelItem::data(int role) const
             return mContact->avatarData().fileName;
         case Qt::DecorationRole:
             return QImage(mContact->avatarData().fileName);
+        case AccountModel::TextChatCapabilityRole:
+            return mContact->capabilities()->supportsTextChats();
+        case AccountModel::MediaCallCapabilityRole:
+            return mContact->capabilities()->supportsMediaCalls();
+        case AccountModel::AudioCallCapabilityRole:
+            return mContact->capabilities()->supportsAudioCalls();
+        case AccountModel::VideoCallCapabilityRole:
+            return mContact->capabilities()->supportsVideoCalls();
+        case AccountModel::UpgradeCallCapabilityRole:
+            return mContact->capabilities()->supportsUpgradingCalls();
         default:
             break;
     }
