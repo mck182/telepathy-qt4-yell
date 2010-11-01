@@ -19,7 +19,14 @@
  */
 
 #include "accountwindow.h"
+
 #include "TelepathyQt4/ui/examples/accounts/_gen/accountwindow.moc.hpp"
+
+#include <TelepathyQt4/AccountManager>
+#include <TelepathyQt4/PendingReady>
+
+#include <TelepathyQt4/ui/FlatModelProxy>
+#include <TelepathyQt4/ui/AvatarImageProvider>
 
 #include <QAbstractItemModel>
 #include <QDeclarativeContext>
@@ -27,14 +34,7 @@
 #include <QDeclarativeView>
 #include <QVBoxLayout>
 
-#include <TelepathyQt4/AccountManager>
-#include <TelepathyQt4/PendingReady>
-
-#include <TelepathyQt4/ui/FlatModelProxy>
-
-#include "TelepathyQt4/ui/avatar-image-provider.h"
 #include "telepathy-initializer.h"
-
 
 AccountWindow::AccountWindow()
     : QWidget(0)

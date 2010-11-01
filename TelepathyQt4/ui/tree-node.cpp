@@ -18,7 +18,8 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#include "tree-node.h"
+#include "TelepathyQt4/ui/tree-node.h"
+
 #include "TelepathyQt4/ui/_gen/tree-node.moc.hpp"
 
 TreeNode::TreeNode()

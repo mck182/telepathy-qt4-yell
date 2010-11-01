@@ -21,16 +21,16 @@
 #include "chatwindow.h"
 #include "TelepathyQt4/ui/examples/conversation/_gen/chatwindow.moc.hpp"
 
-#include <QDeclarativeContext>
-#include <QDeclarativeView>
-#include <QLineEdit>
-#include <QVBoxLayout>
-
 #include <TelepathyQt4/Connection>
 #include <TelepathyQt4/ContactManager>
 #include <TelepathyQt4/TextChannel>
 #include <TelepathyQt4/PendingContacts>
 #include <TelepathyQt4/PendingReady>
+
+#include <QDeclarativeContext>
+#include <QDeclarativeView>
+#include <QLineEdit>
+#include <QVBoxLayout>
 
 ChatWindow::ChatWindow(QWidget *parent)
     : QWidget(parent)

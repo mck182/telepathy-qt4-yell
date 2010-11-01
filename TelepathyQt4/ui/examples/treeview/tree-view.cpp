@@ -19,6 +19,7 @@
  */
 
 #include "tree-view.h"
+
 #include "TelepathyQt4/ui/examples/treeview/_gen/tree-view.moc.hpp"
 
 #include <TelepathyQt4/PendingReady>
@@ -31,7 +32,6 @@
 #include <QVBoxLayout>
 
 #include "telepathy-initializer.h"
-
 
 TreeView::TreeView(QWidget *parent)
     : QWidget(parent)

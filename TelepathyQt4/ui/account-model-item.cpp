@@ -18,7 +18,8 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#include "account-model-item.h"
+#include "TelepathyQt4/ui/account-model-item.h"
+
 #include "TelepathyQt4/ui/_gen/account-model-item.moc.hpp"
 
 #include <TelepathyQt4/Account>
@@ -26,7 +27,7 @@
 
 #include <TelepathyQt4/ui/AccountModel>
 
-#include "contact-model-item.h"
+#include "TelepathyQt4/ui/contact-model-item.h"
 #include "TelepathyQt4/ui/avatar-image-provider.h"
 
 namespace Tp

@@ -19,13 +19,14 @@
  */
 
 #include <TelepathyQt4/ui/AccountModel>
+
 #include "TelepathyQt4/ui/_gen/account-model.moc.hpp"
 
 #include <TelepathyQt4/PendingReady>
 #include <TelepathyQt4/ContactManager>
 
-#include "account-model-item.h"
-#include "contact-model-item.h"
+#include "TelepathyQt4/ui/account-model-item.h"
+#include "TelepathyQt4/ui/contact-model-item.h"
 
 namespace Tp
 {
