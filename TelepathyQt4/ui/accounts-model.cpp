@@ -87,6 +87,11 @@ AccountsModel::AccountsModel(const Tp::AccountManagerPtr &am, QObject *parent)
     roles[PublishStateRole] = "publishState";
     roles[BlockedRole] = "blocked";
     roles[GroupsRole] = "groups";
+    roles[TextChatCapabilityRole] = "textChat";
+    roles[MediaCallCapabilityRole] = "mediaCall";
+    roles[AudioCallCapabilityRole] = "audioCall";
+    roles[VideoCallCapabilityRole] = "videoCall";
+    roles[UpgradeCallCapabilityRole] = "upgradeCall";
     setRoleNames(roles);
 }
 
