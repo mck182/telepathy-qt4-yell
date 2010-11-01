@@ -83,6 +83,7 @@ void TelepathyInitializer::onAccountReady(Tp::PendingOperation *op)
     }
     else {
         numConnections--;
+        checkFinished();
     }
 }
 
