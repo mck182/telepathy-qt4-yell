@@ -101,7 +101,7 @@ public:
 
 Q_SIGNALS:
     void accountCountChanged();
-    void accountConnectionStatusChanged(const QString &accountId, 
+    void accountConnectionStatusChanged(const QString &accountId,
                                         int status, int statusReason);
 
 private:

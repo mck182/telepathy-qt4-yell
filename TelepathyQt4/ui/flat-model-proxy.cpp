@@ -113,7 +113,7 @@ int FlatModelProxy::offsetOf(int index) const
 void FlatModelProxy::onRowsAboutToBeInserted(const QModelIndex &index, int first, int last)
 {
     if (index.isValid()) {
-        int offset = offsetOf(index.row()); 
+        int offset = offsetOf(index.row());
         int firstIndex = offset + first;
         int lastIndex = offset + last;
 
@@ -125,7 +125,7 @@ void FlatModelProxy::onRowsAboutToBeInserted(const QModelIndex &index, int first
 void FlatModelProxy::onRowsAboutToBeRemoved(const QModelIndex &index, int first, int last)
 {
     if (index.isValid()) {
-        int offset = offsetOf(index.row()); 
+        int offset = offsetOf(index.row());
         int firstIndex = offset + first;
         int lastIndex = offset + last;
 

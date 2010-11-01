@@ -48,7 +48,7 @@ AccountModel::AccountModel(const Tp::AccountManagerPtr &am, QObject *parent)
 
     foreach (Tp::AccountPtr account, mAM->allAccounts()) {
         AccountModelItem *item = new AccountModelItem(account);
-        connect(item, SIGNAL(connectionStatusChanged(const QString&, int, int)), 
+        connect(item, SIGNAL(connectionStatusChanged(const QString&, int, int)),
                 this, SIGNAL(accountConnectionStatusChanged(const QString&, int, int)));
         mTree->addChild(item);
     }
@@ -99,7 +99,7 @@ void AccountModel::onNewAccount(const Tp::AccountPtr &account)
 {
     AccountModelItem *accountNode = new AccountModelItem(account);
 
-    connect(accountNode, SIGNAL(connectionStatusChanged(const QString&, int, int)), 
+    connect(accountNode, SIGNAL(connectionStatusChanged(const QString&, int, int)),
             this, SIGNAL(accountConnectionStatusChanged(const QString&, int, int)));
 
     onItemsAdded(mTree, QList<TreeNode *>() << accountNode);

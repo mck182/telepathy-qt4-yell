@@ -38,7 +38,7 @@ public:
         EVENT
     };
 
-    ConversationItem(const ContactPtr &contact, const QDateTime &time, 
+    ConversationItem(const ContactPtr &contact, const QDateTime &time,
             const QString &text, Type type, QObject *parent = 0);
     virtual ~ConversationItem();
 

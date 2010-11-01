@@ -103,7 +103,7 @@ int ConversationModel::rowCount(const QModelIndex &parent) const
 
 void ConversationModel::sendMessage(const QString& text)
 {
-    ConversationItem *item = new ConversationItem(mSelf, QDateTime::currentDateTime(), 
+    ConversationItem *item = new ConversationItem(mSelf, QDateTime::currentDateTime(),
                                                   text, ConversationItem::MESSAGE, this);
     addItem(item);
 
@@ -123,7 +123,7 @@ void ConversationModel::onChannelReady(Tp::PendingOperation *op)
 
 void ConversationModel::onMessageReceived(const Tp::ReceivedMessage &message)
 {
-    ConversationItem *item = new ConversationItem(message.sender(), message.sent(), 
+    ConversationItem *item = new ConversationItem(message.sender(), message.sent(),
                                                   message.text(), ConversationItem::MESSAGE, this);
     addItem(item);
 
