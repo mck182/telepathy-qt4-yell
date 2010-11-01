@@ -21,6 +21,10 @@
 #ifndef _TelepathyQt4_flat_model_proxy_h_HEADER_GUARD_
 #define _TelepathyQt4_flat_model_proxy_h_HEADER_GUARD_
 
+#ifndef IN_TELEPATHY_QT4_HEADER
+#error IN_TELEPATHY_QT4_HEADER
+#endif
+
 #include <QAbstractProxyModel>
 #include <TelepathyQt4/Global>
 

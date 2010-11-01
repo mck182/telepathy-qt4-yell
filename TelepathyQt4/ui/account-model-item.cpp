@@ -26,9 +26,9 @@
 #include <TelepathyQt4/ContactManager>
 
 #include <TelepathyQt4/ui/AccountModel>
+#include <TelepathyQt4/ui/AvatarImageProvider>
 
 #include "TelepathyQt4/ui/contact-model-item.h"
-#include "TelepathyQt4/ui/avatar-image-provider.h"
 
 namespace Tp
 {
