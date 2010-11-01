@@ -69,7 +69,6 @@ public:
         RequestedPresenceStatusMessageRole,
         ConnectionStatusRole,
         ConnectionStatusReasonRole,
-        ConnectionRole,
 
         // contact roles
         AliasRole,

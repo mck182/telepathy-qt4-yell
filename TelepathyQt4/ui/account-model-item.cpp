@@ -159,8 +159,6 @@ QVariant AccountModelItem::data(int role) const
             return mAccount->connectionStatus();
         case AccountModel::ConnectionStatusReasonRole:
             return mAccount->connectionStatusReason();
-        case AccountModel::ConnectionRole:
-            return mAccount->connectionObjectPath();
         default:
             return QVariant();
     }
