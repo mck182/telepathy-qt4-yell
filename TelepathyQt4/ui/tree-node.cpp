@@ -22,6 +22,9 @@
 
 #include "TelepathyQt4/ui/_gen/tree-node.moc.hpp"
 
+namespace Tp
+{
+
 TreeNode::TreeNode()
     : mParent(0)
 { }
@@ -97,5 +100,7 @@ void TreeNode::remove()
                    SIGNAL(childrenRemoved(TreeNode *, int, int)));
     }
     deleteLater();
+}
+
 }
 

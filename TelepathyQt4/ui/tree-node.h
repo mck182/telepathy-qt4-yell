@@ -24,6 +24,9 @@
 #include <QObject>
 #include <QVariant>
 
+namespace Tp
+{
+
 class TreeNode : public QObject
 {
     Q_OBJECT
@@ -58,6 +61,8 @@ protected:
     QList<TreeNode *> mChildren;
     TreeNode *mParent;
 };
+
+}
 
 #endif // _TelepathyQt4_tree_node_h_HEADER_GUARD_
 
