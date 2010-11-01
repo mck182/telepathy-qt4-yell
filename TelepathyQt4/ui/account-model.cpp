@@ -32,8 +32,8 @@ namespace Tp
 {
 
 AccountModel::AccountModel(const Tp::AccountManagerPtr &am, QObject *parent)
-    : QAbstractItemModel(parent)
-    , mAM(am)
+    : QAbstractItemModel(parent),
+      mAM(am)
 {
     mTree = new TreeNode;
     connect(mTree,

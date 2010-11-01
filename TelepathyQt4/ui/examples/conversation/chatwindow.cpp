@@ -33,8 +33,8 @@
 #include <QVBoxLayout>
 
 ChatWindow::ChatWindow(QWidget *parent)
-    : QWidget(parent)
-    , AbstractClientHandler(channelClassList())
+    : QWidget(parent),
+      AbstractClientHandler(channelClassList())
 {
     resize(800, 500);
 }
@@ -92,10 +92,10 @@ void ChatWindow::onReturnPressed()
 TelepathyInitializer::TelepathyInitializer(const Tp::ConnectionPtr &connection,
                                            const Tp::TextChannelPtr &channel,
                                            const Tp::MethodInvocationContextPtr<> &context)
-    : mConnection(connection)
-    , mChannel(channel)
-    , mContext(context)
-    , mModel(0)
+    : mConnection(connection),
+      mChannel(channel),
+      mContext(context),
+      mModel(0)
 {
 }
 

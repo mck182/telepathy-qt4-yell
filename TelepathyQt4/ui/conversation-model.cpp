@@ -33,8 +33,8 @@ namespace Tp
 {
 
 ConversationModel::ConversationModel(const ContactPtr &self, const TextChannelPtr &channel)
-    : mSelf(self)
-    , mChannel(channel)
+    : mSelf(self),
+      mChannel(channel)
 {
     // display messages already in queue
     foreach (Tp::ReceivedMessage message, mChannel->messageQueue()) {

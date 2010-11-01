@@ -31,11 +31,11 @@ ConversationItem::ConversationItem(const ContactPtr &contact,
                                    const QString &text,
                                    Type type,
                                    QObject *parent)
-    : QObject(parent)
-    , mContact(contact)
-    , mTime(time.isValid() ? time : QDateTime::currentDateTime())
-    , mText(text)
-    , mType(type)
+    : QObject(parent),
+      mContact(contact),
+      mTime(time.isValid() ? time : QDateTime::currentDateTime()),
+      mText(text),
+      mType(type)
 {
 }
 

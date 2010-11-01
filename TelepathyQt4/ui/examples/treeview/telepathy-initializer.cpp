@@ -28,10 +28,10 @@
 #include <TelepathyQt4/PendingReady>
 
 TelepathyInitializer::TelepathyInitializer(const Tp::AccountManagerPtr &am)
-    : QObject(0)
-    , mAM(am)
-    , mAccountModel(0)
-    , numConnections(0)
+    : QObject(0),
+      mAM(am),
+      mAccountModel(0),
+      numConnections(0)
 {
 }
 

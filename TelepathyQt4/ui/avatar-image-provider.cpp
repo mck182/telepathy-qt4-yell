@@ -27,8 +27,8 @@ namespace Tp
 {
 
 AvatarImageProvider::AvatarImageProvider(const AccountManagerPtr &am)
-    : QDeclarativeImageProvider(Image)
-    , mAM(am)
+    : QDeclarativeImageProvider(Image),
+      mAM(am)
 {
 }
 
