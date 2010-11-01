@@ -59,7 +59,6 @@ void ChatWindow::initialize(Tp::ConversationModel *model)
     show();
 }
 
-
 void ChatWindow::handleChannels(const Tp::MethodInvocationContextPtr<> &context,
                                 const Tp::AccountPtr &account,
                                 const Tp::ConnectionPtr &connection,

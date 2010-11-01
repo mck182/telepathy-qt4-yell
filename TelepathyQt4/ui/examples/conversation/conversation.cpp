@@ -43,7 +43,6 @@ int main(int argc, char *argv[])
                                                                Features() <<  Connection::FeatureSelfContact
                                                                << Connection::FeatureCore);
 
-
     ClientRegistrarPtr registrar = ClientRegistrar::create(accountFactory, connectionFactory);
     ChatWindow* mainWindow = new ChatWindow();
 

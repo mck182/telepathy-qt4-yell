@@ -121,7 +121,6 @@ void FlatModelProxy::onRowsAboutToBeInserted(const QModelIndex &index, int first
     }
 }
 
-
 void FlatModelProxy::onRowsAboutToBeRemoved(const QModelIndex &index, int first, int last)
 {
     if (index.isValid()) {
@@ -133,14 +132,12 @@ void FlatModelProxy::onRowsAboutToBeRemoved(const QModelIndex &index, int first,
     }
 }
 
-
 void FlatModelProxy::onRowsInserted(const QModelIndex &index, int first, int last)
 {
     if (index.isValid()) {
         endInsertRows();
     }
 }
-
 
 void FlatModelProxy::onRowsRemoved(const QModelIndex &index, int first, int last)
 {
