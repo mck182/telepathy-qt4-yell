@@ -126,7 +126,7 @@ QVariant AccountModelItem::data(int role) const
             return mAccount->isValid();
         case AccountModel::EnabledRole:
             return mAccount->isEnabled();
-        case AccountModel::ConnectionManagerRole:
+        case AccountModel::ConnectionManagerNameRole:
             return mAccount->cmName();
         case AccountModel::ProtocolNameRole:
             return mAccount->protocolName();
@@ -147,11 +147,13 @@ QVariant AccountModelItem::data(int role) const
             return mAccount->currentPresence().status;
         case AccountModel::CurrentPresenceTypeRole:
             return mAccount->currentPresence().type;
-        case AccountModel::CurrentStatusMessageRole:
+        case AccountModel::CurrentPresenceStatusMessageRole:
             return mAccount->currentPresence().statusMessage;
         case AccountModel::RequestedPresenceRole:
             return mAccount->requestedPresence().status;
-        case AccountModel::RequestedStatusMessageRole:
+        case AccountModel::RequestedPresenceTypeRole:
+            return mAccount->requestedPresence().type;
+        case AccountModel::RequestedPresenceStatusMessageRole:
             return mAccount->requestedPresence().statusMessage;
         case AccountModel::ConnectionStatusRole:
             return mAccount->connectionStatus();
@@ -173,7 +175,7 @@ bool AccountModelItem::setData(int role, const QVariant &value)
     case AccountModel::RequestedPresenceRole:
         setStatus(value.toString());
         return true;
-    case AccountModel::RequestedStatusMessageRole:
+    case AccountModel::RequestedPresenceStatusMessageRole:
         setStatusMessage(value.toString());
         return true;
     case AccountModel::NicknameRole:

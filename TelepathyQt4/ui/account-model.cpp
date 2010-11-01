@@ -62,7 +62,7 @@ AccountModel::AccountModel(const Tp::AccountManagerPtr &am, QObject *parent)
     roles[IdRole] = "id";
     roles[ValidRole] = "valid";
     roles[EnabledRole] = "enabled";
-    roles[ConnectionManagerRole] = "connectionManager";
+    roles[ConnectionManagerNameRole] = "connectionManager";
     roles[ProtocolNameRole] = "protocol";
     roles[DisplayNameRole] = "displayName";
     roles[IconRole] = "icon";
@@ -72,9 +72,10 @@ AccountModel::AccountModel(const Tp::AccountManagerPtr &am, QObject *parent)
     roles[AutomaticPresenceRole] = "automaticPresence";
     roles[CurrentPresenceRole] = "status";
     roles[CurrentPresenceTypeRole] = "statusType";
-    roles[CurrentStatusMessageRole] = "statusMessage";
+    roles[CurrentPresenceStatusMessageRole] = "statusMessage";
     roles[RequestedPresenceRole] = "requestedStatus";
-    roles[RequestedStatusMessageRole] = "requestedStausMessage";
+    roles[RequestedPresenceTypeRole] = "requestedStatusType";
+    roles[RequestedPresenceStatusMessageRole] = "requestedStausMessage";
     roles[ConnectionStatusRole] = "connectionStatus";
     roles[ConnectionStatusReasonRole] = "connectionStatusReason";
     roles[ConnectionRole] = "connection";
