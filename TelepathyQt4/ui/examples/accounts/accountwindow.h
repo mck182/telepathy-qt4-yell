@@ -38,7 +38,6 @@ public:
     AccountWindow();
 
 private Q_SLOTS:
-
     void onInitializationFinished(TelepathyInitializer *initializer);
 
 private:

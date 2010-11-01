@@ -44,7 +44,6 @@ class TELEPATHY_QT4_EXPORT AccountModel : public QAbstractItemModel
     Q_ENUMS(Role)
 
 public:
-
     enum Role {
         // general roles
         ItemRole = Qt::UserRole,
@@ -105,7 +104,6 @@ Q_SIGNALS:
                                         int status, int statusReason);
 
 private:
-
     Tp::AccountManagerPtr mAM;
     class TreeNode *mTree;
 
@@ -115,7 +113,6 @@ private:
     ContactManager *contactManager(int row) const;
 
 private Q_SLOTS:
-
     void onNewAccount(const Tp::AccountPtr &account);
     void onItemChanged(TreeNode *node);
     void onItemsAdded(TreeNode *parent, const QList<TreeNode *>& nodes);

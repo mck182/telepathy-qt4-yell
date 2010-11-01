@@ -38,11 +38,9 @@ public:
     TreeView(QWidget *parent = 0);
 
 private Q_SLOTS:
-
     void onInitializationFinished(TelepathyInitializer *initializer);
 
 private:
-
     QTreeView *mView;
 };
 

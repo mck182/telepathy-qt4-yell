@@ -40,7 +40,6 @@ Q_SIGNALS:
     void finished(TelepathyInitializer *initializer);
 
 private Q_SLOTS:
-
     void onAMReady(Tp::PendingOperation *);
     void onAccountReady(Tp::PendingOperation *);
     void onConnectionReady(Tp::PendingOperation *);

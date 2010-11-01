@@ -36,7 +36,6 @@ class TELEPATHY_QT4_EXPORT AccountModelItem : public TreeNode
     Q_OBJECT
 
 public:
-
     AccountModelItem(const AccountPtr &account);
 
     Q_INVOKABLE virtual QVariant data(int role) const;
@@ -58,7 +57,6 @@ Q_SIGNALS:
                                  int status, int statusReason);
 
 private Q_SLOTS:
-
     void onRemoved();
     void onChanged();
     void onStatusChanged(Tp::ConnectionStatus status,
@@ -69,7 +67,6 @@ private Q_SLOTS:
                            const Tp::Contacts &removed);
 
 private:
-
     AccountPtr mAccount;
 };
 

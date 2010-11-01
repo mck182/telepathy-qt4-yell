@@ -47,7 +47,6 @@ class TELEPATHY_QT4_EXPORT ConversationModel : public QAbstractListModel
     };
 
 public:
-
     explicit ConversationModel(const ContactPtr &self, const TextChannelPtr &channel);
     virtual ~ConversationModel();
 
@@ -56,7 +55,6 @@ public:
     Q_INVOKABLE void sendMessage(const QString& text);
 
 private:
-
     ContactPtr mSelf;
     TextChannelPtr mChannel;
     QList<const ConversationItem *> mItems;
@@ -67,7 +65,6 @@ private:
     typedef Tp::ChannelChatState ChannelChatState;
 
 private Q_SLOTS:
-
     void onChannelReady(Tp::PendingOperation *op);
     void onMessageReceived(const Tp::ReceivedMessage &message);
     void onChatStateChanged(const Tp::ContactPtr &contact, ChannelChatState state);

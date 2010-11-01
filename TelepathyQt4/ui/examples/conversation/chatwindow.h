@@ -49,12 +49,10 @@ public:
     bool bypassApproval() const { return false; }
 
 private Q_SLOTS:
-
     void initialize(Tp::ConversationModel *model);
     void onReturnPressed();
 
 private:
-
     QScopedPointer<Tp::ConversationModel> mModel;
     QDeclarativeView *mConversation;
     QLineEdit *mInput;
@@ -84,7 +82,6 @@ class TelepathyInitializer : public QObject
     Q_OBJECT
 
 public:
-
     TelepathyInitializer(const Tp::ConnectionPtr &connection,
                          const Tp::TextChannelPtr &channel,
                          const Tp::MethodInvocationContextPtr<> &context);
@@ -92,11 +89,9 @@ public:
     void run();
 
 Q_SIGNALS:
-
     void finished(Tp::ConversationModel *);
 
 private:
-
     void initializeConnection();
     void initializeChannel();
     void initializeContacts();
@@ -107,7 +102,6 @@ private:
     Tp::ConversationModel *mModel;
 
 private Q_SLOTS:
-
     void onConnectionReady(Tp::PendingOperation *);
     void onChannelReady(Tp::PendingOperation *);
     void onContactsUpgraded(Tp::PendingOperation *);
