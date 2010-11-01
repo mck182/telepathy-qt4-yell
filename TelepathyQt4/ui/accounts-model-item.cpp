@@ -18,14 +18,14 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#include "TelepathyQt4/ui/account-model-item.h"
+#include "TelepathyQt4/ui/accounts-model-item.h"
 
-#include "TelepathyQt4/ui/_gen/account-model-item.moc.hpp"
+#include "TelepathyQt4/ui/_gen/accounts-model-item.moc.hpp"
 
 #include <TelepathyQt4/Account>
 #include <TelepathyQt4/ContactManager>
 
-#include <TelepathyQt4/ui/AccountModel>
+#include <TelepathyQt4/ui/AccountsModel>
 #include <TelepathyQt4/ui/AvatarImageProvider>
 
 #include "TelepathyQt4/ui/contact-model-item.h"
@@ -33,7 +33,7 @@
 namespace Tp
 {
 
-AccountModelItem::AccountModelItem(const AccountPtr &account)
+AccountsModelItem::AccountsModelItem(const AccountPtr &account)
     : mAccount(account)
 {
     if (mAccount->haveConnection()) {
@@ -111,72 +111,72 @@ AccountModelItem::AccountModelItem(const AccountPtr &account)
             SLOT(onChanged()));
 }
 
-QVariant AccountModelItem::data(int role) const
+QVariant AccountsModelItem::data(int role) const
 {
     switch (role) {
-        case AccountModel::ItemRole:
+        case AccountsModel::ItemRole:
             return QVariant::fromValue(
                 const_cast<QObject *>(
                     static_cast<const QObject *>(this)));
-        case AccountModel::IdRole:
+        case AccountsModel::IdRole:
             return mAccount->uniqueIdentifier();
-        case AccountModel::AvatarRole:
+        case AccountsModel::AvatarRole:
             return AvatarImageProvider::urlFor(mAccount);
-        case AccountModel::ValidRole:
+        case AccountsModel::ValidRole:
             return mAccount->isValid();
-        case AccountModel::EnabledRole:
+        case AccountsModel::EnabledRole:
             return mAccount->isEnabled();
-        case AccountModel::ConnectionManagerNameRole:
+        case AccountsModel::ConnectionManagerNameRole:
             return mAccount->cmName();
-        case AccountModel::ProtocolNameRole:
+        case AccountsModel::ProtocolNameRole:
             return mAccount->protocolName();
-        case AccountModel::DisplayNameRole:
+        case AccountsModel::DisplayNameRole:
         case Qt::DisplayRole:
             return mAccount->displayName();
-        case AccountModel::IconRole:
+        case AccountsModel::IconRole:
             return mAccount->icon();
-        case AccountModel::NicknameRole:
+        case AccountsModel::NicknameRole:
             return mAccount->nickname();
-        case AccountModel::ConnectsAutomaticallyRole:
+        case AccountsModel::ConnectsAutomaticallyRole:
             return mAccount->connectsAutomatically();
-        case AccountModel::ChangingPresenceRole:
+        case AccountsModel::ChangingPresenceRole:
             return mAccount->isChangingPresence();
-        case AccountModel::AutomaticPresenceRole:
+        case AccountsModel::AutomaticPresenceRole:
             return mAccount->automaticPresence().status;
-        case AccountModel::CurrentPresenceRole:
+        case AccountsModel::CurrentPresenceRole:
             return mAccount->currentPresence().status;
-        case AccountModel::CurrentPresenceTypeRole:
+        case AccountsModel::CurrentPresenceTypeRole:
             return mAccount->currentPresence().type;
-        case AccountModel::CurrentPresenceStatusMessageRole:
+        case AccountsModel::CurrentPresenceStatusMessageRole:
             return mAccount->currentPresence().statusMessage;
-        case AccountModel::RequestedPresenceRole:
+        case AccountsModel::RequestedPresenceRole:
             return mAccount->requestedPresence().status;
-        case AccountModel::RequestedPresenceTypeRole:
+        case AccountsModel::RequestedPresenceTypeRole:
             return mAccount->requestedPresence().type;
-        case AccountModel::RequestedPresenceStatusMessageRole:
+        case AccountsModel::RequestedPresenceStatusMessageRole:
             return mAccount->requestedPresence().statusMessage;
-        case AccountModel::ConnectionStatusRole:
+        case AccountsModel::ConnectionStatusRole:
             return mAccount->connectionStatus();
-        case AccountModel::ConnectionStatusReasonRole:
+        case AccountsModel::ConnectionStatusReasonRole:
             return mAccount->connectionStatusReason();
         default:
             return QVariant();
     }
 }
 
-bool AccountModelItem::setData(int role, const QVariant &value)
+bool AccountsModelItem::setData(int role, const QVariant &value)
 {
     switch (role) {
-    case AccountModel::EnabledRole:
+    case AccountsModel::EnabledRole:
         setEnabled(value.toBool());
         return true;
-    case AccountModel::RequestedPresenceRole:
+    case AccountsModel::RequestedPresenceRole:
         setStatus(value.toString());
         return true;
-    case AccountModel::RequestedPresenceStatusMessageRole:
+    case AccountsModel::RequestedPresenceStatusMessageRole:
         setStatusMessage(value.toString());
         return true;
-    case AccountModel::NicknameRole:
+    case AccountsModel::NicknameRole:
         setNickname(value.toString());
         return true;
     default:
@@ -184,31 +184,31 @@ bool AccountModelItem::setData(int role, const QVariant &value)
     }
 }
 
-void AccountModelItem::setEnabled(bool value)
+void AccountsModelItem::setEnabled(bool value)
 {
     mAccount->setEnabled(value);
 }
 
-void AccountModelItem::setStatus(const QString &value)
+void AccountsModelItem::setStatus(const QString &value)
 {
     SimplePresence presence = mAccount->currentPresence();
     presence.status = value;
     mAccount->setRequestedPresence(presence);
 }
 
-void AccountModelItem::setStatusMessage(const QString& value)
+void AccountsModelItem::setStatusMessage(const QString& value)
 {
     SimplePresence presence = mAccount->currentPresence();
     presence.statusMessage = value;
     mAccount->setRequestedPresence(presence);
 }
 
-void AccountModelItem::setNickname(const QString &value)
+void AccountsModelItem::setNickname(const QString &value)
 {
     mAccount->setNickname(value);
 }
 
-void AccountModelItem::setPresence(int type, const QString &status, const QString &statusMessage)
+void AccountsModelItem::setPresence(int type, const QString &status, const QString &statusMessage)
 {
     SimplePresence presence;
     presence.type = type;
@@ -217,18 +217,18 @@ void AccountModelItem::setPresence(int type, const QString &status, const QStrin
     mAccount->setRequestedPresence(presence);
 }
 
-void AccountModelItem::onRemoved()
+void AccountsModelItem::onRemoved()
 {
     int index = parent()->indexOf(this);
     emit childrenRemoved(parent(), index, index);
 }
 
-void AccountModelItem::onChanged()
+void AccountsModelItem::onChanged()
 {
     emit changed(this);
 }
 
-void AccountModelItem::onContactsChanged(const Tp::Contacts &addedContacts,
+void AccountsModelItem::onContactsChanged(const Tp::Contacts &addedContacts,
                                          const Tp::Contacts &removedContacts)
 {
     foreach (ContactPtr contact, removedContacts) {
@@ -248,7 +248,7 @@ void AccountModelItem::onContactsChanged(const Tp::Contacts &addedContacts,
     emit childrenAdded(this, newNodes);
 }
 
-void AccountModelItem::onStatusChanged(Tp::ConnectionStatus status,
+void AccountsModelItem::onStatusChanged(Tp::ConnectionStatus status,
                                        Tp::ConnectionStatusReason statusReason,
                                        const QString &error,
                                        const QVariantMap &errorDetails)

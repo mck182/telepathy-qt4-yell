@@ -30,7 +30,7 @@
 TelepathyInitializer::TelepathyInitializer(const Tp::AccountManagerPtr &am)
     : QObject(0),
       mAM(am),
-      mAccountModel(0),
+      mAccountsModel(0),
       numConnections(0)
 {
 }
@@ -43,9 +43,9 @@ void TelepathyInitializer::run()
             SLOT(onAMReady(Tp::PendingOperation *)));
 }
 
-Tp::AccountModel *TelepathyInitializer::accountModel() const
+Tp::AccountsModel *TelepathyInitializer::accountModel() const
 {
-    return mAccountModel;
+    return mAccountsModel;
 }
 
 void TelepathyInitializer::onAMReady(Tp::PendingOperation *)
@@ -118,7 +118,7 @@ void TelepathyInitializer::onContactsUpgraded(Tp::PendingOperation *op)
 void TelepathyInitializer::checkFinished()
 {
     if (numConnections <= 0) {
-        mAccountModel = new Tp::AccountModel(mAM);
+        mAccountsModel = new Tp::AccountsModel(mAM);
         emit finished(this);
         deleteLater();
     }

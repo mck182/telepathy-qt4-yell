@@ -26,7 +26,7 @@
 #include <TelepathyQt4/PendingContacts>
 #include <TelepathyQt4/ContactManager>
 
-#include <TelepathyQt4/ui/AccountModel>
+#include <TelepathyQt4/ui/AccountsModel>
 
 #include <QTreeView>
 #include <QVBoxLayout>
@@ -51,7 +51,7 @@ TreeView::TreeView(QWidget *parent)
 
 void TreeView::onInitializationFinished(TelepathyInitializer *initializer)
 {
-    Tp::AccountModel *model = initializer->accountModel();
+    Tp::AccountsModel *model = initializer->accountModel();
     mView->setModel(model);
 }
 

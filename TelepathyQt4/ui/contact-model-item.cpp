@@ -23,7 +23,8 @@
 #include "TelepathyQt4/ui/_gen/contact-model-item.moc.hpp"
 
 #include <TelepathyQt4/ContactCapabilities>
-#include <TelepathyQt4/ui/AccountModel>
+
+#include <TelepathyQt4/ui/AccountsModel>
 
 #include <QImage>
 
@@ -38,42 +39,42 @@ QVariant ContactModelItem::data(int role) const
 {
     switch(role)
     {
-        case AccountModel::ItemRole:
+        case AccountsModel::ItemRole:
             return QVariant::fromValue(
                 const_cast<QObject *>(
                     static_cast<const QObject *>(this)));
-        case AccountModel::IdRole:
+        case AccountsModel::IdRole:
             return mContact->id();
         case Qt::DisplayRole:
-        case AccountModel::AliasRole:
+        case AccountsModel::AliasRole:
             return mContact->alias();
-        case AccountModel::PresenceStatusRole:
+        case AccountsModel::PresenceStatusRole:
             return mContact->presenceStatus();
-        case AccountModel::PresenceTypeRole:
+        case AccountsModel::PresenceTypeRole:
             return mContact->presenceType();
-        case AccountModel::PresenceMessageRole:
+        case AccountsModel::PresenceMessageRole:
             return mContact->presenceMessage();
-        case AccountModel::SubscriptionStateRole:
+        case AccountsModel::SubscriptionStateRole:
             return mContact->subscriptionState();
-        case AccountModel::PublishStateRole:
+        case AccountsModel::PublishStateRole:
             return mContact->publishState();
-        case AccountModel::BlockedRole:
+        case AccountsModel::BlockedRole:
             return !!mContact->block();
-        case AccountModel::GroupsRole:
+        case AccountsModel::GroupsRole:
             return mContact->groups();
-        case AccountModel::AvatarRole:
+        case AccountsModel::AvatarRole:
             return mContact->avatarData().fileName;
         case Qt::DecorationRole:
             return QImage(mContact->avatarData().fileName);
-        case AccountModel::TextChatCapabilityRole:
+        case AccountsModel::TextChatCapabilityRole:
             return mContact->capabilities()->supportsTextChats();
-        case AccountModel::MediaCallCapabilityRole:
+        case AccountsModel::MediaCallCapabilityRole:
             return mContact->capabilities()->supportsMediaCalls();
-        case AccountModel::AudioCallCapabilityRole:
+        case AccountsModel::AudioCallCapabilityRole:
             return mContact->capabilities()->supportsAudioCalls();
-        case AccountModel::VideoCallCapabilityRole:
+        case AccountsModel::VideoCallCapabilityRole:
             return mContact->capabilities()->supportsVideoCalls();
-        case AccountModel::UpgradeCallCapabilityRole:
+        case AccountsModel::UpgradeCallCapabilityRole:
             return mContact->capabilities()->supportsUpgradingCalls();
         default:
             break;

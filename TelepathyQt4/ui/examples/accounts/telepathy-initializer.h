@@ -21,7 +21,7 @@
 #ifndef _TelepathyQt4_telepathy_initializer_h_HEADER_GUARD_
 #define _TelepathyQt4_telepathy_initializer_h_HEADER_GUARD_
 
-#include <TelepathyQt4/ui/AccountModel>
+#include <TelepathyQt4/ui/AccountsModel>
 #include <TelepathyQt4/Types>
 
 class TelepathyInitializer : public QObject
@@ -33,7 +33,7 @@ public:
     TelepathyInitializer(const Tp::AccountManagerPtr &am);
 
     void run();
-    Tp::AccountModel *accountModel() const;
+    Tp::AccountsModel *accountModel() const;
 
 Q_SIGNALS:
     
@@ -51,7 +51,7 @@ private:
     void checkFinished();
 
     Tp::AccountManagerPtr mAM;
-    Tp::AccountModel *mAccountModel;
+    Tp::AccountsModel *mAccountsModel;
     int numConnections;
 };
 

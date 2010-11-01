@@ -31,12 +31,12 @@
 namespace Tp
 {
 
-class TELEPATHY_QT4_EXPORT AccountModelItem : public TreeNode
+class TELEPATHY_QT4_EXPORT AccountsModelItem : public TreeNode
 {
     Q_OBJECT
 
 public:
-    AccountModelItem(const AccountPtr &account);
+    AccountsModelItem(const AccountPtr &account);
 
     Q_INVOKABLE virtual QVariant data(int role) const;
     virtual bool setData(int role, const QVariant &value);

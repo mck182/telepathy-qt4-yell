@@ -32,12 +32,12 @@
 #include <TelepathyQt4/Types>
 #include <TelepathyQt4/TextChannel>
 
-#include "account-model-item.h"
+#include "accounts-model-item.h"
 
 namespace Tp
 {
 
-class TELEPATHY_QT4_EXPORT AccountModel : public QAbstractItemModel
+class TELEPATHY_QT4_EXPORT AccountsModel : public QAbstractItemModel
 {
     Q_OBJECT
     Q_PROPERTY(int accountCount READ accountCount NOTIFY accountCountChanged)
@@ -86,8 +86,8 @@ public:
         UpgradeCallCapabilityRole
     };
 
-    explicit AccountModel(const Tp::AccountManagerPtr &am, QObject *parent = 0);
-    virtual ~AccountModel();
+    explicit AccountsModel(const Tp::AccountManagerPtr &am, QObject *parent = 0);
+    virtual ~AccountsModel();
 
     virtual int rowCount(const QModelIndex &parent = QModelIndex()) const;
     virtual int columnCount(const QModelIndex &parent = QModelIndex()) const;

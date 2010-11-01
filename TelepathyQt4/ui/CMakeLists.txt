@@ -1,7 +1,7 @@
 # Set source files
 set(telepathy_qt4_ui_SRCS
-    account-model.cpp
-    account-model-item.cpp
+    accounts-model.cpp
+    accounts-model-item.cpp
     avatar-image-provider.cpp
     contact-model-item.cpp
     conversation-item.cpp
@@ -11,9 +11,8 @@ set(telepathy_qt4_ui_SRCS
 )
 
 set(telepathy_qt4_ui_MOC_SRCS
-    abstract-tree-item.h
-    account-model.h
-    account-model-item.h
+    accounts-model.h
+    accounts-model-item.h
     contact-model-item.h
     conversation-item.h
     conversation-model.h
@@ -22,12 +21,12 @@ set(telepathy_qt4_ui_MOC_SRCS
 )
 
 set(telepathy_qt4_ui_HEADERS
-    AccountModel
+    AccountsModel
     AvatarImageProvider
     ConversationModel
     FlatModelProxy
-    account-model.h
-    account-model-item.h
+    accounts-model.h
+    accounts-model-item.h
     avatar-image-provider.cpp
     contact-model-item.h
     conversation-item.h

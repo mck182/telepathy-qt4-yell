@@ -24,7 +24,7 @@
 #include <QWidget>
 #include <TelepathyQt4/Types>
 
-#include <TelepathyQt4/ui/AccountModel>
+#include <TelepathyQt4/ui/AccountsModel>
 
 class TelepathyInitializer;
 class QDeclarativeView;
