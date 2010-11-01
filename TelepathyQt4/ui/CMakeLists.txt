@@ -69,4 +69,3 @@ install(FILES ${telepathy_qt4_ui_HEADERS}
     DESTINATION ${INCLUDE_INSTALL_DIR}/telepathy-1.0/TelepathyQt4/ui
     COMPONENT ui_headers)
 
-add_subdirectory(examples)
