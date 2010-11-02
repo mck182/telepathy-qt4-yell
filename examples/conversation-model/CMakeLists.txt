@@ -16,5 +16,5 @@ target_link_libraries(examples_conversation
     ${QT_QTCORE_LIBRARY}
     ${QT_QTDECLARATIVE_LIBRARY}
     telepathy-qt4
-    telepathy-qt4-ui)
+    telepathy-qt4-models)
 

@@ -18,7 +18,7 @@ target_link_libraries(examples_accounts_model
     ${QT_QTCORE_LIBRARY}
     ${QT_QTDECLARATIVE_LIBRARY}
     telepathy-qt4
-    telepathy-qt4-ui)
+    telepathy-qt4-models)
 
 # tree view
 set(examples_treeview_SRCS
@@ -41,5 +41,5 @@ target_link_libraries(examples_treeview
     ${QT_QTCORE_LIBRARY}
     ${QT_QTDECLARATIVE_LIBRARY}
     telepathy-qt4
-    telepathy-qt4-ui)
+    telepathy-qt4-models)
 

@@ -1,5 +1,5 @@
 # Set source files
-set(telepathy_qt4_ui_SRCS
+set(telepathy_qt4_models_SRCS
     accounts-model.cpp
     accounts-model-item.cpp
     avatar-image-provider.cpp
@@ -10,7 +10,7 @@ set(telepathy_qt4_ui_SRCS
     tree-node.cpp
 )
 
-set(telepathy_qt4_ui_MOC_SRCS
+set(telepathy_qt4_models_MOC_SRCS
     accounts-model.h
     accounts-model-item.h
     contact-model-item.h
@@ -20,7 +20,7 @@ set(telepathy_qt4_ui_MOC_SRCS
     tree-node.h
 )
 
-set(telepathy_qt4_ui_HEADERS
+set(telepathy_qt4_models_HEADERS
     AccountsModel
     AvatarImageProvider
     ConversationModel
@@ -35,37 +35,37 @@ set(telepathy_qt4_ui_HEADERS
     tree-node.h
 )
 
-tpqt4_generate_mocs(${telepathy_qt4_ui_MOC_SRCS})
+tpqt4_generate_mocs(${telepathy_qt4_models_MOC_SRCS})
 
 # Create library
 if (ENABLE_COMPILER_COVERAGE)
-    add_library(telepathy-qt4-ui STATIC ${telepathy_qt4_ui_SRCS} ${telepathy_qt4_ui_MOC_SRCS})
+    add_library(telepathy-qt4-models STATIC ${telepathy_qt4_models_SRCS} ${telepathy_qt4_models_MOC_SRCS})
 else (ENABLE_COMPILER_COVERAGE)
-    add_library(telepathy-qt4-ui SHARED ${telepathy_qt4_ui_SRCS} ${telepathy_qt4_ui_MOC_SRCS})
+    add_library(telepathy-qt4-models SHARED ${telepathy_qt4_models_SRCS} ${telepathy_qt4_models_MOC_SRCS})
 endif (ENABLE_COMPILER_COVERAGE)
 
 # Link
-target_link_libraries(telepathy-qt4-ui
+target_link_libraries(telepathy-qt4-models
     ${QT_QTDBUS_LIBRARY}
     ${QT_QTCORE_LIBRARY}
     telepathy-qt4)
 
 # Set the correct version number
-set_target_properties(telepathy-qt4-ui PROPERTIES
+set_target_properties(telepathy-qt4-models PROPERTIES
     SOVERSION ${TP_QT4_ABI_VERSION}
     VERSION ${TP_QT4_LIBRARY_VERSION})
 
 # Install the library - watch out for the correct components
 if (WIN32)
-    install(TARGETS telepathy-qt4-ui RUNTIME DESTINATION ${LIB_INSTALL_DIR} COMPONENT ui
-        ARCHIVE DESTINATION ${LIB_INSTALL_DIR} COMPONENT ui_headers)
+    install(TARGETS telepathy-qt4-models RUNTIME DESTINATION ${LIB_INSTALL_DIR} COMPONENT models
+        ARCHIVE DESTINATION ${LIB_INSTALL_DIR} COMPONENT models_headers)
 else (WIN32)
-    install(TARGETS telepathy-qt4-ui LIBRARY DESTINATION ${LIB_INSTALL_DIR} COMPONENT ui
-        ARCHIVE DESTINATION ${LIB_INSTALL_DIR} COMPONENT ui_headers)
+    install(TARGETS telepathy-qt4-models LIBRARY DESTINATION ${LIB_INSTALL_DIR} COMPONENT models
+        ARCHIVE DESTINATION ${LIB_INSTALL_DIR} COMPONENT models_headers)
 endif (WIN32)
 
 # Install headers
-install(FILES ${telepathy_qt4_ui_HEADERS} 
-    DESTINATION ${INCLUDE_INSTALL_DIR}/telepathy-1.0/TelepathyQt4/ui
-    COMPONENT ui_headers)
+install(FILES ${telepathy_qt4_models_HEADERS} 
+    DESTINATION ${INCLUDE_INSTALL_DIR}/telepathy-1.0/TelepathyQt4/models
+    COMPONENT models_headers)
 
