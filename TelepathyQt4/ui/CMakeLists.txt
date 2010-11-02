@@ -27,7 +27,7 @@ set(telepathy_qt4_ui_HEADERS
     FlatModelProxy
     accounts-model.h
     accounts-model-item.h
-    avatar-image-provider.cpp
+    avatar-image-provider.h
     contact-model-item.h
     conversation-item.h
     conversation-model.h
