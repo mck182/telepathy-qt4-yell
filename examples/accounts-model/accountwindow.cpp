@@ -20,13 +20,13 @@
 
 #include "accountwindow.h"
 
-#include "TelepathyQt4/ui/examples/accounts/_gen/accountwindow.moc.hpp"
+#include "examples/accounts-model/_gen/accountwindow.moc.hpp"
 
 #include <TelepathyQt4/AccountManager>
 #include <TelepathyQt4/PendingReady>
 
-#include <TelepathyQt4/ui/FlatModelProxy>
-#include <TelepathyQt4/ui/AvatarImageProvider>
+#include <TelepathyQt4/models/FlatModelProxy>
+#include <TelepathyQt4/models/AvatarImageProvider>
 
 #include <QAbstractItemModel>
 #include <QDeclarativeContext>

@@ -20,7 +20,7 @@
 
 #include "telepathy-initializer.h"
 
-#include "TelepathyQt4/ui/examples/accounts/_gen/telepathy-initializer.moc.hpp"
+#include "examples/accounts-model/_gen/telepathy-initializer.moc.hpp"
 
 #include <TelepathyQt4/AccountManager>
 #include <TelepathyQt4/ContactManager>

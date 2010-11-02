@@ -27,7 +27,7 @@
 #include <TelepathyQt4/AbstractClientHandler>
 #include <TelepathyQt4/Types>
 
-#include <TelepathyQt4/ui/ConversationModel>
+#include <TelepathyQt4/models/ConversationModel>
 
 class QDeclarativeView;
 class QLineEdit;

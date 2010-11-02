@@ -18,16 +18,16 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#include <TelepathyQt4/ui/ConversationModel>
+#include <TelepathyQt4/models/ConversationModel>
 
-#include "TelepathyQt4/ui/_gen/conversation-model.moc.hpp"
+#include "TelepathyQt4/models/_gen/conversation-model.moc.hpp"
 
 #include <TelepathyQt4/PendingReady>
 #include <TelepathyQt4/ReceivedMessage>
 
 #include <QPixmap>
 
-#include "TelepathyQt4/ui/conversation-item.h"
+#include "TelepathyQt4/models/conversation-item.h"
 
 namespace Tp
 {

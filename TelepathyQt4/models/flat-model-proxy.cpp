@@ -18,9 +18,9 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#include <TelepathyQt4/ui/FlatModelProxy>
+#include <TelepathyQt4/models/FlatModelProxy>
 
-#include "TelepathyQt4/ui/_gen/flat-model-proxy.moc.hpp"
+#include "TelepathyQt4/models/_gen/flat-model-proxy.moc.hpp"
 
 namespace Tp
 {

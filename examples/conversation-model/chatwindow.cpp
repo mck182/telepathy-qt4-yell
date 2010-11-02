@@ -19,7 +19,7 @@
  */
 
 #include "chatwindow.h"
-#include "TelepathyQt4/ui/examples/conversation/_gen/chatwindow.moc.hpp"
+#include "examples/conversation-model/_gen/chatwindow.moc.hpp"
 
 #include <TelepathyQt4/Connection>
 #include <TelepathyQt4/ContactManager>

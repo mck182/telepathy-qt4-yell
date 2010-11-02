@@ -20,13 +20,13 @@
 
 #include "tree-view.h"
 
-#include "TelepathyQt4/ui/examples/treeview/_gen/tree-view.moc.hpp"
+#include "examples/accounts-model/_gen/tree-view.moc.hpp"
 
 #include <TelepathyQt4/PendingReady>
 #include <TelepathyQt4/PendingContacts>
 #include <TelepathyQt4/ContactManager>
 
-#include <TelepathyQt4/ui/AccountsModel>
+#include <TelepathyQt4/models/AccountsModel>
 
 #include <QTreeView>
 #include <QVBoxLayout>
