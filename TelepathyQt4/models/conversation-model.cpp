@@ -83,8 +83,10 @@ QVariant ConversationModel::data(const QModelIndex &index, int role) const
         return item->time();
     case TypeRole:
         switch (item->type()) {
-        case ConversationItem::MESSAGE:
-            return QString::fromLatin1("message");
+        case ConversationItem::INCOMING_MESSAGE:
+            return QString::fromLatin1("incoming_message");
+        case ConversationItem::OUTGOING_MESSAGE:
+            return QString::fromLatin1("outgoing_message");
         case ConversationItem::EVENT:
             return QString::fromLatin1("event");
         default:
@@ -104,7 +106,7 @@ int ConversationModel::rowCount(const QModelIndex &parent) const
 void ConversationModel::sendMessage(const QString& text)
 {
     ConversationItem *item = new ConversationItem(mSelf, QDateTime::currentDateTime(),
-                                                  text, ConversationItem::MESSAGE, this);
+                                                  text, ConversationItem::OUTGOING_MESSAGE, this);
     addItem(item);
 
     mChannel->send(item->text());
@@ -124,7 +126,7 @@ void ConversationModel::onChannelReady(Tp::PendingOperation *op)
 void ConversationModel::onMessageReceived(const Tp::ReceivedMessage &message)
 {
     ConversationItem *item = new ConversationItem(message.sender(), message.sent(),
-                                                  message.text(), ConversationItem::MESSAGE, this);
+                                                  message.text(), ConversationItem::INCOMING_MESSAGE, this);
     addItem(item);
 
     mChannel->acknowledge(QList<Tp::ReceivedMessage>() << message);

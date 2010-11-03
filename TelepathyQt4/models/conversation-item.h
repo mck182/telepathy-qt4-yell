@@ -34,7 +34,8 @@ class TELEPATHY_QT4_EXPORT ConversationItem : public QObject
 
 public:
     enum Type {
-        MESSAGE,
+        INCOMING_MESSAGE,
+        OUTGOING_MESSAGE,
         EVENT
     };
 

@@ -29,7 +29,7 @@ Rectangle {
                 text: {
                     var time = Qt.formatTime(model.time, "hh:mm:ss");
                     var message;
-                    if (model.type == "message") {
+                    if (model.type == "incoming_message" || model.type == "outgoing_message") {
                         message = model.contact + ": " + model.text;
                     }
                     else {
