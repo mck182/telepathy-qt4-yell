@@ -59,7 +59,7 @@ QVariant ContactModelItem::data(int role) const
         case AccountsModel::PublishStateRole:
             return mContact->publishState();
         case AccountsModel::BlockedRole:
-            return !!mContact->block();
+            return mContact->isBlocked();
         case AccountsModel::GroupsRole:
             return mContact->groups();
         case AccountsModel::AvatarRole:
