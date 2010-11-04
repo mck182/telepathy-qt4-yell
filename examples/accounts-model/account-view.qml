@@ -34,6 +34,8 @@ Rectangle {
                     id: avatar
                     anchors.left: parent.left
                     anchors.margins: 10
+                    height: 64
+                    width: 64
                     source: model.avatar
                 }
                 Text {
@@ -52,7 +54,7 @@ Rectangle {
                 }
                 EditableText {
                     id: statusMessage
-                    anchors.left: parent.left
+                    anchors.left: avatar.right
                     anchors.top: displayName.bottom
                     anchors.margins: 10
                     text: "message: " + value
@@ -61,7 +63,7 @@ Rectangle {
                 }
                 EditableText {
                     id: nickname
-                    anchors.left: parent.left
+                    anchors.left: avatar.right
                     anchors.top: statusMessage.bottom
                     anchors.margins: 10
                     value: model.nickname
@@ -75,7 +77,7 @@ Rectangle {
         id: accounts
         anchors.top: parent.top
         width: parent.width
-        height: 100
+        height: 300
 
         model: accountsModel
         delegate: accountsDelegate
@@ -83,7 +85,6 @@ Rectangle {
 
     ContactsView {
         anchors.top: accounts.bottom
-
     }
 
 }
