@@ -83,7 +83,9 @@ public:
         MediaCallCapabilityRole,
         AudioCallCapabilityRole,
         VideoCallCapabilityRole,
-        UpgradeCallCapabilityRole
+        UpgradeCallCapabilityRole,
+
+        CustomRole // a placemark for custom roles in inherited models
     };
 
     explicit AccountsModel(const Tp::AccountManagerPtr &am, QObject *parent = 0);
