@@ -34,7 +34,7 @@ AvatarImageProvider::AvatarImageProvider(const AccountManagerPtr &am)
 
 QString AvatarImageProvider::urlFor(const AccountPtr &account)
 {
-    return QString::fromLatin1("image://avatars/") + account->objectPath();
+    return QString::fromLatin1("image://avatars/") + account->uniqueIdentifier();
 }
 
 void AvatarImageProvider::registerProvider(QDeclarativeEngine *engine, const AccountManagerPtr &am)
@@ -44,8 +44,8 @@ void AvatarImageProvider::registerProvider(QDeclarativeEngine *engine, const Acc
 
 QImage AvatarImageProvider::requestImage(const QString &id, QSize *size, const QSize &requestedSize)
 {
-    qDebug() << "requested image for" << id;
-    AccountPtr account = mAM->accountForPath(id);
+    QString path = QString::fromLatin1(TELEPATHY_ACCOUNT_OBJECT_PATH_BASE "/") + id;
+    AccountPtr account = mAM->accountForPath(path);
     QImage image;
     image.loadFromData(account->avatar().avatarData);
     if (size) {
