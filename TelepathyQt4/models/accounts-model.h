@@ -91,7 +91,7 @@ public:
 
     virtual int rowCount(const QModelIndex &parent = QModelIndex()) const;
     virtual int columnCount(const QModelIndex &parent = QModelIndex()) const;
-    QVariant data(const QModelIndex &index, int role) const;
+    virtual QVariant data(const QModelIndex &index, int role) const;
     AccountPtr accountForIndex(const QModelIndex &index) const;
 
     virtual Qt::ItemFlags flags(const QModelIndex &index) const;
