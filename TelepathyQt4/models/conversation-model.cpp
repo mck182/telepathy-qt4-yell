@@ -32,8 +32,9 @@
 namespace Tp
 {
 
-ConversationModel::ConversationModel(const ContactPtr &self, const TextChannelPtr &channel)
-    : mSelf(self),
+ConversationModel::ConversationModel(const ContactPtr &self, const TextChannelPtr &channel, QObject *parent)
+    : QAbstractListModel(parent),
+      mSelf(self),
       mChannel(channel)
 {
     // display messages already in queue

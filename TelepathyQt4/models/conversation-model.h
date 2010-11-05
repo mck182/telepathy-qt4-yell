@@ -47,7 +47,7 @@ class TELEPATHY_QT4_EXPORT ConversationModel : public QAbstractListModel
     };
 
 public:
-    explicit ConversationModel(const ContactPtr &self, const TextChannelPtr &channel);
+    explicit ConversationModel(const ContactPtr &self, const TextChannelPtr &channel, QObject *parent = 0);
     virtual ~ConversationModel();
 
     virtual int rowCount(const QModelIndex &parent = QModelIndex()) const;
