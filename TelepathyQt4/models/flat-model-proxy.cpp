@@ -42,6 +42,9 @@ FlatModelProxy::FlatModelProxy(QAbstractItemModel *source)
     connect(source,
             SIGNAL(rowsRemoved(QModelIndex, int, int)),
             SLOT(onRowsRemoved(QModelIndex, int, int)));
+    connect(source,
+            SIGNAL(dataChanged(QModelIndex, QModelIndex)),
+            SLOT(onDataChanged(QModelIndex, QModelIndex)));
 }
 
 QModelIndex FlatModelProxy::mapFromSource(const QModelIndex &index) const
@@ -143,6 +146,23 @@ void FlatModelProxy::onRowsRemoved(const QModelIndex &index, int first, int last
 {
     if (index.isValid()) {
         endRemoveRows();
+    }
+}
+
+void FlatModelProxy::onDataChanged(const QModelIndex &first, const QModelIndex &last)
+{
+    if (!first.parent().isValid()) {
+        int firstOffset = offsetOf(first.row());
+        int lastOffset = offsetOf(last.row() + 1) - 1;
+
+        QModelIndex firstIndex = createIndex(firstOffset, 0, first.row());
+        QModelIndex lastIndex = createIndex(lastOffset, 0, last.row());
+        emit dataChanged(firstIndex, lastIndex);
+    }
+    else if (first.parent() == last.parent()) {
+        QModelIndex firstIndex = mapFromSource(first);
+        QModelIndex lastIndex = mapFromSource(last);
+        emit dataChanged(firstIndex, lastIndex);
     }
 }
 
