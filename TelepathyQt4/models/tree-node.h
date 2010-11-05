@@ -23,11 +23,12 @@
 
 #include <QObject>
 #include <QVariant>
+#include <TelepathyQt4/Types>
 
 namespace Tp
 {
 
-class TreeNode : public QObject
+class TELEPATHY_QT4_EXPORT TreeNode : public QObject
 {
     Q_OBJECT
 public:

@@ -28,7 +28,7 @@
 namespace Tp
 {
 
-class ContactModelItem : public TreeNode
+class TELEPATHY_QT4_EXPORT ContactModelItem : public TreeNode
 {
     Q_OBJECT
 
