@@ -111,6 +111,12 @@ Q_SIGNALS:
     void accountConnectionStatusChanged(const QString &accountId,
                                         int status, int statusReason);
 
+protected Q_SLOTS:
+    void onNewAccount(const Tp::AccountPtr &account);
+    void onItemChanged(TreeNode *node);
+    void onItemsAdded(TreeNode *parent, const QList<TreeNode *>& nodes);
+    void onItemsRemoved(TreeNode *parent, int first, int last);
+
 private:
     Tp::AccountManagerPtr mAM;
     class TreeNode *mTree;
@@ -119,12 +125,6 @@ private:
 
     int rowOf(const Account *account);
     ContactManager *contactManager(int row) const;
-
-private Q_SLOTS:
-    void onNewAccount(const Tp::AccountPtr &account);
-    void onItemChanged(TreeNode *node);
-    void onItemsAdded(TreeNode *parent, const QList<TreeNode *>& nodes);
-    void onItemsRemoved(TreeNode *parent, int first, int last);
 };
 
 }
