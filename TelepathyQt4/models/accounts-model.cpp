@@ -162,6 +162,23 @@ QObject *AccountsModel::accountItemForId(const QString &id) const
     return 0;
 }
 
+QObject *AccountsModel::contactItemForId(const QString &accountId, const QString &contactId) const
+{
+    AccountsModelItem *accountItem = qobject_cast<AccountsModelItem*>(accountItemForId(accountId));
+    for (int i = 0; i < accountItem->size(); ++i) {
+        ContactModelItem *item = qobject_cast<ContactModelItem*>(accountItem->childAt(i));
+        if (!item) {
+            continue;
+        }
+
+        if (item->data(IdRole) == contactId) {
+            return item;
+        }
+    }
+
+    return 0; 
+}
+
 int AccountsModel::columnCount(const QModelIndex &parent) const
 {
     return 1;

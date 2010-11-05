@@ -104,6 +104,7 @@ public:
 
     int accountCount() const;
     Q_INVOKABLE QObject *accountItemForId(const QString &id) const;
+    Q_INVOKABLE QObject *contactItemForId(const QString &accountId, const QString &contactId) const;
 
 Q_SIGNALS:
     void accountCountChanged();
