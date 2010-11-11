@@ -43,9 +43,6 @@ ConversationModel::ConversationModel(const ContactPtr &self, const TextChannelPt
     }
 
     connect(mChannel.data(),
-            SIGNAL(messageReceived(const Tp::ReceivedMessage &)),
-            SLOT(onMessageReceived(const Tp::ReceivedMessage &)));
-    connect(mChannel.data(),
             SIGNAL(chatStateChanged(Tp::ContactPtr, ChannelChatState)),
             SLOT(onChatStateChanged(Tp::ContactPtr, ChannelChatState)));
     
@@ -152,7 +149,7 @@ void ConversationModel::onChatStateChanged(const Tp::ContactPtr &contact, Channe
   * Disconnect the model from the channel messages queue so that messages on the queue will not
   * be acknowledged and entered into the model automatically
   */
-void ConversationModel::disconnectChannel()
+void ConversationModel::disconnectChannelQueue()
 {
     disconnect(mChannel.data(),
             SIGNAL(messageReceived(const Tp::ReceivedMessage &)),
@@ -162,7 +159,7 @@ void ConversationModel::disconnectChannel()
 /**
   * Reconnect the model to the channel queue and acknowledge messages on the queue
   */
-void ConversationModel::reconnectChannel()
+void ConversationModel::connectChannelQueue()
 {
     //reconnect the signal
     connect(mChannel.data(),
