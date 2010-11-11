@@ -148,5 +148,34 @@ void ConversationModel::onChatStateChanged(const Tp::ContactPtr &contact, Channe
     }
 }
 
+/**
+  * Disconnect the model from the channel messages queue so that messages on the queue will not
+  * be acknowledged and entered into the model automatically
+  */
+void ConversationModel::disconnectChannel()
+{
+    disconnect(mChannel.data(),
+            SIGNAL(messageReceived(const Tp::ReceivedMessage &)),
+            this, SLOT(onMessageReceived(const Tp::ReceivedMessage &)));
+}
+
+/**
+  * Reconnect the model to the channel queue and acknowledge messages on the queue
+  */
+void ConversationModel::reconnectChannel()
+{
+    //reconnect the signal
+    connect(mChannel.data(),
+                SIGNAL(messageReceived(const Tp::ReceivedMessage &)),
+                SLOT(onMessageReceived(const Tp::ReceivedMessage &)));
+
+    //flush the queue and enter all messages into the model
+    // display messages already in queue
+    foreach (Tp::ReceivedMessage message, mChannel->messageQueue()) {
+        onMessageReceived(message);
+    }
+}
+
+
 }
 
