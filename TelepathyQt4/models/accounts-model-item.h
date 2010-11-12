@@ -52,16 +52,21 @@ public:
 
     Q_INVOKABLE void setPresence(int type, const QString &status, const QString &statusMessage);
 
+    Q_INVOKABLE void refreshKnownContacts(void);
+
+
 Q_SIGNALS:
     void connectionStatusChanged(const QString &accountId,
                                  int status, int statusReason);
 
 private Q_SLOTS:
     void onRemoved();
+
     void onChanged();
+
     void onStatusChanged(Tp::ConnectionStatus status,
-                         Tp::ConnectionStatusReason statusReason,
-                         const QString &error, const QVariantMap &errorDetails);
+                             Tp::ConnectionStatusReason statusReason,
+                             const QString &error, const QVariantMap &errorDetails);
 
     void onContactsChanged(const Tp::Contacts &added,
                            const Tp::Contacts &removed);

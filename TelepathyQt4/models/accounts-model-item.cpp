@@ -243,6 +243,7 @@ void AccountsModelItem::onContactsChanged(const Tp::Contacts &addedContacts,
 
     QList<TreeNode *> newNodes;
     foreach (ContactPtr contact, addedContacts) {
+        qDebug("contact added: %s", qPrintable(contact->id()));
         newNodes.append(new ContactModelItem(contact));
     }
     emit childrenAdded(this, newNodes);
@@ -253,18 +254,23 @@ void AccountsModelItem::onStatusChanged(Tp::ConnectionStatus status,
                                        const QString &error,
                                        const QVariantMap &errorDetails)
 {
+    emit connectionStatusChanged(mAccount->uniqueIdentifier(), status, statusReason);
+}
+
+void AccountsModelItem::refreshKnownContacts()
+{
+    //clear the contacts of the account
+    emit childrenRemoved(this, 0, size() - 1);
+
+    //reload the known contacts if it has a connection
+    QList<TreeNode *> newNodes;
     if (mAccount->haveConnection()) {
         ContactManager *manager = mAccount->connection()->contactManager();
-        QList<TreeNode *> newNodes;
         foreach (ContactPtr contact, manager->allKnownContacts()) {
             newNodes.append(new ContactModelItem(contact));
         }
-        emit(childrenAdded(this, newNodes));
     }
-    else {
-        emit childrenRemoved(this, 0, size() - 1);
-    }
-    emit connectionStatusChanged(mAccount->uniqueIdentifier(), status, statusReason);
+    emit childrenAdded(this, newNodes);
 }
 
 }
