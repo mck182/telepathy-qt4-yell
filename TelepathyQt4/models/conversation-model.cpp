@@ -37,11 +37,6 @@ ConversationModel::ConversationModel(const ContactPtr &self, const TextChannelPt
       mSelf(self),
       mChannel(channel)
 {
-    // display messages already in queue
-    foreach (Tp::ReceivedMessage message, mChannel->messageQueue()) {
-        onMessageReceived(message);
-    }
-
     connect(mChannel.data(),
             SIGNAL(chatStateChanged(Tp::ContactPtr, ChannelChatState)),
             SLOT(onChatStateChanged(Tp::ContactPtr, ChannelChatState)));
