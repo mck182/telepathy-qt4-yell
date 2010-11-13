@@ -165,6 +165,10 @@ QObject *AccountsModel::accountItemForId(const QString &id) const
 QObject *AccountsModel::contactItemForId(const QString &accountId, const QString &contactId) const
 {
     AccountsModelItem *accountItem = qobject_cast<AccountsModelItem*>(accountItemForId(accountId));
+    if (!accountItem) {
+        return 0;
+    }
+
     for (int i = 0; i < accountItem->size(); ++i) {
         ContactModelItem *item = qobject_cast<ContactModelItem*>(accountItem->childAt(i));
         if (!item) {
