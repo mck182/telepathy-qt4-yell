@@ -31,6 +31,8 @@ TreeNode::TreeNode()
 
 TreeNode::~TreeNode()
 {
+    mParent->mChildren.removeOne(this);
+
     foreach (TreeNode *child, mChildren) {
         delete child;
     }
@@ -85,7 +87,6 @@ bool TreeNode::setData(int role, const QVariant &value)
 void TreeNode::remove()
 {
     if (mParent) {
-        mParent->mChildren.removeOne(this);
         disconnect(this,
                    SIGNAL(changed(TreeNode *)),
                    mParent,
