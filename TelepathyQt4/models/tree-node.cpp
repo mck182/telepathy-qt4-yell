@@ -49,6 +49,10 @@ void TreeNode::addChild(TreeNode *node)
     mChildren.append(node);
     node->mParent = this;
 
+    // set the parent QObject so that the node doesn't get deleted if used 
+    // from QML/QtScript
+    node->setParent(this);
+
     // chain changed and removed signals
     connect(node,
             SIGNAL(changed(TreeNode *)),
