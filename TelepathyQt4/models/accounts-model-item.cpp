@@ -47,7 +47,7 @@ AccountsModelItem::AccountsModelItem(const AccountPtr &account)
                                                Tp::Channel::GroupMemberChangeDetails)),
                 SLOT(onContactsChanged(Tp::Contacts, Tp::Contacts)));
     }
-
+    
     connect(mAccount.data(),
             SIGNAL(removed()),
             SLOT(onRemoved()));
@@ -109,6 +109,10 @@ AccountsModelItem::AccountsModelItem(const AccountPtr &account)
     connect(mAccount.data(),
             SIGNAL(haveConnectionChanged(bool)),
             SLOT(onChanged()));
+    connect(mAccount.data(),
+            SIGNAL(haveConnectionChanged(bool)),
+            SLOT(onHaveConnectionChanged(bool)));
+
 }
 
 QVariant AccountsModelItem::data(int role) const
@@ -255,6 +259,20 @@ void AccountsModelItem::onStatusChanged(Tp::ConnectionStatus status,
                                        const QVariantMap &errorDetails)
 {
     emit connectionStatusChanged(mAccount->uniqueIdentifier(), status, statusReason);
+}
+
+void AccountsModelItem::onHaveConnectionChanged(bool have)
+{
+    if (!have) {
+        return;
+    }
+
+    ContactManager *manager = mAccount->connection()->contactManager();
+
+    connect(manager,
+            SIGNAL(allKnownContactsChanged(Tp::Contacts, Tp::Contacts,
+                                           Tp::Channel::GroupMemberChangeDetails)),
+            SLOT(onContactsChanged(Tp::Contacts, Tp::Contacts)));
 }
 
 void AccountsModelItem::refreshKnownContacts()

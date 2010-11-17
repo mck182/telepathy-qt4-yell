@@ -68,6 +68,7 @@ private Q_SLOTS:
                              Tp::ConnectionStatusReason statusReason,
                              const QString &error, const QVariantMap &errorDetails);
 
+    void onHaveConnectionChanged(bool have);
     void onContactsChanged(const Tp::Contacts &added,
                            const Tp::Contacts &removed);
 
