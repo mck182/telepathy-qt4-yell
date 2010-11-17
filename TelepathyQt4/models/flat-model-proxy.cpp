@@ -43,6 +43,12 @@ FlatModelProxy::FlatModelProxy(QAbstractItemModel *source)
             SIGNAL(rowsRemoved(QModelIndex, int, int)),
             SLOT(onRowsRemoved(QModelIndex, int, int)));
     connect(source,
+            SIGNAL(rowsInserted(QModelIndex, int, int)),
+            SIGNAL(rowCountChanged()));
+    connect(source,
+            SIGNAL(rowsRemoved(QModelIndex, int, int)),
+            SIGNAL(rowCountChanged()));
+    connect(source,
             SIGNAL(dataChanged(QModelIndex, QModelIndex)),
             SLOT(onDataChanged(QModelIndex, QModelIndex)));
 }
