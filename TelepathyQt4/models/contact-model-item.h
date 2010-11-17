@@ -40,6 +40,9 @@ public:
 
     ContactPtr contact() const { return mContact; }
 
+public Q_SLOTS:
+    void onChanged();
+
 private:
     
     ContactPtr mContact;

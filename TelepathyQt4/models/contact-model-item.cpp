@@ -33,7 +33,39 @@ namespace Tp
 
 ContactModelItem::ContactModelItem(const Tp::ContactPtr &contact)
     : mContact(contact)
-{ }
+{ 
+
+    connect(contact.data(),
+            SIGNAL(aliasChanged(const QString&)),
+            SLOT(onChanged()));
+    connect(contact.data(),
+            SIGNAL(avatarTokenChanged(const QString&)),
+            SLOT(onChanged()));
+    connect(contact.data(),
+            SIGNAL(avatarDataChanged(const Tp::AvatarData&)),
+            SLOT(onChanged()));
+    connect(contact.data(),
+            SIGNAL(simplePresenceChanged(const QString &, uint, const QString&)),
+            SLOT(onChanged()));
+    connect(contact.data(),
+            SIGNAL(capabilitiesChanged(Tp::ContactCapabilities*)),
+            SLOT(onChanged()));
+    connect(contact.data(),
+            SIGNAL(locationUpdated(Tp::ContactLocation*)),
+            SLOT(onChanged()));
+    connect(contact.data(),
+            SIGNAL(infoChanged(const Tp::ContactInfoFieldList&)),
+            SLOT(onChanged()));
+    connect(contact.data(),
+            SIGNAL(subscriptionStateChanged(Tp::Contact::PresenceState)),
+            SLOT(onChanged()));
+    connect(contact.data(),
+            SIGNAL(publishStateChanged(Tp::Contact::PresenceState)),
+            SLOT(onChanged()));
+    connect(contact.data(),
+            SIGNAL(blockStatusChanged(bool)),
+            SLOT(onChanged()));
+}
 
 QVariant ContactModelItem::data(int role) const
 {
@@ -81,6 +113,11 @@ QVariant ContactModelItem::data(int role) const
     }
 
     return QVariant();
+}
+
+void ContactModelItem::onChanged()
+{
+    emit changed(this);
 }
 
 }
