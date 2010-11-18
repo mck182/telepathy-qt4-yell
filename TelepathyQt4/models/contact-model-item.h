@@ -37,6 +37,7 @@ public:
     ContactModelItem(const ContactPtr &contact);
 
     Q_INVOKABLE virtual QVariant data(int role) const;
+    Q_INVOKABLE virtual bool setData(int role, const QVariant &value);
 
     ContactPtr contact() const { return mContact; }
 

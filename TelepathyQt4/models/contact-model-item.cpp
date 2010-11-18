@@ -23,6 +23,7 @@
 #include "TelepathyQt4/models/_gen/contact-model-item.moc.hpp"
 
 #include <TelepathyQt4/ContactCapabilities>
+#include <TelepathyQt4/ContactManager>
 
 #include <TelepathyQt4/models/AccountsModel>
 
@@ -113,6 +114,40 @@ QVariant ContactModelItem::data(int role) const
     }
 
     return QVariant();
+}
+
+bool ContactModelItem::setData(int role, const QVariant &value)
+{
+    switch (role) {
+        case AccountsModel::PublishStateRole: {
+            Tp::Contact::PresenceState state;
+            state = (Tp::Contact::PresenceState) value.toInt();
+            switch (state) {
+                case Tp::Contact::PresenceStateYes:
+                    // authorize the contact and request its presence publication
+                    mContact->authorizePresencePublication();
+                    mContact->requestPresenceSubscription();
+                    return true;
+                case Tp::Contact::PresenceStateNo: {
+                    // reject the presence publication and remove the contact
+                    mContact->removePresencePublication();
+                    QList<Tp::ContactPtr> contacts;
+                    contacts << mContact;
+                    Tp::ContactManager *manager = mContact->manager();
+                    // TODO: replace the removeFromGroup code by this line when the models get merged into tp-qt4
+                    //mContact->manager()->removeContacts(mContact);
+                    foreach (const QString &group, mContact->groups()) {
+                        manager->removeContactsFromGroup(group, contacts);
+                    }
+                    return true;
+                }
+                default:
+                    return false;
+            }
+        }
+        default:
+            return false;
+    }
 }
 
 void ContactModelItem::onChanged()
