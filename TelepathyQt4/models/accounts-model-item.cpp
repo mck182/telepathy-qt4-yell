@@ -236,7 +236,7 @@ void AccountsModelItem::onContactsChanged(const Tp::Contacts &addedContacts,
                                          const Tp::Contacts &removedContacts)
 {
     foreach (ContactPtr contact, removedContacts) {
-        for (int i = 0; i < mChildren.size(); i++) {
+        for (int i = 0; i < mChildren.size(); ++i) {
             ContactModelItem *item = qobject_cast<ContactModelItem *>(childAt(i));
             if (item->contact() == contact) {
                 emit childrenRemoved(this, i, i);
@@ -277,19 +277,47 @@ void AccountsModelItem::onHaveConnectionChanged(bool have)
 
 void AccountsModelItem::refreshKnownContacts()
 {
-    //clear the contacts of the account
-    emit childrenRemoved(this, 0, size() - 1);
-
     //reload the known contacts if it has a connection
     QList<TreeNode *> newNodes;
     if (mAccount->haveConnection()) {
         ContactManager *manager = mAccount->connection()->contactManager();
-        foreach (ContactPtr contact, manager->allKnownContacts()) {
-            newNodes.append(new ContactModelItem(contact));
+        Contacts contacts = manager->allKnownContacts();
+
+        //remove the items no longer present
+        for (int i = 0; i < mChildren.size(); ++i) {
+            bool exists = false;
+            ContactModelItem *item = qobject_cast<ContactModelItem *>(childAt(i));
+            if(item) {
+                ContactPtr itemContact = item->contact();
+                if(contacts.contains(itemContact)) {
+                    exists = true;
+                    break;
+                }
+            }
+            if(!exists) {
+                qDebug("item removed");
+                emit childrenRemoved(this, i, i);
+            }
+        }
+
+        //get the list of contacts in the children
+        QList<ContactPtr> contactItemsList;
+        for (int i = 0; i < mChildren.size(); ++i) {
+            ContactModelItem *item = qobject_cast<ContactModelItem *>(childAt(i));
+            if(item) {
+                contactItemsList.append(item->contact());
+            }
+        }
+
+        foreach (ContactPtr contact, contacts) {
+            if(!contactItemsList.contains(contact)) {
+                qDebug("new contact detected");
+                newNodes.append(new ContactModelItem(contact));
+            }
         }
     }
-    emit childrenAdded(this, newNodes);
+    if(newNodes.count() > 0) {
+        emit childrenAdded(this, newNodes);
+    }
 }
-
 }
-
