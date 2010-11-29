@@ -24,6 +24,7 @@
 
 #include <TelepathyQt4/PendingReady>
 #include <TelepathyQt4/ReceivedMessage>
+#include <TelepathyQt4/AvatarData>
 
 #include <QPixmap>
 
@@ -38,8 +39,8 @@ ConversationModel::ConversationModel(const ContactPtr &self, const TextChannelPt
       mChannel(channel)
 {
     connect(mChannel.data(),
-            SIGNAL(chatStateChanged(Tp::ContactPtr, ChannelChatState)),
-            SLOT(onChatStateChanged(Tp::ContactPtr, ChannelChatState)));
+            SIGNAL(chatStateChanged(const Tp::ContactPtr&, Tp::ChannelChatState)),
+            SLOT(onChatStateChanged(const Tp::ContactPtr&, Tp::ChannelChatState)));
     
     QHash<int, QByteArray> roles;
     roles[TextRole] = "text";

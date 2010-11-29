@@ -21,6 +21,7 @@
 #include "chatwindow.h"
 #include "examples/conversation-model/_gen/chatwindow.moc.hpp"
 
+#include <TelepathyQt4/ChannelClassSpecList>
 #include <TelepathyQt4/Connection>
 #include <TelepathyQt4/ContactManager>
 #include <TelepathyQt4/TextChannel>
@@ -34,7 +35,7 @@
 
 ChatWindow::ChatWindow(QWidget *parent)
     : QWidget(parent),
-      AbstractClientHandler(channelClassList())
+      AbstractClientHandler(Tp::ChannelClassSpecList(channelClassList()))
 {
     resize(800, 500);
 }
@@ -65,7 +66,7 @@ void ChatWindow::handleChannels(const Tp::MethodInvocationContextPtr<> &context,
                                 const QList<Tp::ChannelPtr> &channels,
                                 const QList<Tp::ChannelRequestPtr> &requestsSatisfied,
                                 const QDateTime &userActionTime,
-                                const QVariantMap &handlerInfo)
+                                const Tp::AbstractClientHandler::HandlerInfo &handlerInfo)
 {
     if (channels.size() == 1) {
         Tp::TextChannelPtr channel = Tp::TextChannelPtr::dynamicCast(channels[0]);
@@ -139,11 +140,11 @@ void TelepathyInitializer::initializeConnection()
 
 void TelepathyInitializer::initializeContacts()
 {
-    Tp::ContactManager *contactManager = mConnection->contactManager();
+    Tp::ContactManagerPtr contactManager = mConnection->contactManager();
 
     QList<Tp::ContactPtr> contacts = mChannel->groupContacts().toList();
 
-    QSet<Tp::Contact::Feature> features;
+    Tp::Features features;
     features << Tp::Contact::FeatureAlias
              << Tp::Contact::FeatureAvatarToken
              << Tp::Contact::FeatureSimplePresence

@@ -36,13 +36,13 @@ namespace Tp
 AccountsModelItem::AccountsModelItem(const AccountPtr &account)
     : mAccount(account)
 {
-    if (mAccount->haveConnection()) {
-        ContactManager *manager = account->connection()->contactManager();
+    if (!mAccount->connection().isNull()) {
+        ContactManagerPtr manager = account->connection()->contactManager();
         foreach (ContactPtr contact, manager->allKnownContacts()) {
             addChild(new ContactModelItem(contact));
         }
 
-        connect(manager,
+        connect(manager.data(),
                 SIGNAL(allKnownContactsChanged(Tp::Contacts, Tp::Contacts,
                                                Tp::Channel::GroupMemberChangeDetails)),
                 SLOT(onContactsChanged(Tp::Contacts, Tp::Contacts)));
@@ -73,7 +73,7 @@ AccountsModelItem::AccountsModelItem(const AccountPtr &account)
             SIGNAL(stateChanged(bool)),
             SLOT(onChanged()));
     connect(mAccount.data(),
-            SIGNAL(capabilitiesChanged(Tp::ConnectionCapabilities *)),
+            SIGNAL(capabilitiesChanged(const Tp::ConnectionCapabilities &)),
             SLOT(onChanged()));
     connect(mAccount.data(),
             SIGNAL(connectsAutomaticallyPropertyChanged(bool)),
@@ -85,13 +85,13 @@ AccountsModelItem::AccountsModelItem(const AccountPtr &account)
             SIGNAL(changingPresence(bool)),
             SLOT(onChanged()));
     connect(mAccount.data(),
-            SIGNAL(automaticPresenceChanged(Tp::SimplePresence)),
+            SIGNAL(automaticPresenceChanged(const Tp::Presence&)),
             SLOT(onChanged()));
     connect(mAccount.data(),
-            SIGNAL(currentPresenceChanged(Tp::SimplePresence)),
+            SIGNAL(currentPresenceChanged(const Tp::Presence&)),
             SLOT(onChanged()));
     connect(mAccount.data(),
-            SIGNAL(requestedPresenceChanged(Tp::SimplePresence)),
+            SIGNAL(requestedPresenceChanged(const Tp::Presence&)),
             SLOT(onChanged()));
     connect(mAccount.data(),
             SIGNAL(onlinenessChanged(bool)),
@@ -100,18 +100,17 @@ AccountsModelItem::AccountsModelItem(const AccountPtr &account)
             SIGNAL(avatarChanged(Tp::Avatar)),
             SLOT(onChanged()));
     connect(mAccount.data(),
-            SIGNAL(statusChanged(Tp::ConnectionStatus, Tp::ConnectionStatusReason,
-                                 QString, QVariantMap)),
+            SIGNAL(onlinenessChanged(bool)),
             SLOT(onChanged()));
     connect(mAccount.data(),
-            SIGNAL(statusChanged(Tp::ConnectionStatus,Tp::ConnectionStatusReason,QString,QVariantMap)),
-            SLOT(onStatusChanged(Tp::ConnectionStatus,Tp::ConnectionStatusReason,QString,QVariantMap)));
+            SIGNAL(connectionStatusChanged(Tp::ConnectionStatus)),
+            SLOT(onStatusChanged(Tp::ConnectionStatus)));
     connect(mAccount.data(),
-            SIGNAL(haveConnectionChanged(bool)),
+            SIGNAL(connectionChanged(const Tp::ConnectionPtr&)),
             SLOT(onChanged()));
     connect(mAccount.data(),
-            SIGNAL(haveConnectionChanged(bool)),
-            SLOT(onHaveConnectionChanged(bool)));
+            SIGNAL(connectionChanged(const Tp::ConnectionPtr&)),
+            SLOT(onConnectionChanged(const Tp::ConnectionPtr&)));
 
 }
 
@@ -138,7 +137,7 @@ QVariant AccountsModelItem::data(int role) const
         case Qt::DisplayRole:
             return mAccount->displayName();
         case AccountsModel::IconRole:
-            return mAccount->icon();
+            return mAccount->iconName();
         case AccountsModel::NicknameRole:
             return mAccount->nickname();
         case AccountsModel::ConnectsAutomaticallyRole:
@@ -146,19 +145,19 @@ QVariant AccountsModelItem::data(int role) const
         case AccountsModel::ChangingPresenceRole:
             return mAccount->isChangingPresence();
         case AccountsModel::AutomaticPresenceRole:
-            return mAccount->automaticPresence().status;
+            return mAccount->automaticPresence().status();
         case AccountsModel::CurrentPresenceRole:
-            return mAccount->currentPresence().status;
+            return mAccount->currentPresence().status();
         case AccountsModel::CurrentPresenceTypeRole:
-            return mAccount->currentPresence().type;
+            return mAccount->currentPresence().type();
         case AccountsModel::CurrentPresenceStatusMessageRole:
-            return mAccount->currentPresence().statusMessage;
+            return mAccount->currentPresence().statusMessage();
         case AccountsModel::RequestedPresenceRole:
-            return mAccount->requestedPresence().status;
+            return mAccount->requestedPresence().status();
         case AccountsModel::RequestedPresenceTypeRole:
-            return mAccount->requestedPresence().type;
+            return mAccount->requestedPresence().type();
         case AccountsModel::RequestedPresenceStatusMessageRole:
-            return mAccount->requestedPresence().statusMessage;
+            return mAccount->requestedPresence().statusMessage();
         case AccountsModel::ConnectionStatusRole:
             return mAccount->connectionStatus();
         case AccountsModel::ConnectionStatusReasonRole:
@@ -195,14 +194,14 @@ void AccountsModelItem::setEnabled(bool value)
 
 void AccountsModelItem::setStatus(const QString &value)
 {
-    SimplePresence presence = mAccount->currentPresence();
+    SimplePresence presence = mAccount->currentPresence().barePresence();
     presence.status = value;
     mAccount->setRequestedPresence(presence);
 }
 
 void AccountsModelItem::setStatusMessage(const QString& value)
 {
-    SimplePresence presence = mAccount->currentPresence();
+    SimplePresence presence = mAccount->currentPresence().barePresence();
     presence.statusMessage = value;
     mAccount->setRequestedPresence(presence);
 }
@@ -214,10 +213,8 @@ void AccountsModelItem::setNickname(const QString &value)
 
 void AccountsModelItem::setPresence(int type, const QString &status, const QString &statusMessage)
 {
-    SimplePresence presence;
-    presence.type = type;
-    presence.status = status;
-    presence.statusMessage = statusMessage;
+    Presence presence;
+    presence.setStatus((ConnectionPresenceType) type, status, statusMessage);
     mAccount->setRequestedPresence(presence);
 }
 
@@ -253,23 +250,20 @@ void AccountsModelItem::onContactsChanged(const Tp::Contacts &addedContacts,
     emit childrenAdded(this, newNodes);
 }
 
-void AccountsModelItem::onStatusChanged(Tp::ConnectionStatus status,
-                                       Tp::ConnectionStatusReason statusReason,
-                                       const QString &error,
-                                       const QVariantMap &errorDetails)
+void AccountsModelItem::onStatusChanged(Tp::ConnectionStatus status)
 {
-    emit connectionStatusChanged(mAccount->uniqueIdentifier(), status, statusReason);
+    emit connectionStatusChanged(mAccount->uniqueIdentifier(), status);
 }
 
-void AccountsModelItem::onHaveConnectionChanged(bool have)
+void AccountsModelItem::onConnectionChanged(const Tp::ConnectionPtr &connection)
 {
-    if (!have) {
+    if (connection.isNull()) {
         return;
     }
 
-    ContactManager *manager = mAccount->connection()->contactManager();
+    ContactManagerPtr manager = connection->contactManager();
 
-    connect(manager,
+    connect(manager.data(),
             SIGNAL(allKnownContactsChanged(Tp::Contacts, Tp::Contacts,
                                            Tp::Channel::GroupMemberChangeDetails)),
             SLOT(onContactsChanged(Tp::Contacts, Tp::Contacts)));
@@ -279,8 +273,8 @@ void AccountsModelItem::refreshKnownContacts()
 {
     //reload the known contacts if it has a connection
     QList<TreeNode *> newNodes;
-    if (mAccount->haveConnection()) {
-        ContactManager *manager = mAccount->connection()->contactManager();
+    if (!mAccount->connection().isNull()) {
+        ContactManagerPtr manager = mAccount->connection()->contactManager();
         Contacts contacts = manager->allKnownContacts();
 
         //remove the items no longer present

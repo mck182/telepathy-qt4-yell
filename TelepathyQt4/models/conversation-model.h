@@ -69,7 +69,7 @@ private:
 private Q_SLOTS:
     void onChannelReady(Tp::PendingOperation *op);
     void onMessageReceived(const Tp::ReceivedMessage &message);
-    void onChatStateChanged(const Tp::ContactPtr &contact, ChannelChatState state);
+    void onChatStateChanged(const Tp::ContactPtr &contact, Tp::ChannelChatState state);
 };
 
 }

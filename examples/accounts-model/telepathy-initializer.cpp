@@ -68,9 +68,9 @@ void TelepathyInitializer::onAMReady(Tp::PendingOperation *)
 void TelepathyInitializer::onAccountReady(Tp::PendingOperation *op)
 {
     Tp::PendingReady *pr = qobject_cast<Tp::PendingReady *>(op);
-    Tp::AccountPtr account = Tp::AccountPtr(qobject_cast<Tp::Account *>(pr->object()));
+    Tp::AccountPtr account = Tp::AccountPtr::dynamicCast(pr->object());
 
-    if (account->haveConnection()) {
+    if (!account->connection().isNull()) {
         Tp::Features features;
         features << Tp::Connection::FeatureCore
                  << Tp::Connection::FeatureSelfContact
@@ -91,12 +91,12 @@ void TelepathyInitializer::onAccountReady(Tp::PendingOperation *op)
 void TelepathyInitializer::onConnectionReady(Tp::PendingOperation *op)
 {
     Tp::PendingReady *pr = qobject_cast<Tp::PendingReady *>(op);
-    Tp::ConnectionPtr connection(qobject_cast<Tp::Connection *>(pr->object()));
+    Tp::ConnectionPtr connection = Tp::ConnectionPtr::dynamicCast(pr->object());
 
-    Tp::ContactManager *manager = connection->contactManager();
+    Tp::ContactManagerPtr manager = connection->contactManager();
     QList<Tp::ContactPtr> contacts = manager->allKnownContacts().toList();
 
-    QSet<Tp::Contact::Feature> features;
+    Tp::Features features;
     features << Tp::Contact::FeatureAlias
              << Tp::Contact::FeatureAvatarToken
              << Tp::Contact::FeatureSimplePresence

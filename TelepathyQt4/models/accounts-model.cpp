@@ -48,8 +48,8 @@ AccountsModel::AccountsModel(const Tp::AccountManagerPtr &am, QObject *parent)
 
     foreach (Tp::AccountPtr account, mAM->allAccounts()) {
         AccountsModelItem *item = new AccountsModelItem(account);
-        connect(item, SIGNAL(connectionStatusChanged(const QString&, int, int)),
-                this, SIGNAL(accountConnectionStatusChanged(const QString&, int, int)));
+        connect(item, SIGNAL(connectionStatusChanged(const QString&, int)),
+                this, SIGNAL(accountConnectionStatusChanged(const QString&, int)));
         mTree->addChild(item);
     }
 

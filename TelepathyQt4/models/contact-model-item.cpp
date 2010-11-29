@@ -24,6 +24,7 @@
 
 #include <TelepathyQt4/ContactCapabilities>
 #include <TelepathyQt4/ContactManager>
+#include <TelepathyQt4/AvatarData>
 
 #include <TelepathyQt4/models/AccountsModel>
 
@@ -46,25 +47,28 @@ ContactModelItem::ContactModelItem(const Tp::ContactPtr &contact)
             SIGNAL(avatarDataChanged(const Tp::AvatarData&)),
             SLOT(onChanged()));
     connect(contact.data(),
-            SIGNAL(simplePresenceChanged(const QString &, uint, const QString&)),
+            SIGNAL(presenceChanged(const Tp::Presence&)),
             SLOT(onChanged()));
     connect(contact.data(),
-            SIGNAL(capabilitiesChanged(Tp::ContactCapabilities*)),
+            SIGNAL(capabilitiesChanged(const Tp::ContactCapabilities&)),
             SLOT(onChanged()));
     connect(contact.data(),
-            SIGNAL(locationUpdated(Tp::ContactLocation*)),
+            SIGNAL(locationUpdated(const Tp::LocationInfo&)),
             SLOT(onChanged()));
     connect(contact.data(),
-            SIGNAL(infoChanged(const Tp::ContactInfoFieldList&)),
+            SIGNAL(infoFieldsChanged(const Tp::Contact::InfoFields&)),
             SLOT(onChanged()));
     connect(contact.data(),
-            SIGNAL(subscriptionStateChanged(Tp::Contact::PresenceState)),
+            SIGNAL(subscriptionStateChanged(Tp::Contact::PresenceState,
+                                            const Tp::Channel::GroupMemberChangeDetails&)),
             SLOT(onChanged()));
     connect(contact.data(),
-            SIGNAL(publishStateChanged(Tp::Contact::PresenceState)),
+            SIGNAL(publishStateChanged(Tp::Contact::PresenceState,
+                                       const Tp::Channel::GroupMemberChangeDetails&)),
             SLOT(onChanged()));
     connect(contact.data(),
-            SIGNAL(blockStatusChanged(bool)),
+            SIGNAL(blockStatusChanged(bool,
+                                      const Tp::Channel::GroupMemberChangeDetails&)),
             SLOT(onChanged()));
 }
 
@@ -82,11 +86,11 @@ QVariant ContactModelItem::data(int role) const
         case AccountsModel::AliasRole:
             return mContact->alias();
         case AccountsModel::PresenceStatusRole:
-            return mContact->presenceStatus();
+            return mContact->presence().status();
         case AccountsModel::PresenceTypeRole:
-            return mContact->presenceType();
+            return mContact->presence().type();
         case AccountsModel::PresenceMessageRole:
-            return mContact->presenceMessage();
+            return mContact->presence().statusMessage();
         case AccountsModel::SubscriptionStateRole:
             return mContact->subscriptionState();
         case AccountsModel::PublishStateRole:
@@ -100,15 +104,15 @@ QVariant ContactModelItem::data(int role) const
         case Qt::DecorationRole:
             return QImage(mContact->avatarData().fileName);
         case AccountsModel::TextChatCapabilityRole:
-            return mContact->capabilities()->supportsTextChats();
+            return mContact->capabilities().textChats();
         case AccountsModel::MediaCallCapabilityRole:
-            return mContact->capabilities()->supportsMediaCalls();
+            return mContact->capabilities().streamedMediaCalls();
         case AccountsModel::AudioCallCapabilityRole:
-            return mContact->capabilities()->supportsAudioCalls();
+            return mContact->capabilities().streamedMediaAudioCalls();
         case AccountsModel::VideoCallCapabilityRole:
-            return mContact->capabilities()->supportsVideoCalls();
+            return mContact->capabilities().streamedMediaVideoCalls();
         case AccountsModel::UpgradeCallCapabilityRole:
-            return mContact->capabilities()->supportsUpgradingCalls();
+            return mContact->capabilities().upgradingStreamedMediaCalls();
         default:
             break;
     }
@@ -133,12 +137,7 @@ bool ContactModelItem::setData(int role, const QVariant &value)
                     mContact->removePresencePublication();
                     QList<Tp::ContactPtr> contacts;
                     contacts << mContact;
-                    Tp::ContactManager *manager = mContact->manager();
-                    // TODO: replace the removeFromGroup code by this line when the models get merged into tp-qt4
-                    //mContact->manager()->removeContacts(mContact);
-                    foreach (const QString &group, mContact->groups()) {
-                        manager->removeContactsFromGroup(group, contacts);
-                    }
+                    mContact->manager()->removeContacts(contacts);
                     return true;
                 }
                 default:

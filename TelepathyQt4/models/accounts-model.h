@@ -108,8 +108,7 @@ public:
 
 Q_SIGNALS:
     void accountCountChanged();
-    void accountConnectionStatusChanged(const QString &accountId,
-                                        int status, int statusReason);
+    void accountConnectionStatusChanged(const QString &accountId, int status);
 
 protected Q_SLOTS:
     void onNewAccount(const Tp::AccountPtr &account);

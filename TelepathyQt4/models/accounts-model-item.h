@@ -56,19 +56,16 @@ public:
 
 
 Q_SIGNALS:
-    void connectionStatusChanged(const QString &accountId,
-                                 int status, int statusReason);
+    void connectionStatusChanged(const QString &accountId, int status);
 
 private Q_SLOTS:
     void onRemoved();
 
     void onChanged();
 
-    void onStatusChanged(Tp::ConnectionStatus status,
-                             Tp::ConnectionStatusReason statusReason,
-                             const QString &error, const QVariantMap &errorDetails);
+    void onStatusChanged(Tp::ConnectionStatus status);
 
-    void onHaveConnectionChanged(bool have);
+    void onConnectionChanged(const Tp::ConnectionPtr &connection);
     void onContactsChanged(const Tp::Contacts &added,
                            const Tp::Contacts &removed);
 
