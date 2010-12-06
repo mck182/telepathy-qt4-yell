@@ -257,7 +257,11 @@ void AccountsModelItem::onStatusChanged(Tp::ConnectionStatus status)
 
 void AccountsModelItem::onConnectionChanged(const Tp::ConnectionPtr &connection)
 {
-    if (connection.isNull()) {
+    //if the connection is invalid or disconnected, clear the contacts list
+    if (connection.isNull()
+            || !connection->isValid()
+            || connection->status() == ConnectionStatusDisconnected) {
+        emit childrenRemoved(this, 0, mChildren.size() - 1);
         return;
     }
 
@@ -273,7 +277,8 @@ void AccountsModelItem::refreshKnownContacts()
 {
     //reload the known contacts if it has a connection
     QList<TreeNode *> newNodes;
-    if (!mAccount->connection().isNull()) {
+    if (!mAccount->connection().isNull()
+            && mAccount->connection()->isValid()) {
         ContactManagerPtr manager = mAccount->connection()->contactManager();
         Contacts contacts = manager->allKnownContacts();
 
