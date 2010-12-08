@@ -65,6 +65,7 @@ protected:
     typedef Tp::ChannelChatState ChannelChatState;
 
     void addItem(const ConversationItem *item);
+    bool deleteItem(const ConversationItem *item);
 
 protected Q_SLOTS:
     virtual void onChatStateChanged(const Tp::ContactPtr &contact, Tp::ChannelChatState state);

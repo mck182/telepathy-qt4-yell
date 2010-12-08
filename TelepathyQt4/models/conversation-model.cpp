@@ -116,6 +116,19 @@ void ConversationModel::addItem(const ConversationItem *item)
     endInsertRows();
 }
 
+bool ConversationModel::deleteItem(const ConversationItem *item)
+{
+    int num = mItems.indexOf(item);
+    if (num != -1) {
+        beginRemoveRows(QModelIndex(), num, num);
+        mItems.removeAt(num);
+        endRemoveRows();
+        return true;
+    }
+
+    return false;
+}
+
 void ConversationModel::onChannelReady(Tp::PendingOperation *op)
 {
 }
