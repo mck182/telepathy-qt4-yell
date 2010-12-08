@@ -27,7 +27,7 @@
 #include <TelepathyQt4/AvatarData>
 
 #include <QPixmap>
-#include <QListIterator>
+#include <QtAlgorithms>
 
 #include "TelepathyQt4/models/conversation-item.h"
 
@@ -54,10 +54,7 @@ ConversationModel::ConversationModel(const ContactPtr &self, const TextChannelPt
 
 ConversationModel::~ConversationModel()
 {
-    QListIterator<const ConversationItem *> itemsIterator(mItems);
-    while (itemsIterator.hasNext()) {
-        delete itemsIterator.next();
-    }
+    qDeleteAll(mItems.begin(), mItems.end());
     mItems.clear();
 }
 
