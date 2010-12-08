@@ -38,6 +38,7 @@ class TELEPATHY_QT4_EXPORT ConversationModel : public QAbstractListModel
 {
     Q_OBJECT
 
+public:
     enum Role {
         TextRole = Qt::UserRole,
         ContactRole,
@@ -46,30 +47,31 @@ class TELEPATHY_QT4_EXPORT ConversationModel : public QAbstractListModel
         TypeRole
     };
 
-public:
     explicit ConversationModel(const ContactPtr &self, const TextChannelPtr &channel, QObject *parent = 0);
     virtual ~ConversationModel();
 
     virtual int rowCount(const QModelIndex &parent = QModelIndex()) const;
-    QVariant data(const QModelIndex &index, int role) const;
+    virtual QVariant data(const QModelIndex &index, int role) const;
     Q_INVOKABLE void sendMessage(const QString& text);
     Q_INVOKABLE void disconnectChannelQueue(void);
     Q_INVOKABLE void connectChannelQueue(void);
 
-private:
+protected:
     ContactPtr mSelf;
     TextChannelPtr mChannel;
     QList<const ConversationItem *> mItems;
 
-    void addItem(const ConversationItem *item);
-
     // work around moc namespace limitations
     typedef Tp::ChannelChatState ChannelChatState;
+
+    void addItem(const ConversationItem *item);
+
+protected Q_SLOTS:
+    virtual void onChatStateChanged(const Tp::ContactPtr &contact, Tp::ChannelChatState state);
 
 private Q_SLOTS:
     void onChannelReady(Tp::PendingOperation *op);
     void onMessageReceived(const Tp::ReceivedMessage &message);
-    void onChatStateChanged(const Tp::ContactPtr &contact, Tp::ChannelChatState state);
 };
 
 }
