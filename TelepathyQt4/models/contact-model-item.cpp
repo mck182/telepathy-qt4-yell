@@ -18,7 +18,7 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#include "TelepathyQt4/models/contact-model-item.h"
+#include "TelepathyQt4/models/ContactModelItem"
 
 #include "TelepathyQt4/models/_gen/contact-model-item.moc.hpp"
 
@@ -35,7 +35,7 @@ namespace Tp
 
 ContactModelItem::ContactModelItem(const Tp::ContactPtr &contact)
     : mContact(contact)
-{ 
+{
 
     connect(contact.data(),
             SIGNAL(aliasChanged(const QString&)),

@@ -29,7 +29,7 @@
 #include <QPixmap>
 #include <QtAlgorithms>
 
-#include "TelepathyQt4/models/conversation-item.h"
+#include "TelepathyQt4/models/ConversationItem"
 
 namespace Tp
 {
@@ -42,7 +42,7 @@ ConversationModel::ConversationModel(const ContactPtr &self, const TextChannelPt
     connect(mChannel.data(),
             SIGNAL(chatStateChanged(const Tp::ContactPtr&, Tp::ChannelChatState)),
             SLOT(onChatStateChanged(const Tp::ContactPtr&, Tp::ChannelChatState)));
-    
+
     QHash<int, QByteArray> roles;
     roles[TextRole] = "text";
     roles[ContactRole] = "contact";

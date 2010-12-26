@@ -18,8 +18,8 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#ifndef _TelepathyQt4_tree_node_h_HEADER_GUARD_
-#define _TelepathyQt4_tree_node_h_HEADER_GUARD_
+#ifndef _TelepathyQt4_models_tree_node_h_HEADER_GUARD_
+#define _TelepathyQt4_models_tree_node_h_HEADER_GUARD_
 
 #include <QObject>
 #include <QVariant>
@@ -56,12 +56,11 @@ Q_SIGNALS:
     void childrenRemoved(TreeNode *parent, int first, int last);
 
 protected:
-    
+
     QList<TreeNode *> mChildren;
     TreeNode *mParent;
 };
 
 }
 
-#endif // _TelepathyQt4_tree_node_h_HEADER_GUARD_
-
+#endif // _TelepathyQt4_models_tree_node_h_HEADER_GUARD_

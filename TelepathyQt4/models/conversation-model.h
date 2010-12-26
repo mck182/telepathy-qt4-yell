@@ -18,8 +18,8 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#ifndef _TelepathyQt4_conversation_model_h_HEADER_GUARD_
-#define _TelepathyQt4_conversation_model_h_HEADER_GUARD_
+#ifndef _TelepathyQt4_models_conversation_model_h_HEADER_GUARD_
+#define _TelepathyQt4_models_conversation_model_h_HEADER_GUARD_
 
 #ifndef IN_TELEPATHY_QT4_HEADER
 #error IN_TELEPATHY_QT4_HEADER
@@ -77,5 +77,4 @@ private Q_SLOTS:
 
 }
 
-#endif // _TelepathyQt4_ui_conversation_model_h_HEADER_GUARD_
-
+#endif // _TelepathyQt4_models_conversation_model_h_HEADER_GUARD_

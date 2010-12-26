@@ -13,6 +13,7 @@ set(telepathy_qt4_models_SRCS
 set(telepathy_qt4_models_MOC_SRCS
     accounts-model.h
     accounts-model-item.h
+    avatar-image-provider.h
     contact-model-item.h
     conversation-item.h
     conversation-model.h
@@ -22,7 +23,10 @@ set(telepathy_qt4_models_MOC_SRCS
 
 set(telepathy_qt4_models_HEADERS
     AccountsModel
+    AccountsModelItem
     AvatarImageProvider
+    ContactModelItem
+    ConversationItem
     ConversationModel
     FlatModelProxy
     accounts-model.h
@@ -65,7 +69,7 @@ else (WIN32)
 endif (WIN32)
 
 # Install headers
-install(FILES ${telepathy_qt4_models_HEADERS} 
+install(FILES ${telepathy_qt4_models_HEADERS}
     DESTINATION ${INCLUDE_INSTALL_DIR}/telepathy-1.0/TelepathyQt4/models
     COMPONENT models_headers)
 

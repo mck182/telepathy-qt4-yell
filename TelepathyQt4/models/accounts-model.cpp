@@ -25,8 +25,8 @@
 #include <TelepathyQt4/PendingReady>
 #include <TelepathyQt4/ContactManager>
 
-#include "TelepathyQt4/models/accounts-model-item.h"
-#include "TelepathyQt4/models/contact-model-item.h"
+#include "TelepathyQt4/models/AccountsModelItem"
+#include "TelepathyQt4/models/ContactModelItem"
 
 namespace Tp
 {
@@ -180,7 +180,7 @@ QObject *AccountsModel::contactItemForId(const QString &accountId, const QString
         }
     }
 
-    return 0; 
+    return 0;
 }
 
 int AccountsModel::columnCount(const QModelIndex &parent) const
@@ -198,7 +198,7 @@ QVariant AccountsModel::data(const QModelIndex &index, int role) const
     if (!index.isValid()) {
         return QVariant();
     }
-    
+
     return node(index)->data(role);
 }
 

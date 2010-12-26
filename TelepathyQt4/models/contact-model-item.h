@@ -18,8 +18,12 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#ifndef _TelepathyQt4_contact_model_item_h_HEADER_GUARD_
-#define _TelepathyQt4_contact_model_item_h_HEADER_GUARD_
+#ifndef _TelepathyQt4_models_contact_model_item_h_HEADER_GUARD_
+#define _TelepathyQt4_models_contact_model_item_h_HEADER_GUARD_
+
+#ifndef IN_TELEPATHY_QT4_HEADER
+#error IN_TELEPATHY_QT4_HEADER
+#endif
 
 #include "tree-node.h"
 
@@ -33,7 +37,7 @@ class TELEPATHY_QT4_EXPORT ContactModelItem : public TreeNode
     Q_OBJECT
 
 public:
-    
+
     ContactModelItem(const ContactPtr &contact);
 
     Q_INVOKABLE virtual QVariant data(int role) const;
@@ -45,11 +49,10 @@ public Q_SLOTS:
     void onChanged();
 
 private:
-    
+
     ContactPtr mContact;
 };
 
 }
 
-#endif // _TelepathyQt4_contact_model_item_h_HEADER_GUARD_
-
+#endif // _TelepathyQt4_models_contact_model_item_h_HEADER_GUARD_

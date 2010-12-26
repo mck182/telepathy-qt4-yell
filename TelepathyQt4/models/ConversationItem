@@ -1,0 +1,13 @@
+#ifndef _TelepathyQt4_models_ConversationItem_HEADER_GUARD_
+#define _TelepathyQt4_models_ConversationItem_HEADER_GUARD_
+
+#ifndef IN_TELEPATHY_QT4_HEADER
+#define IN_TELEPATHY_QT4_HEADER
+#endif
+
+#include <TelepathyQt4/models/conversation-item.h>
+
+#undef IN_TELEPATHY_QT4_HEADER
+
+#endif // _TelepathyQt4_models_ConversationItem_HEADER_GUARD_
+// vim:set ft=cpp:

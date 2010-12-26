@@ -18,7 +18,7 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#include "TelepathyQt4/models/accounts-model-item.h"
+#include "TelepathyQt4/models/AccountsModelItem"
 
 #include "TelepathyQt4/models/_gen/accounts-model-item.moc.hpp"
 
@@ -28,7 +28,7 @@
 #include <TelepathyQt4/models/AccountsModel>
 #include <TelepathyQt4/models/AvatarImageProvider>
 
-#include "TelepathyQt4/models/contact-model-item.h"
+#include "TelepathyQt4/models/ContactModelItem"
 
 namespace Tp
 {
@@ -47,7 +47,7 @@ AccountsModelItem::AccountsModelItem(const AccountPtr &account)
                                                Tp::Channel::GroupMemberChangeDetails)),
                 SLOT(onContactsChanged(Tp::Contacts, Tp::Contacts)));
     }
-    
+
     connect(mAccount.data(),
             SIGNAL(removed()),
             SLOT(onRemoved()));
