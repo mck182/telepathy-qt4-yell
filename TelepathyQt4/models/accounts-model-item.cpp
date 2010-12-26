@@ -286,14 +286,14 @@ void AccountsModelItem::refreshKnownContacts()
         for (int i = 0; i < mChildren.size(); ++i) {
             bool exists = false;
             ContactModelItem *item = qobject_cast<ContactModelItem *>(childAt(i));
-            if(item) {
+            if (item) {
                 ContactPtr itemContact = item->contact();
-                if(contacts.contains(itemContact)) {
+                if (contacts.contains(itemContact)) {
                     exists = true;
                     break;
                 }
             }
-            if(!exists) {
+            if (!exists) {
                 qDebug("item removed");
                 emit childrenRemoved(this, i, i);
             }
@@ -303,19 +303,19 @@ void AccountsModelItem::refreshKnownContacts()
         QList<ContactPtr> contactItemsList;
         for (int i = 0; i < mChildren.size(); ++i) {
             ContactModelItem *item = qobject_cast<ContactModelItem *>(childAt(i));
-            if(item) {
+            if (item) {
                 contactItemsList.append(item->contact());
             }
         }
 
         foreach (ContactPtr contact, contacts) {
-            if(!contactItemsList.contains(contact)) {
+            if (!contactItemsList.contains(contact)) {
                 qDebug("new contact detected");
                 newNodes.append(new ContactModelItem(contact));
             }
         }
     }
-    if(newNodes.count() > 0) {
+    if (newNodes.count() > 0) {
         emit childrenAdded(this, newNodes);
     }
 }
