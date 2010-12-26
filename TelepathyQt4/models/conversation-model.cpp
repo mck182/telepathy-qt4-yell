@@ -100,7 +100,7 @@ int ConversationModel::rowCount(const QModelIndex &parent) const
     return mItems.count();
 }
 
-void ConversationModel::sendMessage(const QString& text)
+void ConversationModel::sendMessage(const QString &text)
 {
     ConversationItem *item = new ConversationItem(mSelf, QDateTime::currentDateTime(),
                                                   text, ConversationItem::OUTGOING_MESSAGE, this);

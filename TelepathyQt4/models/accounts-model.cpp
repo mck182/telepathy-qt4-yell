@@ -116,7 +116,7 @@ void AccountsModel::onItemChanged(TreeNode *node)
     emit dataChanged(accountIndex, accountIndex);
 }
 
-void AccountsModel::onItemsAdded(TreeNode *parent, const QList<TreeNode *>& nodes)
+void AccountsModel::onItemsAdded(TreeNode *parent, const QList<TreeNode *> &nodes)
 {
     QModelIndex parentIndex = index(parent);
     int currentSize = rowCount(parentIndex);
@@ -264,7 +264,7 @@ QModelIndex AccountsModel::parent(const QModelIndex &index) const
     }
 }
 
-TreeNode* AccountsModel::node(const QModelIndex &index) const
+TreeNode *AccountsModel::node(const QModelIndex &index) const
 {
     TreeNode *node = reinterpret_cast<TreeNode *>(index.internalPointer());
     return node ? node : mTree;

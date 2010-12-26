@@ -199,7 +199,7 @@ void AccountsModelItem::setStatus(const QString &value)
     mAccount->setRequestedPresence(presence);
 }
 
-void AccountsModelItem::setStatusMessage(const QString& value)
+void AccountsModelItem::setStatusMessage(const QString &value)
 {
     SimplePresence presence = mAccount->currentPresence().barePresence();
     presence.statusMessage = value;

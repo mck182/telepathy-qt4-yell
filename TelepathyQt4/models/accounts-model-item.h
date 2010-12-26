@@ -50,7 +50,7 @@ public:
 
     Q_INVOKABLE void setStatus(const QString &value);
 
-    Q_INVOKABLE void setStatusMessage(const QString& value);
+    Q_INVOKABLE void setStatusMessage(const QString &value);
 
     Q_INVOKABLE void setNickname(const QString &value);
 

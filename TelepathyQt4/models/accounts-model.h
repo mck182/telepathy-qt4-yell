@@ -113,7 +113,7 @@ Q_SIGNALS:
 protected Q_SLOTS:
     void onNewAccount(const Tp::AccountPtr &account);
     void onItemChanged(TreeNode *node);
-    void onItemsAdded(TreeNode *parent, const QList<TreeNode *>& nodes);
+    void onItemsAdded(TreeNode *parent, const QList<TreeNode *> &nodes);
     void onItemsRemoved(TreeNode *parent, int first, int last);
 
 private:
