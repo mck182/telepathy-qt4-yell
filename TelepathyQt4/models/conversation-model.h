@@ -57,11 +57,9 @@ public:
     Q_INVOKABLE void disconnectChannelQueue(void);
     Q_INVOKABLE void connectChannelQueue(void);
 
-protected:
-    ContactPtr mSelf;
-    TextChannelPtr mChannel;
-    QList<const ConversationItem *> mItems;
+    ContactPtr selfContact() const;
 
+protected:
     // work around moc namespace limitations
     typedef Tp::ChannelChatState ChannelChatState;
 
@@ -74,6 +72,11 @@ protected Q_SLOTS:
 private Q_SLOTS:
     void onChannelReady(Tp::PendingOperation *op);
     void onMessageReceived(const Tp::ReceivedMessage &message);
+
+private:
+    struct Private;
+    friend struct Private;
+    Private *mPriv;
 };
 
 }
