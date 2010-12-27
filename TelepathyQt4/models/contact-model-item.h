@@ -38,20 +38,21 @@ class TELEPATHY_QT4_EXPORT ContactModelItem : public TreeNode
     Q_DISABLE_COPY(ContactModelItem)
 
 public:
-
     ContactModelItem(const ContactPtr &contact);
+    virtual ~ContactModelItem();
 
     Q_INVOKABLE virtual QVariant data(int role) const;
     Q_INVOKABLE virtual bool setData(int role, const QVariant &value);
 
-    ContactPtr contact() const { return mContact; }
+    ContactPtr contact() const;
 
 public Q_SLOTS:
     void onChanged();
 
 private:
-
-    ContactPtr mContact;
+    struct Private;
+    friend struct Private;
+    Private *mPriv;
 };
 
 }

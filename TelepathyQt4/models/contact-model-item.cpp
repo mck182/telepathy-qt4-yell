@@ -33,8 +33,18 @@
 namespace Tp
 {
 
+struct TELEPATHY_QT4_NO_EXPORT ContactModelItem::Private
+{
+    Private(const Tp::ContactPtr &contact)
+        : mContact(contact)
+    {
+    }
+
+    ContactPtr mContact;
+};
+
 ContactModelItem::ContactModelItem(const Tp::ContactPtr &contact)
-    : mContact(contact)
+    : mPriv(new Private(contact))
 {
 
     connect(contact.data(),
@@ -72,6 +82,11 @@ ContactModelItem::ContactModelItem(const Tp::ContactPtr &contact)
             SLOT(onChanged()));
 }
 
+ContactModelItem::~ContactModelItem()
+{
+    delete mPriv;
+}
+
 QVariant ContactModelItem::data(int role) const
 {
     switch (role)
@@ -81,38 +96,38 @@ QVariant ContactModelItem::data(int role) const
                 const_cast<QObject *>(
                     static_cast<const QObject *>(this)));
         case AccountsModel::IdRole:
-            return mContact->id();
+            return mPriv->mContact->id();
         case Qt::DisplayRole:
         case AccountsModel::AliasRole:
-            return mContact->alias();
+            return mPriv->mContact->alias();
         case AccountsModel::PresenceStatusRole:
-            return mContact->presence().status();
+            return mPriv->mContact->presence().status();
         case AccountsModel::PresenceTypeRole:
-            return mContact->presence().type();
+            return mPriv->mContact->presence().type();
         case AccountsModel::PresenceMessageRole:
-            return mContact->presence().statusMessage();
+            return mPriv->mContact->presence().statusMessage();
         case AccountsModel::SubscriptionStateRole:
-            return mContact->subscriptionState();
+            return mPriv->mContact->subscriptionState();
         case AccountsModel::PublishStateRole:
-            return mContact->publishState();
+            return mPriv->mContact->publishState();
         case AccountsModel::BlockedRole:
-            return mContact->isBlocked();
+            return mPriv->mContact->isBlocked();
         case AccountsModel::GroupsRole:
-            return mContact->groups();
+            return mPriv->mContact->groups();
         case AccountsModel::AvatarRole:
-            return mContact->avatarData().fileName;
+            return mPriv->mContact->avatarData().fileName;
         case Qt::DecorationRole:
-            return QImage(mContact->avatarData().fileName);
+            return QImage(mPriv->mContact->avatarData().fileName);
         case AccountsModel::TextChatCapabilityRole:
-            return mContact->capabilities().textChats();
+            return mPriv->mContact->capabilities().textChats();
         case AccountsModel::MediaCallCapabilityRole:
-            return mContact->capabilities().streamedMediaCalls();
+            return mPriv->mContact->capabilities().streamedMediaCalls();
         case AccountsModel::AudioCallCapabilityRole:
-            return mContact->capabilities().streamedMediaAudioCalls();
+            return mPriv->mContact->capabilities().streamedMediaAudioCalls();
         case AccountsModel::VideoCallCapabilityRole:
-            return mContact->capabilities().streamedMediaVideoCalls();
+            return mPriv->mContact->capabilities().streamedMediaVideoCalls();
         case AccountsModel::UpgradeCallCapabilityRole:
-            return mContact->capabilities().upgradingStreamedMediaCalls();
+            return mPriv->mContact->capabilities().upgradingStreamedMediaCalls();
         default:
             break;
     }
@@ -129,15 +144,15 @@ bool ContactModelItem::setData(int role, const QVariant &value)
             switch (state) {
                 case Tp::Contact::PresenceStateYes:
                     // authorize the contact and request its presence publication
-                    mContact->authorizePresencePublication();
-                    mContact->requestPresenceSubscription();
+                    mPriv->mContact->authorizePresencePublication();
+                    mPriv->mContact->requestPresenceSubscription();
                     return true;
                 case Tp::Contact::PresenceStateNo: {
                     // reject the presence publication and remove the contact
-                    mContact->removePresencePublication();
+                    mPriv->mContact->removePresencePublication();
                     QList<Tp::ContactPtr> contacts;
-                    contacts << mContact;
-                    mContact->manager()->removeContacts(contacts);
+                    contacts << mPriv->mContact;
+                    mPriv->mContact->manager()->removeContacts(contacts);
                     return true;
                 }
                 default:
@@ -154,5 +169,9 @@ void ContactModelItem::onChanged()
     emit changed(this);
 }
 
+ContactPtr ContactModelItem::contact() const
+{
+    return mPriv->mContact;
 }
 
+}
