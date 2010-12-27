@@ -40,6 +40,7 @@ class TELEPATHY_QT4_EXPORT AvatarImageProvider : public QDeclarativeImageProvide
 public:
 
     AvatarImageProvider(const AccountManagerPtr &am);
+    virtual ~AvatarImageProvider();
 
     static QString urlFor(const AccountPtr &account);
     static void registerProvider(QDeclarativeEngine *engine, const AccountManagerPtr &am);
@@ -47,8 +48,9 @@ public:
     virtual QImage requestImage(const QString &id, QSize *size, const QSize &requestedSize);
 
 private:
-    AccountManagerPtr mAM;
-
+    struct Private;
+    friend struct Private;
+    Private *mPriv;
 };
 
 }

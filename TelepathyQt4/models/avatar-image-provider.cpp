@@ -26,10 +26,25 @@
 namespace Tp
 {
 
+struct TELEPATHY_QT4_NO_EXPORT AvatarImageProvider::Private
+{
+    Private(const Tp::AccountManagerPtr &am)
+        : mAM(am)
+    {
+    }
+
+    Tp::AccountManagerPtr mAM;
+};
+
 AvatarImageProvider::AvatarImageProvider(const AccountManagerPtr &am)
     : QDeclarativeImageProvider(Image),
-      mAM(am)
+      mPriv(new Private(am))
 {
+}
+
+AvatarImageProvider::~AvatarImageProvider()
+{
+    delete mPriv;
 }
 
 QString AvatarImageProvider::urlFor(const AccountPtr &account)
@@ -45,7 +60,7 @@ void AvatarImageProvider::registerProvider(QDeclarativeEngine *engine, const Acc
 QImage AvatarImageProvider::requestImage(const QString &id, QSize *size, const QSize &requestedSize)
 {
     QString path = QString::fromLatin1(TELEPATHY_ACCOUNT_OBJECT_PATH_BASE "/") + id;
-    AccountPtr account = mAM->accountForPath(path);
+    AccountPtr account = mPriv->mAM->accountForPath(path);
     QImage image;
     image.loadFromData(account->avatar().avatarData);
     if (size) {
@@ -55,4 +70,3 @@ QImage AvatarImageProvider::requestImage(const QString &id, QSize *size, const Q
 }
 
 }
-
