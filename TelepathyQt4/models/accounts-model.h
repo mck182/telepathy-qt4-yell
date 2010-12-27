@@ -118,11 +118,11 @@ protected Q_SLOTS:
     void onItemsRemoved(TreeNode *parent, int first, int last);
 
 private:
-    Tp::AccountManagerPtr mAM;
-    class TreeNode *mTree;
+    struct Private;
+    friend struct Private;
+    Private *mPriv;
 
-    class TreeNode *node(const QModelIndex &index) const;
-
+    TreeNode *node(const QModelIndex &index) const;
     int rowOf(const Account *account);
     ContactManager *contactManager(int row) const;
 };

@@ -31,29 +31,40 @@
 namespace Tp
 {
 
+struct TELEPATHY_QT4_NO_EXPORT AccountsModel::Private
+{
+    Private(const Tp::AccountManagerPtr &am)
+        : mAM(am)
+    {
+    }
+
+    Tp::AccountManagerPtr mAM;
+    class TreeNode *mTree;
+};
+
 AccountsModel::AccountsModel(const Tp::AccountManagerPtr &am, QObject *parent)
     : QAbstractItemModel(parent),
-      mAM(am)
+      mPriv(new AccountsModel::Private(am))
 {
-    mTree = new TreeNode;
-    connect(mTree,
+    mPriv->mTree = new TreeNode;
+    connect(mPriv->mTree,
             SIGNAL(changed(TreeNode *)),
             SLOT(onItemChanged(TreeNode *)));
-    connect(mTree,
+    connect(mPriv->mTree,
             SIGNAL(childrenAdded(TreeNode *, QList<TreeNode *>)),
             SLOT(onItemsAdded(TreeNode *, QList<TreeNode *>)));
-    connect(mTree,
+    connect(mPriv->mTree,
             SIGNAL(childrenRemoved(TreeNode *, int, int)),
             SLOT(onItemsRemoved(TreeNode *, int, int)));
 
-    foreach (Tp::AccountPtr account, mAM->allAccounts()) {
+    foreach (Tp::AccountPtr account, mPriv->mAM->allAccounts()) {
         AccountsModelItem *item = new AccountsModelItem(account);
         connect(item, SIGNAL(connectionStatusChanged(const QString&, int)),
                 this, SIGNAL(accountConnectionStatusChanged(const QString&, int)));
-        mTree->addChild(item);
+        mPriv->mTree->addChild(item);
     }
 
-    connect(mAM.data(),
+    connect(mPriv->mAM.data(),
             SIGNAL(newAccount(const Tp::AccountPtr &)),
             SLOT(onNewAccount(const Tp::AccountPtr &)));
 
@@ -97,7 +108,8 @@ AccountsModel::AccountsModel(const Tp::AccountManagerPtr &am, QObject *parent)
 
 AccountsModel::~AccountsModel()
 {
-    delete mTree;
+    delete mPriv->mTree;
+    delete mPriv;
 }
 
 void AccountsModel::onNewAccount(const Tp::AccountPtr &account)
@@ -107,7 +119,7 @@ void AccountsModel::onNewAccount(const Tp::AccountPtr &account)
     connect(accountNode, SIGNAL(connectionStatusChanged(const QString&, int, int)),
             this, SIGNAL(accountConnectionStatusChanged(const QString&, int, int)));
 
-    onItemsAdded(mTree, QList<TreeNode *>() << accountNode);
+    onItemsAdded(mPriv->mTree, QList<TreeNode *>() << accountNode);
 }
 
 void AccountsModel::onItemChanged(TreeNode *node)
@@ -143,13 +155,13 @@ void AccountsModel::onItemsRemoved(TreeNode *parent, int first, int last)
 
 int AccountsModel::accountCount() const
 {
-    return mTree->size();
+    return mPriv->mTree->size();
 }
 
 QObject *AccountsModel::accountItemForId(const QString &id) const
 {
-    for (int i = 0; i < mTree->size(); ++i) {
-        AccountsModelItem *item = qobject_cast<AccountsModelItem*>(mTree->childAt(i));
+    for (int i = 0; i < mPriv->mTree->size(); ++i) {
+        AccountsModelItem *item = qobject_cast<AccountsModelItem*>(mPriv->mTree->childAt(i));
         if (!item) {
             continue;
         }
@@ -265,7 +277,7 @@ QModelIndex AccountsModel::parent(const QModelIndex &index) const
 TreeNode *AccountsModel::node(const QModelIndex &index) const
 {
     TreeNode *node = reinterpret_cast<TreeNode *>(index.internalPointer());
-    return node ? node : mTree;
+    return node ? node : mPriv->mTree;
 }
 
 }
