@@ -37,6 +37,7 @@ class ConversationItem;
 class TELEPATHY_QT4_EXPORT ConversationModel : public QAbstractListModel
 {
     Q_OBJECT
+    Q_DISABLE_COPY(ConversationModel)
 
 public:
     enum Role {

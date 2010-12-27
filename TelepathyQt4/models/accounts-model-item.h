@@ -37,6 +37,7 @@ namespace Tp
 class TELEPATHY_QT4_EXPORT AccountsModelItem : public TreeNode
 {
     Q_OBJECT
+    Q_DISABLE_COPY(AccountsModelItem)
 
 public:
     AccountsModelItem(const AccountPtr &account);

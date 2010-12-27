@@ -31,6 +31,8 @@ namespace Tp
 class TELEPATHY_QT4_EXPORT TreeNode : public QObject
 {
     Q_OBJECT
+    Q_DISABLE_COPY(TreeNode)
+
 public:
     TreeNode();
 

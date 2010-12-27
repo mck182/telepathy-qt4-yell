@@ -34,6 +34,7 @@ namespace Tp
 class TELEPATHY_QT4_EXPORT FlatModelProxy : public QAbstractProxyModel
 {
     Q_OBJECT
+    Q_DISABLE_COPY(FlatModelProxy)
     Q_PROPERTY(int rowCount READ rowCount NOTIFY rowCountChanged)
 
 public:

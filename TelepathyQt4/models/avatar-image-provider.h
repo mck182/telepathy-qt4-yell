@@ -35,6 +35,7 @@ namespace Tp
 
 class TELEPATHY_QT4_EXPORT AvatarImageProvider : public QDeclarativeImageProvider
 {
+    Q_DISABLE_COPY(AvatarImageProvider)
 
 public:
 

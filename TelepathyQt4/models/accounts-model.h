@@ -40,6 +40,7 @@ namespace Tp
 class TELEPATHY_QT4_EXPORT AccountsModel : public QAbstractItemModel
 {
     Q_OBJECT
+    Q_DISABLE_COPY(AccountsModel)
     Q_PROPERTY(int accountCount READ accountCount NOTIFY accountCountChanged)
     Q_ENUMS(Role)
 
