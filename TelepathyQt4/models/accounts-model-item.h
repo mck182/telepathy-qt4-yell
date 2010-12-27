@@ -31,7 +31,6 @@
 #include <TelepathyQt4/Types>
 #include <TelepathyQt4/Contact>
 
-
 namespace Tp
 {
 

@@ -208,8 +208,7 @@ AccountPtr AccountsModel::accountForIndex(const QModelIndex &index) const
     AccountsModelItem *item = qobject_cast<AccountsModelItem *>(accountNode);
     if (item) {
         return item->account();
-    }
-    else {
+    } else {
         return AccountPtr();
     }
 }
@@ -257,8 +256,7 @@ QModelIndex AccountsModel::parent(const QModelIndex &index) const
     TreeNode *currentNode = node(index);
     if (currentNode->parent()) {
         return AccountsModel::index(currentNode->parent());
-    }
-    else {
+    } else {
         // no parent: return root node
         return QModelIndex();
     }

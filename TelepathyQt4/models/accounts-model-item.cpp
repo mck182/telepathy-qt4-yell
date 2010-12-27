@@ -111,7 +111,6 @@ AccountsModelItem::AccountsModelItem(const AccountPtr &account)
     connect(mAccount.data(),
             SIGNAL(connectionChanged(const Tp::ConnectionPtr&)),
             SLOT(onConnectionChanged(const Tp::ConnectionPtr&)));
-
 }
 
 QVariant AccountsModelItem::data(int role) const
@@ -319,4 +318,5 @@ void AccountsModelItem::refreshKnownContacts()
         emit childrenAdded(this, newNodes);
     }
 }
+
 }

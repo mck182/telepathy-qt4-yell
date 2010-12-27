@@ -185,6 +185,5 @@ void ConversationModel::connectChannelQueue()
     }
 }
 
-
 }
 

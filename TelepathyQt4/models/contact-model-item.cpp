@@ -74,7 +74,7 @@ ContactModelItem::ContactModelItem(const Tp::ContactPtr &contact)
 
 QVariant ContactModelItem::data(int role) const
 {
-    switch(role)
+    switch (role)
     {
         case AccountsModel::ItemRole:
             return QVariant::fromValue(
