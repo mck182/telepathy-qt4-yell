@@ -41,10 +41,11 @@ class TELEPATHY_QT4_EXPORT AccountsModelItem : public TreeNode
 
 public:
     AccountsModelItem(const AccountPtr &account);
+    virtual ~AccountsModelItem();
 
     Q_INVOKABLE virtual QVariant data(int role) const;
     virtual bool setData(int role, const QVariant &value);
-    Q_INVOKABLE AccountPtr account() const { return mAccount; }
+    Q_INVOKABLE AccountPtr account() const;
 
     void setEnabled(bool value);
 
@@ -74,7 +75,9 @@ private Q_SLOTS:
                            const Tp::Contacts &removed);
 
 private:
-    AccountPtr mAccount;
+    struct Private;
+    friend struct Private;
+    Private *mPriv;
 };
 
 }

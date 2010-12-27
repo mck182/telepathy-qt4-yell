@@ -33,10 +33,20 @@
 namespace Tp
 {
 
-AccountsModelItem::AccountsModelItem(const AccountPtr &account)
-    : mAccount(account)
+struct TELEPATHY_QT4_NO_EXPORT AccountsModelItem::Private
 {
-    if (!mAccount->connection().isNull()) {
+    Private(const AccountPtr &account)
+        : mAccount(account)
+    {
+    }
+
+    AccountPtr mAccount;
+};
+
+AccountsModelItem::AccountsModelItem(const AccountPtr &account)
+    : mPriv(new Private(account))
+{
+    if (!mPriv->mAccount->connection().isNull()) {
         ContactManagerPtr manager = account->connection()->contactManager();
         foreach (ContactPtr contact, manager->allKnownContacts()) {
             addChild(new ContactModelItem(contact));
@@ -48,69 +58,74 @@ AccountsModelItem::AccountsModelItem(const AccountPtr &account)
                 SLOT(onContactsChanged(Tp::Contacts, Tp::Contacts)));
     }
 
-    connect(mAccount.data(),
+    connect(mPriv->mAccount.data(),
             SIGNAL(removed()),
             SLOT(onRemoved()));
-    connect(mAccount.data(),
+    connect(mPriv->mAccount.data(),
             SIGNAL(serviceNameChanged(QString)),
             SLOT(onChanged()));
-    connect(mAccount.data(),
+    connect(mPriv->mAccount.data(),
             SIGNAL(profileChanged(const Tp::ProfilePtr &)),
             SLOT(onChanged()));
-    connect(mAccount.data(),
+    connect(mPriv->mAccount.data(),
             SIGNAL(iconNameChanged(QString)),
             SLOT(onChanged()));
-    connect(mAccount.data(),
+    connect(mPriv->mAccount.data(),
             SIGNAL(nicknameChanged(QString)),
             SLOT(onChanged()));
-    connect(mAccount.data(),
+    connect(mPriv->mAccount.data(),
             SIGNAL(normalizedNameChanged(QString)),
             SLOT(onChanged()));
-    connect(mAccount.data(),
+    connect(mPriv->mAccount.data(),
             SIGNAL(validityChanged(bool)),
             SLOT(onChanged()));
-    connect(mAccount.data(),
+    connect(mPriv->mAccount.data(),
             SIGNAL(stateChanged(bool)),
             SLOT(onChanged()));
-    connect(mAccount.data(),
+    connect(mPriv->mAccount.data(),
             SIGNAL(capabilitiesChanged(const Tp::ConnectionCapabilities &)),
             SLOT(onChanged()));
-    connect(mAccount.data(),
+    connect(mPriv->mAccount.data(),
             SIGNAL(connectsAutomaticallyPropertyChanged(bool)),
             SLOT(onChanged()));
-    connect(mAccount.data(),
+    connect(mPriv->mAccount.data(),
             SIGNAL(parametersChanged(QVariantMap)),
             SLOT(onChanged()));
-    connect(mAccount.data(),
+    connect(mPriv->mAccount.data(),
             SIGNAL(changingPresence(bool)),
             SLOT(onChanged()));
-    connect(mAccount.data(),
+    connect(mPriv->mAccount.data(),
             SIGNAL(automaticPresenceChanged(const Tp::Presence&)),
             SLOT(onChanged()));
-    connect(mAccount.data(),
+    connect(mPriv->mAccount.data(),
             SIGNAL(currentPresenceChanged(const Tp::Presence&)),
             SLOT(onChanged()));
-    connect(mAccount.data(),
+    connect(mPriv->mAccount.data(),
             SIGNAL(requestedPresenceChanged(const Tp::Presence&)),
             SLOT(onChanged()));
-    connect(mAccount.data(),
+    connect(mPriv->mAccount.data(),
             SIGNAL(onlinenessChanged(bool)),
             SLOT(onChanged()));
-    connect(mAccount.data(),
+    connect(mPriv->mAccount.data(),
             SIGNAL(avatarChanged(Tp::Avatar)),
             SLOT(onChanged()));
-    connect(mAccount.data(),
+    connect(mPriv->mAccount.data(),
             SIGNAL(onlinenessChanged(bool)),
             SLOT(onChanged()));
-    connect(mAccount.data(),
+    connect(mPriv->mAccount.data(),
             SIGNAL(connectionStatusChanged(Tp::ConnectionStatus)),
             SLOT(onStatusChanged(Tp::ConnectionStatus)));
-    connect(mAccount.data(),
+    connect(mPriv->mAccount.data(),
             SIGNAL(connectionChanged(const Tp::ConnectionPtr&)),
             SLOT(onChanged()));
-    connect(mAccount.data(),
+    connect(mPriv->mAccount.data(),
             SIGNAL(connectionChanged(const Tp::ConnectionPtr&)),
             SLOT(onConnectionChanged(const Tp::ConnectionPtr&)));
+}
+
+Tp::AccountsModelItem::~AccountsModelItem()
+{
+    delete mPriv;
 }
 
 QVariant AccountsModelItem::data(int role) const
@@ -121,46 +136,46 @@ QVariant AccountsModelItem::data(int role) const
                 const_cast<QObject *>(
                     static_cast<const QObject *>(this)));
         case AccountsModel::IdRole:
-            return mAccount->uniqueIdentifier();
+            return mPriv->mAccount->uniqueIdentifier();
         case AccountsModel::AvatarRole:
-            return AvatarImageProvider::urlFor(mAccount);
+            return AvatarImageProvider::urlFor(mPriv->mAccount);
         case AccountsModel::ValidRole:
-            return mAccount->isValid();
+            return mPriv->mAccount->isValid();
         case AccountsModel::EnabledRole:
-            return mAccount->isEnabled();
+            return mPriv->mAccount->isEnabled();
         case AccountsModel::ConnectionManagerNameRole:
-            return mAccount->cmName();
+            return mPriv->mAccount->cmName();
         case AccountsModel::ProtocolNameRole:
-            return mAccount->protocolName();
+            return mPriv->mAccount->protocolName();
         case AccountsModel::DisplayNameRole:
         case Qt::DisplayRole:
-            return mAccount->displayName();
+            return mPriv->mAccount->displayName();
         case AccountsModel::IconRole:
-            return mAccount->iconName();
+            return mPriv->mAccount->iconName();
         case AccountsModel::NicknameRole:
-            return mAccount->nickname();
+            return mPriv->mAccount->nickname();
         case AccountsModel::ConnectsAutomaticallyRole:
-            return mAccount->connectsAutomatically();
+            return mPriv->mAccount->connectsAutomatically();
         case AccountsModel::ChangingPresenceRole:
-            return mAccount->isChangingPresence();
+            return mPriv->mAccount->isChangingPresence();
         case AccountsModel::AutomaticPresenceRole:
-            return mAccount->automaticPresence().status();
+            return mPriv->mAccount->automaticPresence().status();
         case AccountsModel::CurrentPresenceRole:
-            return mAccount->currentPresence().status();
+            return mPriv->mAccount->currentPresence().status();
         case AccountsModel::CurrentPresenceTypeRole:
-            return mAccount->currentPresence().type();
+            return mPriv->mAccount->currentPresence().type();
         case AccountsModel::CurrentPresenceStatusMessageRole:
-            return mAccount->currentPresence().statusMessage();
+            return mPriv->mAccount->currentPresence().statusMessage();
         case AccountsModel::RequestedPresenceRole:
-            return mAccount->requestedPresence().status();
+            return mPriv->mAccount->requestedPresence().status();
         case AccountsModel::RequestedPresenceTypeRole:
-            return mAccount->requestedPresence().type();
+            return mPriv->mAccount->requestedPresence().type();
         case AccountsModel::RequestedPresenceStatusMessageRole:
-            return mAccount->requestedPresence().statusMessage();
+            return mPriv->mAccount->requestedPresence().statusMessage();
         case AccountsModel::ConnectionStatusRole:
-            return mAccount->connectionStatus();
+            return mPriv->mAccount->connectionStatus();
         case AccountsModel::ConnectionStatusReasonRole:
-            return mAccount->connectionStatusReason();
+            return mPriv->mAccount->connectionStatusReason();
         default:
             return QVariant();
     }
@@ -186,35 +201,40 @@ bool AccountsModelItem::setData(int role, const QVariant &value)
     }
 }
 
+Tp::AccountPtr Tp::AccountsModelItem::account() const
+{
+     return mPriv->mAccount;
+}
+
 void AccountsModelItem::setEnabled(bool value)
 {
-    mAccount->setEnabled(value);
+    mPriv->mAccount->setEnabled(value);
 }
 
 void AccountsModelItem::setStatus(const QString &value)
 {
-    SimplePresence presence = mAccount->currentPresence().barePresence();
+    SimplePresence presence = mPriv->mAccount->currentPresence().barePresence();
     presence.status = value;
-    mAccount->setRequestedPresence(presence);
+    mPriv->mAccount->setRequestedPresence(presence);
 }
 
 void AccountsModelItem::setStatusMessage(const QString &value)
 {
-    SimplePresence presence = mAccount->currentPresence().barePresence();
+    SimplePresence presence = mPriv->mAccount->currentPresence().barePresence();
     presence.statusMessage = value;
-    mAccount->setRequestedPresence(presence);
+    mPriv->mAccount->setRequestedPresence(presence);
 }
 
 void AccountsModelItem::setNickname(const QString &value)
 {
-    mAccount->setNickname(value);
+    mPriv->mAccount->setNickname(value);
 }
 
 void AccountsModelItem::setPresence(int type, const QString &status, const QString &statusMessage)
 {
     Presence presence;
     presence.setStatus((ConnectionPresenceType) type, status, statusMessage);
-    mAccount->setRequestedPresence(presence);
+    mPriv->mAccount->setRequestedPresence(presence);
 }
 
 void AccountsModelItem::onRemoved()
@@ -251,7 +271,7 @@ void AccountsModelItem::onContactsChanged(const Tp::Contacts &addedContacts,
 
 void AccountsModelItem::onStatusChanged(Tp::ConnectionStatus status)
 {
-    emit connectionStatusChanged(mAccount->uniqueIdentifier(), status);
+    emit connectionStatusChanged(mPriv->mAccount->uniqueIdentifier(), status);
 }
 
 void AccountsModelItem::onConnectionChanged(const Tp::ConnectionPtr &connection)
@@ -276,9 +296,9 @@ void AccountsModelItem::refreshKnownContacts()
 {
     //reload the known contacts if it has a connection
     QList<TreeNode *> newNodes;
-    if (!mAccount->connection().isNull()
-            && mAccount->connection()->isValid()) {
-        ContactManagerPtr manager = mAccount->connection()->contactManager();
+    if (!mPriv->mAccount->connection().isNull()
+            && mPriv->mAccount->connection()->isValid()) {
+        ContactManagerPtr manager = mPriv->mAccount->connection()->contactManager();
         Contacts contacts = manager->allKnownContacts();
 
         //remove the items no longer present
