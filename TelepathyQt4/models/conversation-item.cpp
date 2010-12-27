@@ -26,42 +26,58 @@
 
 namespace Tp {
 
+struct TELEPATHY_QT4_NO_EXPORT ConversationItem::Private
+{
+    Private(const ContactPtr &contact,
+            const QDateTime &time,
+            const QString &text,
+            Type type)
+        : mContact(contact),
+          mTime(time.isValid() ? time : QDateTime::currentDateTime()),
+          mText(text),
+          mType(type)
+    {
+    }
+
+    ContactPtr mContact;
+    QDateTime mTime;
+    QString mText;
+    Type mType;
+};
+
 ConversationItem::ConversationItem(const ContactPtr &contact,
                                    const QDateTime &time,
                                    const QString &text,
                                    Type type,
                                    QObject *parent)
     : QObject(parent),
-      mContact(contact),
-      mTime(time.isValid() ? time : QDateTime::currentDateTime()),
-      mText(text),
-      mType(type)
+      mPriv(new Private(contact, time, text, type))
 {
 }
 
 ConversationItem::~ConversationItem()
 {
+    delete mPriv;
 }
 
 ContactPtr ConversationItem::contact() const
 {
-    return mContact;
+    return mPriv->mContact;
 }
 
 QDateTime ConversationItem::time() const
 {
-    return mTime;
+    return mPriv->mTime;
 }
 
 QString ConversationItem::text() const
 {
-    return mText;
+    return mPriv->mText;
 }
 
 ConversationItem::Type ConversationItem::type() const
 {
-    return mType;
+    return mPriv->mType;
 }
 
 }
-

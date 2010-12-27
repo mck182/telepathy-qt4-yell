@@ -54,11 +54,9 @@ public:
     Type type() const;
 
 private:
-
-    ContactPtr mContact;
-    QDateTime mTime;
-    QString mText;
-    Type mType;
+    struct Private;
+    friend struct Private;
+    Private *mPriv;
 };
 
 }
