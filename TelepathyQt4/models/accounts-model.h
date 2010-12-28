@@ -121,10 +121,6 @@ private:
     struct Private;
     friend struct Private;
     Private *mPriv;
-
-    TreeNode *node(const QModelIndex &index) const;
-    int rowOf(const Account *account);
-    ContactManager *contactManager(int row) const;
 };
 
 }

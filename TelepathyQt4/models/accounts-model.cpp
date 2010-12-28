@@ -38,9 +38,17 @@ struct TELEPATHY_QT4_NO_EXPORT AccountsModel::Private
     {
     }
 
+    TreeNode *node(const QModelIndex &index) const;
+
     Tp::AccountManagerPtr mAM;
-    class TreeNode *mTree;
+    TreeNode *mTree;
 };
+
+TreeNode *AccountsModel::Private::node(const QModelIndex &index) const
+{
+    TreeNode *node = reinterpret_cast<TreeNode *>(index.internalPointer());
+    return node ? node : mTree;
+}
 
 AccountsModel::AccountsModel(const Tp::AccountManagerPtr &am, QObject *parent)
     : QAbstractItemModel(parent),
@@ -202,7 +210,7 @@ int AccountsModel::columnCount(const QModelIndex &parent) const
 
 int AccountsModel::rowCount(const QModelIndex &parent) const
 {
-    return node(parent)->size();
+    return mPriv->node(parent)->size();
 }
 
 QVariant AccountsModel::data(const QModelIndex &index, int role) const
@@ -211,12 +219,12 @@ QVariant AccountsModel::data(const QModelIndex &index, int role) const
         return QVariant();
     }
 
-    return node(index)->data(role);
+    return mPriv->node(index)->data(role);
 }
 
 AccountPtr AccountsModel::accountForIndex(const QModelIndex &index) const
 {
-    TreeNode *accountNode = node(index);
+    TreeNode *accountNode = mPriv->node(index);
     AccountsModelItem *item = qobject_cast<AccountsModelItem *>(accountNode);
     if (item) {
         return item->account();
@@ -237,7 +245,7 @@ Qt::ItemFlags AccountsModel::flags(const QModelIndex &index) const
 bool AccountsModel::setData(const QModelIndex &index, const QVariant &value, int role)
 {
     if (index.isValid()) {
-        node(index)->setData(role, value);
+        mPriv->node(index)->setData(role, value);
     }
 
     return false;
@@ -245,7 +253,7 @@ bool AccountsModel::setData(const QModelIndex &index, const QVariant &value, int
 
 QModelIndex AccountsModel::index(int row, int column, const QModelIndex &parent) const
 {
-    TreeNode *parentNode = node(parent);
+    TreeNode *parentNode = mPriv->node(parent);
     return createIndex(row, column, parentNode->childAt(row));
 }
 
@@ -265,19 +273,13 @@ QModelIndex AccountsModel::parent(const QModelIndex &index) const
         return QModelIndex();
     }
 
-    TreeNode *currentNode = node(index);
+    TreeNode *currentNode = mPriv->node(index);
     if (currentNode->parent()) {
         return AccountsModel::index(currentNode->parent());
     } else {
         // no parent: return root node
         return QModelIndex();
     }
-}
-
-TreeNode *AccountsModel::node(const QModelIndex &index) const
-{
-    TreeNode *node = reinterpret_cast<TreeNode *>(index.internalPointer());
-    return node ? node : mPriv->mTree;
 }
 
 }
