@@ -22,6 +22,7 @@
 
 #include "TelepathyQt4/models/_gen/accounts-model.moc.hpp"
 
+#include "TelepathyQt4/debug-internal.h"
 #include <TelepathyQt4/PendingReady>
 #include <TelepathyQt4/ContactManager>
 
@@ -140,7 +141,7 @@ void AccountsModel::onItemsAdded(TreeNode *parent, const QList<TreeNode *> &node
 {
     QModelIndex parentIndex = index(parent);
     int currentSize = rowCount(parentIndex);
-    qDebug() << "adding rows from" << currentSize << "to" << (currentSize + nodes.size());
+    debug() << "adding rows from" << currentSize << "to" << (currentSize + nodes.size());
     beginInsertRows(parentIndex, currentSize, currentSize + nodes.size() - 1);
     foreach (TreeNode *node, nodes) {
         parent->addChild(node);

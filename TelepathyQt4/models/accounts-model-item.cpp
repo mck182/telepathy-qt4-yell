@@ -22,6 +22,7 @@
 
 #include "TelepathyQt4/models/_gen/accounts-model-item.moc.hpp"
 
+#include "TelepathyQt4/debug-internal.h"
 #include <TelepathyQt4/Account>
 #include <TelepathyQt4/ContactManager>
 
@@ -263,7 +264,7 @@ void AccountsModelItem::onContactsChanged(const Tp::Contacts &addedContacts,
 
     QList<TreeNode *> newNodes;
     foreach (ContactPtr contact, addedContacts) {
-        qDebug("contact added: %s", qPrintable(contact->id()));
+        debug() << "contact added:" << qPrintable(contact->id());
         newNodes.append(new ContactModelItem(contact));
     }
     emit childrenAdded(this, newNodes);
@@ -313,7 +314,7 @@ void AccountsModelItem::refreshKnownContacts()
                 }
             }
             if (!exists) {
-                qDebug("item removed");
+                debug() << "contact removed:" << qPrintable(item->contact()->id());
                 emit childrenRemoved(this, i, i);
             }
         }
@@ -329,7 +330,7 @@ void AccountsModelItem::refreshKnownContacts()
 
         foreach (ContactPtr contact, contacts) {
             if (!contactItemsList.contains(contact)) {
-                qDebug("new contact detected");
+                debug() << "new contact detected:" << qPrintable(contact->id());
                 newNodes.append(new ContactModelItem(contact));
             }
         }
