@@ -38,7 +38,6 @@ class TELEPATHY_QT4_EXPORT FlatModelProxy : public QAbstractProxyModel
     Q_PROPERTY(int rowCount READ rowCount NOTIFY rowCountChanged)
 
 public:
-
     FlatModelProxy(QAbstractItemModel *source);
 
     virtual QModelIndex mapFromSource(const QModelIndex &index) const;
@@ -61,7 +60,6 @@ private Q_SLOTS:
     void onDataChanged(const QModelIndex &first, const QModelIndex &last);
 
 private:
-
     int offsetOf(int index) const;
 };
 
