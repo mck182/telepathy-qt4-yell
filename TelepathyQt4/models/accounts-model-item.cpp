@@ -252,7 +252,7 @@ void AccountsModelItem::onContactsChanged(const Tp::Contacts &addedContacts,
                                          const Tp::Contacts &removedContacts)
 {
     foreach (ContactPtr contact, removedContacts) {
-        for (int i = 0; i < mChildren.size(); ++i) {
+        for (int i = 0; i < size(); ++i) {
             ContactModelItem *item = qobject_cast<ContactModelItem *>(childAt(i));
             if (item->contact() == contact) {
                 emit childrenRemoved(this, i, i);
@@ -280,7 +280,7 @@ void AccountsModelItem::onConnectionChanged(const Tp::ConnectionPtr &connection)
     if (connection.isNull()
             || !connection->isValid()
             || connection->status() == ConnectionStatusDisconnected) {
-        emit childrenRemoved(this, 0, mChildren.size() - 1);
+        emit childrenRemoved(this, 0, size() - 1);
         return;
     }
 
@@ -302,7 +302,7 @@ void AccountsModelItem::refreshKnownContacts()
         Contacts contacts = manager->allKnownContacts();
 
         //remove the items no longer present
-        for (int i = 0; i < mChildren.size(); ++i) {
+        for (int i = 0; i < size(); ++i) {
             bool exists = false;
             ContactModelItem *item = qobject_cast<ContactModelItem *>(childAt(i));
             if (item) {
@@ -320,7 +320,7 @@ void AccountsModelItem::refreshKnownContacts()
 
         //get the list of contacts in the children
         QList<ContactPtr> contactItemsList;
-        for (int i = 0; i < mChildren.size(); ++i) {
+        for (int i = 0; i < size(); ++i) {
             ContactModelItem *item = qobject_cast<ContactModelItem *>(childAt(i));
             if (item) {
                 contactItemsList.append(item->contact());

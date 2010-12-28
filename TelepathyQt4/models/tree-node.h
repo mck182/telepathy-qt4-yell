@@ -57,10 +57,10 @@ Q_SIGNALS:
     void childrenAdded(TreeNode *parent, const QList<TreeNode *> &nodes);
     void childrenRemoved(TreeNode *parent, int first, int last);
 
-protected:
-
-    QList<TreeNode *> mChildren;
-    TreeNode *mParent;
+private:
+    struct Private;
+    friend struct Private;
+    Private *mPriv;
 };
 
 }

@@ -25,30 +25,44 @@
 namespace Tp
 {
 
+struct TELEPATHY_QT4_NO_EXPORT TreeNode::Private
+{
+    Private() :
+        mParent(0)
+    {
+    }
+
+    ~Private()
+    {
+        qDeleteAll(mChildren);
+        mChildren.clear();
+    }
+
+    QList<TreeNode *> mChildren;
+    TreeNode *mParent;
+};
+
 TreeNode::TreeNode()
-    : mParent(0)
+    : mPriv(new Private())
 {
 }
 
 TreeNode::~TreeNode()
 {
-    mParent->mChildren.removeOne(this);
-
-    foreach (TreeNode *child, mChildren) {
-        delete child;
-    }
+    mPriv->mParent->mPriv->mChildren.removeOne(this);
+    delete mPriv;
 }
 
 TreeNode *TreeNode::childAt(int index) const
 {
-    return mChildren[index];
+    return mPriv->mChildren[index];
 }
 
 void TreeNode::addChild(TreeNode *node)
 {
     // takes ownership of node
-    mChildren.append(node);
-    node->mParent = this;
+    mPriv->mChildren.append(node);
+    node->mPriv->mParent = this;
 
     // set the parent QObject so that the node doesn't get deleted if used
     // from QML/QtScript
@@ -67,16 +81,16 @@ void TreeNode::addChild(TreeNode *node)
 }
 
 int TreeNode::indexOf(TreeNode *node) const {
-    return mChildren.indexOf(node);
+    return mPriv->mChildren.indexOf(node);
 }
 
 int TreeNode::size() const {
-    return mChildren.size();
+    return mPriv->mChildren.size();
 }
 
 TreeNode *TreeNode::parent() const
 {
-    return mParent;
+    return mPriv->mParent;
 }
 
 QVariant TreeNode::data(int role) const
@@ -91,22 +105,21 @@ bool TreeNode::setData(int role, const QVariant &value)
 
 void TreeNode::remove()
 {
-    if (mParent) {
+    if (mPriv->mParent) {
         disconnect(this,
                    SIGNAL(changed(TreeNode *)),
-                   mParent,
+                   mPriv->mParent,
                    SIGNAL(changed(TreeNode *)));
         disconnect(this,
                    SIGNAL(childrenAdded(TreeNode *, QList<TreeNode *>)),
-                   mParent,
+                   mPriv->mParent,
                    SIGNAL(childrenAdded(TreeNode *, QList<TreeNode *>)));
         disconnect(this,
                    SIGNAL(childrenRemoved(TreeNode *, int, int)),
-                   mParent,
+                   mPriv->mParent,
                    SIGNAL(childrenRemoved(TreeNode *, int, int)));
     }
     deleteLater();
 }
 
 }
-
