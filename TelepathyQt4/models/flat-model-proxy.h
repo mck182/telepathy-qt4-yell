@@ -39,6 +39,7 @@ class TELEPATHY_QT4_EXPORT FlatModelProxy : public QAbstractProxyModel
 
 public:
     FlatModelProxy(QAbstractItemModel *source);
+    virtual ~FlatModelProxy();
 
     virtual QModelIndex mapFromSource(const QModelIndex &index) const;
     virtual QModelIndex mapToSource(const QModelIndex &index) const;
@@ -60,7 +61,9 @@ private Q_SLOTS:
     void onDataChanged(const QModelIndex &first, const QModelIndex &last);
 
 private:
-    int offsetOf(int index) const;
+    struct Private;
+    friend struct Private;
+    Private *mPriv;
 };
 
 }

@@ -25,8 +25,23 @@
 namespace Tp
 {
 
+struct TELEPATHY_QT4_NO_EXPORT FlatModelProxy::Private
+{
+    int offsetOf(const FlatModelProxy *model, int index) const;
+};
+
+int FlatModelProxy::Private::offsetOf(const FlatModelProxy *model, int index) const
+{
+    int offset = 0;
+    for (int i = 0; i < index; i++) {
+        offset += model->sourceModel()->rowCount(model->sourceModel()->index(i, 0, QModelIndex()));
+    }
+    return offset;
+}
+
 FlatModelProxy::FlatModelProxy(QAbstractItemModel *source)
-    : QAbstractProxyModel(source)
+    : QAbstractProxyModel(source),
+      mPriv(new Private())
 {
     setSourceModel(source);
 
@@ -53,6 +68,11 @@ FlatModelProxy::FlatModelProxy(QAbstractItemModel *source)
             SLOT(onDataChanged(QModelIndex, QModelIndex)));
 }
 
+FlatModelProxy::~FlatModelProxy()
+{
+    delete mPriv;
+}
+
 QModelIndex FlatModelProxy::mapFromSource(const QModelIndex &index) const
 {
     if (!index.isValid()) {
@@ -65,14 +85,14 @@ QModelIndex FlatModelProxy::mapFromSource(const QModelIndex &index) const
         return QModelIndex();
     }
 
-    return createIndex(offsetOf(parent.row()) + index.row(), index.column(), parent.row());
+    return createIndex(mPriv->offsetOf(this, parent.row()) + index.row(), index.column(), parent.row());
 }
 
 QModelIndex FlatModelProxy::mapToSource(const QModelIndex &index) const
 {
     int parentRow = index.internalId();
     QModelIndex parent = sourceModel()->index(parentRow, 0, QModelIndex());
-    int row = index.row() - offsetOf(parent.row());
+    int row = index.row() - mPriv->offsetOf(this, parent.row());
     return sourceModel()->index(row, index.column(), parent);
 }
 
@@ -107,22 +127,13 @@ int FlatModelProxy::rowCount() const
 
 int FlatModelProxy::rowCount(const QModelIndex &parent) const
 {
-    return offsetOf(sourceModel()->rowCount(QModelIndex()));
-}
-
-int FlatModelProxy::offsetOf(int index) const
-{
-    int offset = 0;
-    for (int i = 0; i < index; i++) {
-        offset += sourceModel()->rowCount(sourceModel()->index(i, 0, QModelIndex()));
-    }
-    return offset;
+    return mPriv->offsetOf(this, sourceModel()->rowCount(QModelIndex()));
 }
 
 void FlatModelProxy::onRowsAboutToBeInserted(const QModelIndex &index, int first, int last)
 {
     if (index.isValid()) {
-        int offset = offsetOf(index.row());
+        int offset = mPriv->offsetOf(this, index.row());
         int firstIndex = offset + first;
         int lastIndex = offset + last;
 
@@ -133,7 +144,7 @@ void FlatModelProxy::onRowsAboutToBeInserted(const QModelIndex &index, int first
 void FlatModelProxy::onRowsAboutToBeRemoved(const QModelIndex &index, int first, int last)
 {
     if (index.isValid()) {
-        int offset = offsetOf(index.row());
+        int offset = mPriv->offsetOf(this, index.row());
         int firstIndex = offset + first;
         int lastIndex = offset + last;
 
@@ -158,8 +169,8 @@ void FlatModelProxy::onRowsRemoved(const QModelIndex &index, int first, int last
 void FlatModelProxy::onDataChanged(const QModelIndex &first, const QModelIndex &last)
 {
     if (!first.parent().isValid()) {
-        int firstOffset = offsetOf(first.row());
-        int lastOffset = offsetOf(last.row() + 1) - 1;
+        int firstOffset = mPriv->offsetOf(this, first.row());
+        int lastOffset = mPriv->offsetOf(this, last.row() + 1) - 1;
 
         QModelIndex firstIndex = createIndex(firstOffset, 0, first.row());
         QModelIndex lastIndex = createIndex(lastOffset, 0, last.row());
@@ -173,4 +184,3 @@ void FlatModelProxy::onDataChanged(const QModelIndex &first, const QModelIndex &
 }
 
 }
-
