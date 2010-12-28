@@ -38,7 +38,6 @@ class TELEPATHY_QT4_EXPORT AvatarImageProvider : public QDeclarativeImageProvide
     Q_DISABLE_COPY(AvatarImageProvider)
 
 public:
-
     AvatarImageProvider(const AccountManagerPtr &am);
     virtual ~AvatarImageProvider();
 
