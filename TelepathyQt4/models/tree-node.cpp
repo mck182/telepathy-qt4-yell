@@ -70,14 +70,14 @@ void TreeNode::addChild(TreeNode *node)
 
     // chain changed and removed signals
     connect(node,
-            SIGNAL(changed(TreeNode *)),
-            SIGNAL(changed(TreeNode *)));
+            SIGNAL(changed(TreeNode*)),
+            SIGNAL(changed(TreeNode*)));
     connect(node,
-            SIGNAL(childrenAdded(TreeNode *, QList<TreeNode *>)),
-            SIGNAL(childrenAdded(TreeNode *, QList<TreeNode *>)));
+            SIGNAL(childrenAdded(TreeNode*,QList<TreeNode*>)),
+            SIGNAL(childrenAdded(TreeNode*,QList<TreeNode*>)));
     connect(node,
-            SIGNAL(childrenRemoved(TreeNode *, int, int)),
-            SIGNAL(childrenRemoved(TreeNode *, int, int)));
+            SIGNAL(childrenRemoved(TreeNode*,int,int)),
+            SIGNAL(childrenRemoved(TreeNode*,int,int)));
 }
 
 int TreeNode::indexOf(TreeNode *node) const {
@@ -107,17 +107,17 @@ void TreeNode::remove()
 {
     if (mPriv->mParent) {
         disconnect(this,
-                   SIGNAL(changed(TreeNode *)),
+                   SIGNAL(changed(TreeNode*)),
                    mPriv->mParent,
-                   SIGNAL(changed(TreeNode *)));
+                   SIGNAL(changed(TreeNode*)));
         disconnect(this,
-                   SIGNAL(childrenAdded(TreeNode *, QList<TreeNode *>)),
+                   SIGNAL(childrenAdded(TreeNode*,QList<TreeNode*>)),
                    mPriv->mParent,
-                   SIGNAL(childrenAdded(TreeNode *, QList<TreeNode *>)));
+                   SIGNAL(childrenAdded(TreeNode*,QList<TreeNode*>)));
         disconnect(this,
-                   SIGNAL(childrenRemoved(TreeNode *, int, int)),
+                   SIGNAL(childrenRemoved(TreeNode*,int,int)),
                    mPriv->mParent,
-                   SIGNAL(childrenRemoved(TreeNode *, int, int)));
+                   SIGNAL(childrenRemoved(TreeNode*,int,int)));
     }
     deleteLater();
 }

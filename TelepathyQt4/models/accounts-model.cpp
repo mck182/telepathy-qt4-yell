@@ -57,25 +57,25 @@ AccountsModel::AccountsModel(const Tp::AccountManagerPtr &am, QObject *parent)
 {
     mPriv->mTree = new TreeNode;
     connect(mPriv->mTree,
-            SIGNAL(changed(TreeNode *)),
-            SLOT(onItemChanged(TreeNode *)));
+            SIGNAL(changed(TreeNode*)),
+            SLOT(onItemChanged(TreeNode*)));
     connect(mPriv->mTree,
-            SIGNAL(childrenAdded(TreeNode *, QList<TreeNode *>)),
-            SLOT(onItemsAdded(TreeNode *, QList<TreeNode *>)));
+            SIGNAL(childrenAdded(TreeNode*,QList<TreeNode*>)),
+            SLOT(onItemsAdded(TreeNode*,QList<TreeNode*>)));
     connect(mPriv->mTree,
-            SIGNAL(childrenRemoved(TreeNode *, int, int)),
-            SLOT(onItemsRemoved(TreeNode *, int, int)));
+            SIGNAL(childrenRemoved(TreeNode*,int,int)),
+            SLOT(onItemsRemoved(TreeNode*,int,int)));
 
     foreach (Tp::AccountPtr account, mPriv->mAM->allAccounts()) {
         AccountsModelItem *item = new AccountsModelItem(account);
-        connect(item, SIGNAL(connectionStatusChanged(const QString&, int)),
-                this, SIGNAL(accountConnectionStatusChanged(const QString&, int)));
+        connect(item, SIGNAL(connectionStatusChanged(QString,int)),
+                this, SIGNAL(accountConnectionStatusChanged(QString,int)));
         mPriv->mTree->addChild(item);
     }
 
     connect(mPriv->mAM.data(),
-            SIGNAL(newAccount(const Tp::AccountPtr &)),
-            SLOT(onNewAccount(const Tp::AccountPtr &)));
+            SIGNAL(newAccount(Tp::AccountPtr)),
+            SLOT(onNewAccount(Tp::AccountPtr)));
 
     QHash<int, QByteArray> roles;
     roles[ItemRole] = "item";
@@ -125,8 +125,8 @@ void AccountsModel::onNewAccount(const Tp::AccountPtr &account)
 {
     AccountsModelItem *accountNode = new AccountsModelItem(account);
 
-    connect(accountNode, SIGNAL(connectionStatusChanged(const QString&, int, int)),
-            this, SIGNAL(accountConnectionStatusChanged(const QString&, int, int)));
+    connect(accountNode, SIGNAL(connectionStatusChanged(QString,int)),
+            this, SIGNAL(accountConnectionStatusChanged(QString,int)));
 
     onItemsAdded(mPriv->mTree, QList<TreeNode *>() << accountNode);
 }

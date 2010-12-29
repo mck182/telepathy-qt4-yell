@@ -48,37 +48,36 @@ ContactModelItem::ContactModelItem(const Tp::ContactPtr &contact)
 {
 
     connect(contact.data(),
-            SIGNAL(aliasChanged(const QString&)),
+            SIGNAL(aliasChanged(QString)),
             SLOT(onChanged()));
     connect(contact.data(),
-            SIGNAL(avatarTokenChanged(const QString&)),
+            SIGNAL(avatarTokenChanged(QString)),
             SLOT(onChanged()));
     connect(contact.data(),
-            SIGNAL(avatarDataChanged(const Tp::AvatarData&)),
+            SIGNAL(avatarDataChanged(Tp::AvatarData)),
             SLOT(onChanged()));
     connect(contact.data(),
-            SIGNAL(presenceChanged(const Tp::Presence&)),
+            SIGNAL(presenceChanged(Tp::Presence)),
             SLOT(onChanged()));
     connect(contact.data(),
-            SIGNAL(capabilitiesChanged(const Tp::ContactCapabilities&)),
+            SIGNAL(capabilitiesChanged(Tp::ContactCapabilities)),
             SLOT(onChanged()));
     connect(contact.data(),
-            SIGNAL(locationUpdated(const Tp::LocationInfo&)),
+            SIGNAL(locationUpdated(Tp::LocationInfo)),
             SLOT(onChanged()));
     connect(contact.data(),
-            SIGNAL(infoFieldsChanged(const Tp::Contact::InfoFields&)),
+            SIGNAL(infoFieldsChanged(Tp::Contact::InfoFields)),
             SLOT(onChanged()));
     connect(contact.data(),
             SIGNAL(subscriptionStateChanged(Tp::Contact::PresenceState,
-                                            const Tp::Channel::GroupMemberChangeDetails&)),
+                                            Tp::Channel::GroupMemberChangeDetails)),
             SLOT(onChanged()));
     connect(contact.data(),
             SIGNAL(publishStateChanged(Tp::Contact::PresenceState,
-                                       const Tp::Channel::GroupMemberChangeDetails&)),
+                                       Tp::Channel::GroupMemberChangeDetails)),
             SLOT(onChanged()));
     connect(contact.data(),
-            SIGNAL(blockStatusChanged(bool,
-                                      const Tp::Channel::GroupMemberChangeDetails&)),
+            SIGNAL(blockStatusChanged(bool,Tp::Channel::GroupMemberChangeDetails)),
             SLOT(onChanged()));
 }
 

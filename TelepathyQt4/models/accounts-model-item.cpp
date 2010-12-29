@@ -54,9 +54,9 @@ AccountsModelItem::AccountsModelItem(const AccountPtr &account)
         }
 
         connect(manager.data(),
-                SIGNAL(allKnownContactsChanged(Tp::Contacts, Tp::Contacts,
+                SIGNAL(allKnownContactsChanged(Tp::Contacts,Tp::Contacts,
                                                Tp::Channel::GroupMemberChangeDetails)),
-                SLOT(onContactsChanged(Tp::Contacts, Tp::Contacts)));
+                SLOT(onContactsChanged(Tp::Contacts,Tp::Contacts)));
     }
 
     connect(mPriv->mAccount.data(),
@@ -66,7 +66,7 @@ AccountsModelItem::AccountsModelItem(const AccountPtr &account)
             SIGNAL(serviceNameChanged(QString)),
             SLOT(onChanged()));
     connect(mPriv->mAccount.data(),
-            SIGNAL(profileChanged(const Tp::ProfilePtr &)),
+            SIGNAL(profileChanged(Tp::ProfilePtr)),
             SLOT(onChanged()));
     connect(mPriv->mAccount.data(),
             SIGNAL(iconNameChanged(QString)),
@@ -84,7 +84,7 @@ AccountsModelItem::AccountsModelItem(const AccountPtr &account)
             SIGNAL(stateChanged(bool)),
             SLOT(onChanged()));
     connect(mPriv->mAccount.data(),
-            SIGNAL(capabilitiesChanged(const Tp::ConnectionCapabilities &)),
+            SIGNAL(capabilitiesChanged(Tp::ConnectionCapabilities)),
             SLOT(onChanged()));
     connect(mPriv->mAccount.data(),
             SIGNAL(connectsAutomaticallyPropertyChanged(bool)),
@@ -96,13 +96,13 @@ AccountsModelItem::AccountsModelItem(const AccountPtr &account)
             SIGNAL(changingPresence(bool)),
             SLOT(onChanged()));
     connect(mPriv->mAccount.data(),
-            SIGNAL(automaticPresenceChanged(const Tp::Presence&)),
+            SIGNAL(automaticPresenceChanged(Tp::Presence)),
             SLOT(onChanged()));
     connect(mPriv->mAccount.data(),
-            SIGNAL(currentPresenceChanged(const Tp::Presence&)),
+            SIGNAL(currentPresenceChanged(Tp::Presence)),
             SLOT(onChanged()));
     connect(mPriv->mAccount.data(),
-            SIGNAL(requestedPresenceChanged(const Tp::Presence&)),
+            SIGNAL(requestedPresenceChanged(Tp::Presence)),
             SLOT(onChanged()));
     connect(mPriv->mAccount.data(),
             SIGNAL(onlinenessChanged(bool)),
@@ -117,11 +117,11 @@ AccountsModelItem::AccountsModelItem(const AccountPtr &account)
             SIGNAL(connectionStatusChanged(Tp::ConnectionStatus)),
             SLOT(onStatusChanged(Tp::ConnectionStatus)));
     connect(mPriv->mAccount.data(),
-            SIGNAL(connectionChanged(const Tp::ConnectionPtr&)),
+            SIGNAL(connectionChanged(Tp::ConnectionPtr)),
             SLOT(onChanged()));
     connect(mPriv->mAccount.data(),
-            SIGNAL(connectionChanged(const Tp::ConnectionPtr&)),
-            SLOT(onConnectionChanged(const Tp::ConnectionPtr&)));
+            SIGNAL(connectionChanged(Tp::ConnectionPtr)),
+            SLOT(onConnectionChanged(Tp::ConnectionPtr)));
 }
 
 Tp::AccountsModelItem::~AccountsModelItem()
@@ -288,9 +288,9 @@ void AccountsModelItem::onConnectionChanged(const Tp::ConnectionPtr &connection)
     ContactManagerPtr manager = connection->contactManager();
 
     connect(manager.data(),
-            SIGNAL(allKnownContactsChanged(Tp::Contacts, Tp::Contacts,
+            SIGNAL(allKnownContactsChanged(Tp::Contacts,Tp::Contacts,
                                            Tp::Channel::GroupMemberChangeDetails)),
-            SLOT(onContactsChanged(Tp::Contacts, Tp::Contacts)));
+            SLOT(onContactsChanged(Tp::Contacts,Tp::Contacts)));
 }
 
 void AccountsModelItem::refreshKnownContacts()

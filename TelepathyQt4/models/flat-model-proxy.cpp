@@ -46,26 +46,26 @@ FlatModelProxy::FlatModelProxy(QAbstractItemModel *source)
     setSourceModel(source);
 
     connect(source,
-            SIGNAL(rowsAboutToBeInserted(QModelIndex, int, int)),
-            SLOT(onRowsAboutToBeInserted(QModelIndex, int, int)));
+            SIGNAL(rowsAboutToBeInserted(QModelIndex,int,int)),
+            SLOT(onRowsAboutToBeInserted(QModelIndex,int,int)));
     connect(source,
-            SIGNAL(rowsInserted(QModelIndex, int, int)),
-            SLOT(onRowsInserted(QModelIndex, int, int)));
+            SIGNAL(rowsInserted(QModelIndex,int,int)),
+            SLOT(onRowsInserted(QModelIndex,int,int)));
     connect(source,
-            SIGNAL(rowsAboutToBeRemoved(QModelIndex, int, int)),
-            SLOT(onRowsAboutToBeRemoved(QModelIndex, int, int)));
+            SIGNAL(rowsAboutToBeRemoved(QModelIndex,int,int)),
+            SLOT(onRowsAboutToBeRemoved(QModelIndex,int,int)));
     connect(source,
-            SIGNAL(rowsRemoved(QModelIndex, int, int)),
-            SLOT(onRowsRemoved(QModelIndex, int, int)));
+            SIGNAL(rowsRemoved(QModelIndex,int,int)),
+            SLOT(onRowsRemoved(QModelIndex,int,int)));
     connect(source,
-            SIGNAL(rowsInserted(QModelIndex, int, int)),
+            SIGNAL(rowsInserted(QModelIndex,int,int)),
             SIGNAL(rowCountChanged()));
     connect(source,
-            SIGNAL(rowsRemoved(QModelIndex, int, int)),
+            SIGNAL(rowsRemoved(QModelIndex,int,int)),
             SIGNAL(rowCountChanged()));
     connect(source,
-            SIGNAL(dataChanged(QModelIndex, QModelIndex)),
-            SLOT(onDataChanged(QModelIndex, QModelIndex)));
+            SIGNAL(dataChanged(QModelIndex,QModelIndex)),
+            SLOT(onDataChanged(QModelIndex,QModelIndex)));
 }
 
 FlatModelProxy::~FlatModelProxy()

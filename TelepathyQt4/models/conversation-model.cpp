@@ -52,8 +52,8 @@ ConversationModel::ConversationModel(const ContactPtr &self, const TextChannelPt
       mPriv(new Private(self,channel))
 {
     connect(mPriv->mChannel.data(),
-            SIGNAL(chatStateChanged(const Tp::ContactPtr&, Tp::ChannelChatState)),
-            SLOT(onChatStateChanged(const Tp::ContactPtr&, Tp::ChannelChatState)));
+            SIGNAL(chatStateChanged(Tp::ContactPtr,Tp::ChannelChatState)),
+            SLOT(onChatStateChanged(Tp::ContactPtr,Tp::ChannelChatState)));
 
     QHash<int, QByteArray> roles;
     roles[TextRole] = "text";
@@ -181,9 +181,8 @@ void ConversationModel::onChatStateChanged(const Tp::ContactPtr &contact, Channe
   */
 void ConversationModel::disconnectChannelQueue()
 {
-    disconnect(mPriv->mChannel.data(),
-            SIGNAL(messageReceived(const Tp::ReceivedMessage &)),
-            this, SLOT(onMessageReceived(const Tp::ReceivedMessage &)));
+    disconnect(mPriv->mChannel.data(), SIGNAL(messageReceived(Tp::ReceivedMessage)),
+               this, SLOT(onMessageReceived(Tp::ReceivedMessage)));
 }
 
 /**
@@ -193,8 +192,8 @@ void ConversationModel::connectChannelQueue()
 {
     //reconnect the signal
     connect(mPriv->mChannel.data(),
-                SIGNAL(messageReceived(const Tp::ReceivedMessage &)),
-                SLOT(onMessageReceived(const Tp::ReceivedMessage &)));
+                SIGNAL(messageReceived(Tp::ReceivedMessage)),
+                SLOT(onMessageReceived(Tp::ReceivedMessage)));
 
     //flush the queue and enter all messages into the model
     // display messages already in queue
