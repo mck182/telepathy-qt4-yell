@@ -213,15 +213,15 @@ void AccountsModelItem::setEnabled(bool value)
 
 void AccountsModelItem::setStatus(const QString &value)
 {
-    SimplePresence presence = mPriv->mAccount->currentPresence().barePresence();
-    presence.status = value;
+    Presence presence = mPriv->mAccount->currentPresence().barePresence();
+    presence.setStatus(Tp::ConnectionPresenceTypeUnset, value, QString());
     mPriv->mAccount->setRequestedPresence(presence);
 }
 
 void AccountsModelItem::setStatusMessage(const QString &value)
 {
-    SimplePresence presence = mPriv->mAccount->currentPresence().barePresence();
-    presence.statusMessage = value;
+    Presence presence = mPriv->mAccount->currentPresence().barePresence();
+    presence.setStatus(Tp::ConnectionPresenceTypeUnset, QString(), value);
     mPriv->mAccount->setRequestedPresence(presence);
 }
 
