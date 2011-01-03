@@ -48,11 +48,9 @@ AccountsModelItem::AccountsModelItem(const AccountPtr &account)
     : mPriv(new Private(account))
 {
     if (!mPriv->mAccount->connection().isNull()) {
-        ContactManagerPtr manager = account->connection()->contactManager();
-        foreach (ContactPtr contact, manager->allKnownContacts()) {
-            addChild(new ContactModelItem(contact));
-        }
+        addKnownContacts();
 
+        ContactManagerPtr manager = account->connection()->contactManager();
         connect(manager.data(),
                 SIGNAL(allKnownContactsChanged(Tp::Contacts,Tp::Contacts,
                                                Tp::Channel::GroupMemberChangeDetails)),
@@ -116,9 +114,6 @@ AccountsModelItem::AccountsModelItem(const AccountPtr &account)
     connect(mPriv->mAccount.data(),
             SIGNAL(connectionStatusChanged(Tp::ConnectionStatus)),
             SLOT(onStatusChanged(Tp::ConnectionStatus)));
-    connect(mPriv->mAccount.data(),
-            SIGNAL(connectionChanged(Tp::ConnectionPtr)),
-            SLOT(onChanged()));
     connect(mPriv->mAccount.data(),
             SIGNAL(connectionChanged(Tp::ConnectionPtr)),
             SLOT(onConnectionChanged(Tp::ConnectionPtr)));
@@ -250,7 +245,7 @@ void AccountsModelItem::onChanged()
 }
 
 void AccountsModelItem::onContactsChanged(const Tp::Contacts &addedContacts,
-                                         const Tp::Contacts &removedContacts)
+        const Tp::Contacts &removedContacts)
 {
     foreach (ContactPtr contact, removedContacts) {
         for (int i = 0; i < size(); ++i) {
@@ -277,7 +272,9 @@ void AccountsModelItem::onStatusChanged(Tp::ConnectionStatus status)
 
 void AccountsModelItem::onConnectionChanged(const Tp::ConnectionPtr &connection)
 {
-    //if the connection is invalid or disconnected, clear the contacts list
+    onChanged();
+
+    // if the connection is invalid or disconnected, clear the contacts list
     if (connection.isNull()
             || !connection->isValid()
             || connection->status() == ConnectionStatusDisconnected) {
@@ -291,18 +288,19 @@ void AccountsModelItem::onConnectionChanged(const Tp::ConnectionPtr &connection)
             SIGNAL(allKnownContactsChanged(Tp::Contacts,Tp::Contacts,
                                            Tp::Channel::GroupMemberChangeDetails)),
             SLOT(onContactsChanged(Tp::Contacts,Tp::Contacts)));
+
+    clearContacts();
+    addKnownContacts();
 }
 
-void AccountsModelItem::refreshKnownContacts()
+void AccountsModelItem::clearContacts()
 {
-    //reload the known contacts if it has a connection
-    QList<TreeNode *> newNodes;
-    if (!mPriv->mAccount->connection().isNull()
-            && mPriv->mAccount->connection()->isValid()) {
+    if (!mPriv->mAccount->connection().isNull() &&
+        mPriv->mAccount->connection()->isValid()) {
         ContactManagerPtr manager = mPriv->mAccount->connection()->contactManager();
         Contacts contacts = manager->allKnownContacts();
 
-        //remove the items no longer present
+        // remove the items no longer present
         for (int i = 0; i < size(); ++i) {
             bool exists = false;
             ContactModelItem *item = qobject_cast<ContactModelItem *>(childAt(i));
@@ -310,18 +308,28 @@ void AccountsModelItem::refreshKnownContacts()
                 ContactPtr itemContact = item->contact();
                 if (contacts.contains(itemContact)) {
                     exists = true;
-                    break;
                 }
             }
             if (!exists) {
-                debug() << "contact removed:" << qPrintable(item->contact()->id());
                 emit childrenRemoved(this, i, i);
             }
         }
+    }
+}
 
-        //get the list of contacts in the children
+void AccountsModelItem::addKnownContacts()
+{
+    // reload the known contacts if it has a connection
+    QList<TreeNode *> newNodes;
+    if (!mPriv->mAccount->connection().isNull() &&
+        mPriv->mAccount->connection()->isValid()) {
+        ContactManagerPtr manager = mPriv->mAccount->connection()->contactManager();
+        Contacts contacts = manager->allKnownContacts();
+
+        // get the list of contacts in the children
         QList<ContactPtr> contactItemsList;
-        for (int i = 0; i < size(); ++i) {
+        int numElems = size();
+        for (int i = 0; i < numElems; ++i) {
             ContactModelItem *item = qobject_cast<ContactModelItem *>(childAt(i));
             if (item) {
                 contactItemsList.append(item->contact());
@@ -335,6 +343,7 @@ void AccountsModelItem::refreshKnownContacts()
             }
         }
     }
+
     if (newNodes.count() > 0) {
         emit childrenAdded(this, newNodes);
     }

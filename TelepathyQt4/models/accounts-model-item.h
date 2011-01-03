@@ -57,8 +57,8 @@ public:
 
     Q_INVOKABLE void setPresence(int type, const QString &status, const QString &statusMessage);
 
-    Q_INVOKABLE void refreshKnownContacts(void);
-
+    void clearContacts(void);
+    void addKnownContacts(void);
 
 Q_SIGNALS:
     void connectionStatusChanged(const QString &accountId, int status);

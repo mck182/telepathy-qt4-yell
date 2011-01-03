@@ -190,12 +190,12 @@ void ConversationModel::disconnectChannelQueue()
   */
 void ConversationModel::connectChannelQueue()
 {
-    //reconnect the signal
+    // reconnect the signal
     connect(mPriv->mChannel.data(),
                 SIGNAL(messageReceived(Tp::ReceivedMessage)),
                 SLOT(onMessageReceived(Tp::ReceivedMessage)));
 
-    //flush the queue and enter all messages into the model
+    // flush the queue and enter all messages into the model
     // display messages already in queue
     foreach (Tp::ReceivedMessage message, mPriv->mChannel->messageQueue()) {
         onMessageReceived(message);
