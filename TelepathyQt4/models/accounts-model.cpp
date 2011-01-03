@@ -89,7 +89,9 @@ AccountsModel::AccountsModel(const Tp::AccountManagerPtr &am, QObject *parent)
     roles[NicknameRole] = "nickname";
     roles[ConnectsAutomaticallyRole] = "connectsAutomatically";
     roles[ChangingPresenceRole] = "changingPresence";
-    roles[AutomaticPresenceRole] = "automaticPresence";
+    roles[AutomaticPresenceRole] = "automaticStatus";
+    roles[AutomaticPresenceTypeRole] = "automaticStatusType";
+    roles[AutomaticPresenceStatusMessageRole] = "automaticStatusMessage";
     roles[CurrentPresenceRole] = "status";
     roles[CurrentPresenceTypeRole] = "statusType";
     roles[CurrentPresenceStatusMessageRole] = "statusMessage";

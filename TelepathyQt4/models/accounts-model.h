@@ -62,6 +62,8 @@ public:
         ConnectsAutomaticallyRole,
         ChangingPresenceRole,
         AutomaticPresenceRole,
+        AutomaticPresenceTypeRole,
+        AutomaticPresenceStatusMessageRole,
         CurrentPresenceRole,
         CurrentPresenceTypeRole,
         CurrentPresenceStatusMessageRole,

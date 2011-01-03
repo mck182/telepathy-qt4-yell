@@ -156,6 +156,10 @@ QVariant AccountsModelItem::data(int role) const
             return mPriv->mAccount->isChangingPresence();
         case AccountsModel::AutomaticPresenceRole:
             return mPriv->mAccount->automaticPresence().status();
+        case AccountsModel::AutomaticPresenceTypeRole:
+            return mPriv->mAccount->automaticPresence().type();
+        case AccountsModel::AutomaticPresenceStatusMessageRole:
+            return mPriv->mAccount->automaticPresence().statusMessage();
         case AccountsModel::CurrentPresenceRole:
             return mPriv->mAccount->currentPresence().status();
         case AccountsModel::CurrentPresenceTypeRole:
