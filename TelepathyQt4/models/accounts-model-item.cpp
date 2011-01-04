@@ -41,8 +41,25 @@ struct TELEPATHY_QT4_NO_EXPORT AccountsModelItem::Private
     {
     }
 
+    void setStatus(const QString &value);
+    void setStatusMessage(const QString &value);
+
     AccountPtr mAccount;
 };
+
+void AccountsModelItem::Private::setStatus(const QString &value)
+{
+    Presence presence = mAccount->currentPresence().barePresence();
+    presence.setStatus(Tp::ConnectionPresenceTypeUnset, value, QString());
+    mAccount->setRequestedPresence(presence);
+}
+
+void AccountsModelItem::Private::setStatusMessage(const QString &value)
+{
+    Presence presence = mAccount->currentPresence().barePresence();
+    presence.setStatus(Tp::ConnectionPresenceTypeUnset, QString(), value);
+    mAccount->setRequestedPresence(presence);
+}
 
 AccountsModelItem::AccountsModelItem(const AccountPtr &account)
     : mPriv(new Private(account))
@@ -188,10 +205,10 @@ bool AccountsModelItem::setData(int role, const QVariant &value)
         setEnabled(value.toBool());
         return true;
     case AccountsModel::RequestedPresenceRole:
-        setStatus(value.toString());
+        mPriv->setStatus(value.toString());
         return true;
     case AccountsModel::RequestedPresenceStatusMessageRole:
-        setStatusMessage(value.toString());
+        mPriv->setStatusMessage(value.toString());
         return true;
     case AccountsModel::NicknameRole:
         setNickname(value.toString());
@@ -209,20 +226,6 @@ Tp::AccountPtr Tp::AccountsModelItem::account() const
 void AccountsModelItem::setEnabled(bool value)
 {
     mPriv->mAccount->setEnabled(value);
-}
-
-void AccountsModelItem::setStatus(const QString &value)
-{
-    Presence presence = mPriv->mAccount->currentPresence().barePresence();
-    presence.setStatus(Tp::ConnectionPresenceTypeUnset, value, QString());
-    mPriv->mAccount->setRequestedPresence(presence);
-}
-
-void AccountsModelItem::setStatusMessage(const QString &value)
-{
-    Presence presence = mPriv->mAccount->currentPresence().barePresence();
-    presence.setStatus(Tp::ConnectionPresenceTypeUnset, QString(), value);
-    mPriv->mAccount->setRequestedPresence(presence);
 }
 
 void AccountsModelItem::setNickname(const QString &value)
