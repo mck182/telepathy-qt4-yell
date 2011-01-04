@@ -61,6 +61,7 @@ ConversationModel::ConversationModel(const ContactPtr &self, const TextChannelPt
     roles[ContactAvatarRole] = "contactAvatar";
     roles[TimeRole] = "time";
     roles[TypeRole] = "type";
+    roles[ItemRole] = "item";
     setRoleNames(roles);
 }
 
@@ -102,6 +103,10 @@ QVariant ConversationModel::data(const QModelIndex &index, int role) const
         default:
             return QString();
         }
+    case ItemRole:
+        return QVariant::fromValue(
+                        const_cast<QObject *>(
+                        static_cast<const QObject *>(item)));
     default:
         return QVariant();
     }
@@ -145,6 +150,16 @@ bool ConversationModel::deleteItem(const ConversationItem *item)
     }
 
     return false;
+}
+
+QModelIndex ConversationModel::index(const ConversationItem *item) const
+{
+    int num = mPriv->mItems.indexOf(item);
+    if (num != -1) {
+        return QAbstractListModel::index(num);
+    }
+
+    return QModelIndex();
 }
 
 void ConversationModel::onChannelReady(Tp::PendingOperation *op)

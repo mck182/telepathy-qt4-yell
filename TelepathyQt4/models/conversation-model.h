@@ -45,7 +45,8 @@ public:
         ContactRole,
         ContactAvatarRole,
         TimeRole,
-        TypeRole
+        TypeRole,
+        ItemRole
     };
 
     explicit ConversationModel(const ContactPtr &self, const TextChannelPtr &channel, QObject *parent = 0);
@@ -57,6 +58,7 @@ public:
     Q_INVOKABLE void disconnectChannelQueue();
     Q_INVOKABLE void connectChannelQueue();
 
+
     ContactPtr selfContact() const;
 
 protected:
@@ -65,6 +67,8 @@ protected:
 
     void addItem(const ConversationItem *item);
     bool deleteItem(const ConversationItem *item);
+
+    QModelIndex index(const ConversationItem *item) const;
 
 protected Q_SLOTS:
     virtual void onChatStateChanged(const Tp::ContactPtr &contact, Tp::ChannelChatState state);
