@@ -54,8 +54,8 @@ public:
     virtual int rowCount(const QModelIndex &parent = QModelIndex()) const;
     virtual QVariant data(const QModelIndex &index, int role) const;
     Q_INVOKABLE void sendMessage(const QString &text);
-    Q_INVOKABLE void disconnectChannelQueue(void);
-    Q_INVOKABLE void connectChannelQueue(void);
+    Q_INVOKABLE void disconnectChannelQueue();
+    Q_INVOKABLE void connectChannelQueue();
 
     ContactPtr selfContact() const;
 
