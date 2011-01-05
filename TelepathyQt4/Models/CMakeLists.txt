@@ -29,6 +29,7 @@ set(telepathy_qt4_models_HEADERS
     ConversationItem
     ConversationModel
     FlatModelProxy
+    Global
     TreeNode
     accounts-model.h
     accounts-model-item.h
@@ -37,6 +38,7 @@ set(telepathy_qt4_models_HEADERS
     conversation-item.h
     conversation-model.h
     flat-model-proxy.h
+    global.h
     tree-node.h
 )
 
