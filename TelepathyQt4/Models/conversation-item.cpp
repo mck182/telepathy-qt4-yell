@@ -24,7 +24,8 @@
 
 #include <TelepathyQt4/Contact>
 
-namespace Tp {
+namespace Tp
+{
 
 struct TELEPATHY_QT4_MODELS_NO_EXPORT ConversationItem::Private
 {
