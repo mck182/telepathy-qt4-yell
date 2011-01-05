@@ -21,6 +21,10 @@
 #ifndef _TelepathyQt4_Models_tree_node_h_HEADER_GUARD_
 #define _TelepathyQt4_Models_tree_node_h_HEADER_GUARD_
 
+#ifndef IN_TELEPATHY_QT4_HEADER
+#error IN_TELEPATHY_QT4_HEADER
+#endif
+
 #include <QObject>
 #include <QVariant>
 #include <TelepathyQt4/Types>

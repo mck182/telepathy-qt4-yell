@@ -29,6 +29,7 @@ set(telepathy_qt4_models_HEADERS
     ConversationItem
     ConversationModel
     FlatModelProxy
+    TreeNode
     accounts-model.h
     accounts-model-item.h
     avatar-image-provider.h

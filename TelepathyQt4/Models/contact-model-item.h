@@ -25,7 +25,7 @@
 #error IN_TELEPATHY_QT4_HEADER
 #endif
 
-#include "tree-node.h"
+#include <TelepathyQt4/Models/TreeNode>
 
 #include <TelepathyQt4/Types>
 
