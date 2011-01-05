@@ -32,7 +32,7 @@
 #include <TelepathyQt4/Types>
 #include <TelepathyQt4/TextChannel>
 
-#include <TelepathyQt4/models/AccountsModelItem>
+#include <TelepathyQt4/Models/AccountsModelItem>
 
 namespace Tp
 {

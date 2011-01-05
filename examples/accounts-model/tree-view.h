@@ -25,7 +25,7 @@
 #include <QWidget>
 
 #include <TelepathyQt4/Types>
-#include <TelepathyQt4/models/AccountsModel>
+#include <TelepathyQt4/Models/AccountsModel>
 
 class TelepathyInitializer;
 

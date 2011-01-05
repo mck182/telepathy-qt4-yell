@@ -21,7 +21,7 @@
 #ifndef _TelepathyQt4_telepathy_initializer_h_HEADER_GUARD_
 #define _TelepathyQt4_telepathy_initializer_h_HEADER_GUARD_
 
-#include <TelepathyQt4/models/AccountsModel>
+#include <TelepathyQt4/Models/AccountsModel>
 #include <TelepathyQt4/Types>
 
 class TelepathyInitializer : public QObject

@@ -70,6 +70,6 @@ endif (WIN32)
 
 # Install headers
 install(FILES ${telepathy_qt4_models_HEADERS}
-    DESTINATION ${INCLUDE_INSTALL_DIR}/telepathy-1.0/TelepathyQt4/models
+    DESTINATION ${INCLUDE_INSTALL_DIR}/telepathy-1.0/TelepathyQt4/Models
     COMPONENT models_headers)
 

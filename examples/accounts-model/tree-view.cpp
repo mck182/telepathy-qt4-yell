@@ -26,7 +26,7 @@
 #include <TelepathyQt4/PendingContacts>
 #include <TelepathyQt4/ContactManager>
 
-#include <TelepathyQt4/models/AccountsModel>
+#include <TelepathyQt4/Models/AccountsModel>
 
 #include <QTreeView>
 #include <QVBoxLayout>

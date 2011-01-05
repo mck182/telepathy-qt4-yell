@@ -5,7 +5,7 @@
 #define IN_TELEPATHY_QT4_HEADER
 #endif
 
-#include <TelepathyQt4/models/conversation-item.h>
+#include <TelepathyQt4/Models/conversation-item.h>
 
 #undef IN_TELEPATHY_QT4_HEADER
 

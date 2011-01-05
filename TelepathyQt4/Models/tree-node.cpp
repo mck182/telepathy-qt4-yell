@@ -18,9 +18,9 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#include "TelepathyQt4/models/tree-node.h"
+#include "TelepathyQt4/Models/tree-node.h"
 
-#include "TelepathyQt4/models/_gen/tree-node.moc.hpp"
+#include "TelepathyQt4/Models/_gen/tree-node.moc.hpp"
 
 namespace Tp
 {

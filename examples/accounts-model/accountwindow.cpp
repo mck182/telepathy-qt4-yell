@@ -25,8 +25,8 @@
 #include <TelepathyQt4/AccountManager>
 #include <TelepathyQt4/PendingReady>
 
-#include <TelepathyQt4/models/FlatModelProxy>
-#include <TelepathyQt4/models/AvatarImageProvider>
+#include <TelepathyQt4/Models/FlatModelProxy>
+#include <TelepathyQt4/Models/AvatarImageProvider>
 
 #include <QAbstractItemModel>
 #include <QDeclarativeContext>
