@@ -25,14 +25,17 @@
 #error IN_TELEPATHY_QT4_HEADER
 #endif
 
+#include <TelepathyQt4/Models/Global>
+
+#include <TelepathyQt4/Types>
+
 #include <QDateTime>
 #include <QString>
-#include <TelepathyQt4/Types>
 
 namespace Tp
 {
 
-class TELEPATHY_QT4_EXPORT ConversationItem : public QObject
+class TELEPATHY_QT4_MODELS_EXPORT ConversationItem : public QObject
 {
     Q_OBJECT
     Q_DISABLE_COPY(ConversationItem)

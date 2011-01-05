@@ -32,7 +32,7 @@
 namespace Tp
 {
 
-class TELEPATHY_QT4_EXPORT ContactModelItem : public TreeNode
+class TELEPATHY_QT4_MODELS_EXPORT ContactModelItem : public TreeNode
 {
     Q_OBJECT
     Q_DISABLE_COPY(ContactModelItem)

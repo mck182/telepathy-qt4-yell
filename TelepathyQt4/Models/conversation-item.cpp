@@ -18,7 +18,7 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#include "TelepathyQt4/Models/ConversationItem"
+#include <TelepathyQt4/Models/ConversationItem>
 
 #include "TelepathyQt4/Models/_gen/conversation-item.moc.hpp"
 
@@ -26,7 +26,7 @@
 
 namespace Tp {
 
-struct TELEPATHY_QT4_NO_EXPORT ConversationItem::Private
+struct TELEPATHY_QT4_MODELS_NO_EXPORT ConversationItem::Private
 {
     Private(const ContactPtr &contact,
             const QDateTime &time,

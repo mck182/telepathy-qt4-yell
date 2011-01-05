@@ -25,13 +25,14 @@
 #error IN_TELEPATHY_QT4_HEADER
 #endif
 
+#include <TelepathyQt4/Models/Global>
+
 #include <QAbstractProxyModel>
-#include <TelepathyQt4/Global>
 
 namespace Tp
 {
 
-class TELEPATHY_QT4_EXPORT FlatModelProxy : public QAbstractProxyModel
+class TELEPATHY_QT4_MODELS_EXPORT FlatModelProxy : public QAbstractProxyModel
 {
     Q_OBJECT
     Q_DISABLE_COPY(FlatModelProxy)

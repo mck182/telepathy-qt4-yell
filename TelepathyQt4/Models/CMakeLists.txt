@@ -1,3 +1,8 @@
+# It gets inherited from the previous directory, hence it has to be removed explicitely
+remove_definitions(-DBUILDING_TELEPATHY_QT4)
+# We are building Telepathy-Qt4-Models
+add_definitions(-DBUILDING_TELEPATHY_QT4_MODELS)
+
 # Set source files
 set(telepathy_qt4_models_SRCS
     accounts-model.cpp

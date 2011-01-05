@@ -28,13 +28,13 @@
 #include <TelepathyQt4/Models/TreeNode>
 
 #include <TelepathyQt4/Constants>
-#include <TelepathyQt4/Types>
 #include <TelepathyQt4/Contact>
+#include <TelepathyQt4/Types>
 
 namespace Tp
 {
 
-class TELEPATHY_QT4_EXPORT AccountsModelItem : public TreeNode
+class TELEPATHY_QT4_MODELS_EXPORT AccountsModelItem : public TreeNode
 {
     Q_OBJECT
     Q_DISABLE_COPY(AccountsModelItem)

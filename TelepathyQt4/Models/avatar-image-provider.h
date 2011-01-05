@@ -25,15 +25,17 @@
 #error IN_TELEPATHY_QT4_HEADER
 #endif
 
-#include <QDeclarativeImageProvider>
-#include <QDeclarativeEngine>
+#include <TelepathyQt4/Models/Global>
 
 #include <TelepathyQt4/Types>
+
+#include <QDeclarativeImageProvider>
+#include <QDeclarativeEngine>
 
 namespace Tp
 {
 
-class TELEPATHY_QT4_EXPORT AvatarImageProvider : public QDeclarativeImageProvider
+class TELEPATHY_QT4_MODELS_EXPORT AvatarImageProvider : public QDeclarativeImageProvider
 {
     Q_DISABLE_COPY(AvatarImageProvider)
 

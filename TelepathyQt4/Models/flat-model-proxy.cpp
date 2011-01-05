@@ -25,7 +25,7 @@
 namespace Tp
 {
 
-struct TELEPATHY_QT4_NO_EXPORT FlatModelProxy::Private
+struct TELEPATHY_QT4_MODELS_NO_EXPORT FlatModelProxy::Private
 {
     int offsetOf(const FlatModelProxy *model, int index) const;
 };

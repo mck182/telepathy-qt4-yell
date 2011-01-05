@@ -22,19 +22,19 @@
 
 #include "TelepathyQt4/Models/_gen/conversation-model.moc.hpp"
 
+#include <TelepathyQt4/Models/ConversationItem>
+
+#include <TelepathyQt4/AvatarData>
 #include <TelepathyQt4/PendingReady>
 #include <TelepathyQt4/ReceivedMessage>
-#include <TelepathyQt4/AvatarData>
 
 #include <QPixmap>
 #include <QtAlgorithms>
 
-#include "TelepathyQt4/Models/ConversationItem"
-
 namespace Tp
 {
 
-struct TELEPATHY_QT4_NO_EXPORT ConversationModel::Private
+struct TELEPATHY_QT4_MODELS_NO_EXPORT ConversationModel::Private
 {
     Private(const ContactPtr &self, const TextChannelPtr &channel)
         : mSelf(self),

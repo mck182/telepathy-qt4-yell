@@ -25,16 +25,19 @@
 #error IN_TELEPATHY_QT4_HEADER
 #endif
 
-#include <QAbstractListModel>
-#include <TelepathyQt4/Types>
+#include <TelepathyQt4/Models/Global>
+
 #include <TelepathyQt4/TextChannel>
+#include <TelepathyQt4/Types>
+
+#include <QAbstractListModel>
 
 namespace Tp
 {
 
 class ConversationItem;
 
-class TELEPATHY_QT4_EXPORT ConversationModel : public QAbstractListModel
+class TELEPATHY_QT4_MODELS_EXPORT ConversationModel : public QAbstractListModel
 {
     Q_OBJECT
     Q_DISABLE_COPY(ConversationModel)

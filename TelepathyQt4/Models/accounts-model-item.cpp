@@ -18,23 +18,23 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#include "TelepathyQt4/Models/AccountsModelItem"
+#include <TelepathyQt4/Models/AccountsModelItem>
 
 #include "TelepathyQt4/Models/_gen/accounts-model-item.moc.hpp"
 
 #include "TelepathyQt4/debug-internal.h"
-#include <TelepathyQt4/Account>
-#include <TelepathyQt4/ContactManager>
 
 #include <TelepathyQt4/Models/AccountsModel>
 #include <TelepathyQt4/Models/AvatarImageProvider>
+#include <TelepathyQt4/Models/ContactModelItem>
 
-#include "TelepathyQt4/Models/ContactModelItem"
+#include <TelepathyQt4/Account>
+#include <TelepathyQt4/ContactManager>
 
 namespace Tp
 {
 
-struct TELEPATHY_QT4_NO_EXPORT AccountsModelItem::Private
+struct TELEPATHY_QT4_MODELS_NO_EXPORT AccountsModelItem::Private
 {
     Private(const AccountPtr &account)
         : mAccount(account)

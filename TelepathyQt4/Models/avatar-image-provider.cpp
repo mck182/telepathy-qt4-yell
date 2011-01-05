@@ -26,7 +26,7 @@
 namespace Tp
 {
 
-struct TELEPATHY_QT4_NO_EXPORT AvatarImageProvider::Private
+struct TELEPATHY_QT4_MODELS_NO_EXPORT AvatarImageProvider::Private
 {
     Private(const Tp::AccountManagerPtr &am)
         : mAM(am)

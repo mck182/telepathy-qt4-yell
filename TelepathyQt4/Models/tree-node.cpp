@@ -25,7 +25,7 @@
 namespace Tp
 {
 
-struct TELEPATHY_QT4_NO_EXPORT TreeNode::Private
+struct TELEPATHY_QT4_MODELS_NO_EXPORT TreeNode::Private
 {
     Private() :
         mParent(0)

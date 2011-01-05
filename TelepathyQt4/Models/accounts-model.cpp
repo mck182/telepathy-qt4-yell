@@ -23,16 +23,17 @@
 #include "TelepathyQt4/Models/_gen/accounts-model.moc.hpp"
 
 #include "TelepathyQt4/debug-internal.h"
-#include <TelepathyQt4/PendingReady>
-#include <TelepathyQt4/ContactManager>
 
-#include "TelepathyQt4/Models/AccountsModelItem"
-#include "TelepathyQt4/Models/ContactModelItem"
+#include <TelepathyQt4/ContactManager>
+#include <TelepathyQt4/PendingReady>
+
+#include <TelepathyQt4/Models/AccountsModelItem>
+#include <TelepathyQt4/Models/ContactModelItem>
 
 namespace Tp
 {
 
-struct TELEPATHY_QT4_NO_EXPORT AccountsModel::Private
+struct TELEPATHY_QT4_MODELS_NO_EXPORT AccountsModel::Private
 {
     Private(const Tp::AccountManagerPtr &am)
         : mAM(am)
