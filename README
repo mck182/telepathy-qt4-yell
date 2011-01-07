@@ -1,0 +1,60 @@
+==================
+telepathy-qt4-yell
+==================
+
+This is a library for Qt-based Telepathy clients. This library adds support for some DRAFT
+interfaces that could not land in TelepathyQt4 itself due to API/ABI stability rules.
+Once the interfaces are final and the implementation is ready, the code will move to TelepathyQt4
+itself and removed from here.
+
+Telepathy is a D-Bus framework for unifying real time communication,
+including instant messaging, voice calls and video calls. It abstracts
+differences between protocols to provide a unified interface for
+applications. See the Telepathy website for more information:
+
+  http://telepathy.freedesktop.org/
+
+Telepathy specification
+=======================
+
+The copy of the Telepathy specification in the spec/ directory indicates
+the specification that this library claims to implement. The HTML documentation for the latest version of the specification can be viewed at:
+
+  http://telepathy.freedesktop.org/spec/
+
+Requirements
+============
+
+Building telepathy-qt4-yell requires:
+  TelepathyQt4 and its dependencies
+
+See CMakeLists.txt for full details, including versions required.
+Of the packages listed above, only QtCore and QtDBus are required at runtime.
+
+Building also requires the cmake build system.
+
+Bugs, feature requests and to-do list
+=====================================
+
+Report all bugs, feature requests and "to-do" items here:
+  <https://bugs.freedesktop.org/enter_bug.cgi?product=Telepathy&component=tp-qt4>
+
+Running "make check" will produce FIXME.out, which lists all the mentions of
+FIXME, TODO or XXX in the source code. Ideally, all of these should be in
+Bugzilla, but sometimes they're not.
+
+Contact info
+============
+
+This library is maintained by the Telepathy project:
+  <http://telepathy.freedesktop.org/>
+  <mailto:telepathy@lists.freedesktop.org>
+  <irc://irc.freenode.net/telepathy>
+
+Telepathy development is supported by Collabora Ltd.
+  <http://www.collabora.co.uk/>.
+
+Hacking
+=======
+
+See HACKING for version control, coding style and patch submission information.
