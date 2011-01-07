@@ -9,15 +9,21 @@ add_definitions(-DBUILDING_TELEPATHY_QT4_YELL)
 
 # Sources for Tp-Qt4
 set(telepathy_qt4_yell_SRCS
+    call-channel.cpp
+    call-channel-internal.h
     channel.cpp
     types.cpp)
 
 # Exported headers for Tp-Qt4
 set(telepathy_qt4_yell_HEADERS
+    CallChannel
+    CallContent
+    CallStream
     Channel
     Constants
     Global
     Types
+    call-channel.h
     channel.h
     constants.h
     global.h
@@ -25,6 +31,7 @@ set(telepathy_qt4_yell_HEADERS
 
 # Headers file moc will be run on
 set(telepathy_qt4_yell_MOC_SRCS
+    call-channel.h
     channel.h)
 
 # Generated headers which will be installed and exported

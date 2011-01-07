@@ -34,6 +34,14 @@ namespace Tpy
 
 TELEPATHY_QT4_YELL_EXPORT void registerTypes();
 
+class CallChannel;
+class CallContent;
+class CallStream;
+
+typedef Tp::SharedPtr<CallChannel> CallChannelPtr;
+typedef Tp::SharedPtr<CallContent> CallContentPtr;
+typedef Tp::SharedPtr<CallStream> CallStreamPtr;
+
 } // Tpy
 
 #endif
