@@ -4,6 +4,8 @@
 
 #include <QtCore/QTimer>
 
+#include <TelepathyQt4Yell/Types>
+
 #include <TelepathyQt4/Types>
 #include <TelepathyQt4/Debug>
 #include <TelepathyQt4/DBus>
@@ -29,6 +31,7 @@ Test::~Test()
 void Test::initTestCaseImpl()
 {
     Tp::registerTypes();
+    Tpy::registerTypes();
     Tp::enableDebug(true);
     Tp::enableWarnings(true);
 
