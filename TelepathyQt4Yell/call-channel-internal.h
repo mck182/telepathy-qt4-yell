@@ -119,6 +119,8 @@ struct TELEPATHY_QT4_YELL_NO_EXPORT CallChannel::Private
     CallContentPtr addContent(const QDBusObjectPath &contentPath);
     CallContentPtr lookupContent(const QDBusObjectPath &contentPath) const;
 
+    class PendingRemoveContent;
+
     // Public object
     CallChannel *parent;
 
@@ -135,6 +137,24 @@ struct TELEPATHY_QT4_YELL_NO_EXPORT CallChannel::Private
 
     uint localHoldState;
     uint localHoldStateReason;
+};
+
+class TELEPATHY_QT4_YELL_NO_EXPORT CallChannel::Private::PendingRemoveContent :
+                    public Tp::PendingOperation
+{
+    Q_OBJECT
+
+public:
+    PendingRemoveContent(const CallChannelPtr &channel, const CallContentPtr &content,
+            ContentRemovalReason reason, const QString &detailedReason, const QString &message);
+
+private Q_SLOTS:
+    void onCallFinished(QDBusPendingCallWatcher *watcher);
+    void onContentRemoved(const Tpy::CallContentPtr &content);
+
+private:
+    CallChannelPtr channel;
+    CallContentPtr content;
 };
 
 } // Tp

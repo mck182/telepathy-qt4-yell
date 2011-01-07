@@ -32,6 +32,7 @@ set(telepathy_qt4_yell_HEADERS
 # Headers file moc will be run on
 set(telepathy_qt4_yell_MOC_SRCS
     call-channel.h
+    call-channel-internal.h
     channel.h)
 
 # Generated headers which will be installed and exported

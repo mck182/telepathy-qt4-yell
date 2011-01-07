@@ -181,6 +181,8 @@ public:
     CallContents contents() const;
     CallContents contentsForType(Tp::MediaStreamType type) const;
     PendingCallContent *requestContent(const QString &name, Tp::MediaStreamType type);
+    Tp::PendingOperation *removeContent(const CallContentPtr &content,
+            ContentRemovalReason reason, const QString &detailedReason, const QString &message);
 
     Tp::LocalHoldState localHoldState() const;
     Tp::LocalHoldStateReason localHoldStateReason() const;

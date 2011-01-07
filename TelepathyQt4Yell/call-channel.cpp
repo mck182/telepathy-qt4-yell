@@ -22,6 +22,7 @@
 #include "TelepathyQt4Yell/call-channel-internal.h"
 
 #include "TelepathyQt4Yell/_gen/call-channel.moc.hpp"
+#include "TelepathyQt4Yell/_gen/call-channel-internal.moc.hpp"
 
 #include <TelepathyQt4/Connection>
 #include <TelepathyQt4/ContactManager>
@@ -846,6 +847,51 @@ void CallChannel::Private::introspectLocalHoldState(CallChannel::Private *self)
             SLOT(gotLocalHoldState(QDBusPendingCallWatcher*)));
 }
 
+CallChannel::Private::PendingRemoveContent::PendingRemoveContent(const CallChannelPtr &channel,
+        const CallContentPtr &content, ContentRemovalReason reason,
+        const QString &detailedReason, const QString &message)
+    : PendingOperation(channel),
+      channel(channel),
+      content(content)
+{
+    connect(channel.data(),
+            SIGNAL(contentRemoved(Tpy::CallContentPtr)),
+            SLOT(onContentRemoved(Tpy::CallContentPtr)));
+
+    Client::CallContentInterface *contentInterface =
+        content->interface<Client::CallContentInterface>();
+    connect(new QDBusPendingCallWatcher(
+                contentInterface->Remove(reason, detailedReason, message),
+                this),
+            SIGNAL(finished(QDBusPendingCallWatcher*)),
+            SLOT(onCallFinished(QDBusPendingCallWatcher*)));
+}
+
+void CallChannel::Private::PendingRemoveContent::onCallFinished(QDBusPendingCallWatcher *watcher)
+{
+    if (isFinished()) {
+        watcher->deleteLater();
+        return;
+    }
+
+    if (watcher->isError()) {
+        setFinishedWithError(watcher->error());
+    } else {
+        if (!channel->contents().contains(content)) {
+            setFinished();
+        }
+    }
+
+    watcher->deleteLater();
+}
+
+void CallChannel::Private::PendingRemoveContent::onContentRemoved(const CallContentPtr &contentRemoved)
+{
+    if (!isFinished() && contentRemoved == content) {
+        setFinished();
+    }
+}
+
 /**
  * \class CallChannel
  * \ingroup clientchannel
@@ -1024,6 +1070,24 @@ CallContents CallChannel::contentsForType(Tp::MediaStreamType type) const
 PendingCallContent *CallChannel::requestContent(const QString &name, Tp::MediaStreamType type)
 {
     return new PendingCallContent(CallChannelPtr(this), name, type);
+}
+
+/**
+ * Remove the content.
+ *
+ * \param content The content to remove.
+ * \param reason A removal reason.
+ * \param detailedReason A more specific reason for the removal, if one is available, or an empty
+ *                       string.
+ * \param message A human-readable message for the reason for the removal, such as "Fatal
+ *                streaming failure" or "no codec intersection". This property can be left empty if
+ *                no reason is to be given.
+ */
+Tp::PendingOperation *CallChannel::removeContent(const CallContentPtr &content,
+        ContentRemovalReason reason, const QString &detailedReason, const QString &message)
+{
+    return new Private::PendingRemoveContent(CallChannelPtr(this),
+            content, reason, detailedReason, message);
 }
 
 /**
