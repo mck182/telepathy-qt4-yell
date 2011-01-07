@@ -30,6 +30,8 @@
 #include <TelepathyQt4Yell/Types>
 
 #include <TelepathyQt4/Channel>
+#include <TelepathyQt4/ChannelClassSpec>
+#include <TelepathyQt4/ChannelFactory>
 #include <TelepathyQt4/PendingOperation>
 #include <TelepathyQt4/Types>
 #include <TelepathyQt4/SharedPtr>
@@ -163,6 +165,19 @@ class TELEPATHY_QT4_YELL_EXPORT CallChannel : public Tp::Channel
 public:
     static const Tp::Feature FeatureContents;
     static const Tp::Feature FeatureLocalHoldState;
+
+    // TODO: helper methods, move to the appropriate classes once CallChannel is merged in tp-qt4
+    static Tp::ChannelClassSpec callClassSpec(
+            const QVariantMap &additionalProperties = QVariantMap());
+    static Tp::ChannelClassSpec audioCallClassSpec(
+            const QVariantMap &additionalProperties = QVariantMap());
+    static Tp::ChannelClassSpec videoCallClassSpec(
+            const QVariantMap &additionalProperties = QVariantMap());
+    static Tp::ChannelClassSpec videoCallWithAudioClassSpec(
+            const QVariantMap &additionalProperties = QVariantMap());
+    static void registerWithChannelFactory(const Tp::ChannelFactoryPtr &channelFactory);
+
+    // TODO: add helpers to ensure/create call channel using Account
 
     static CallChannelPtr create(const Tp::ConnectionPtr &connection,
             const QString &objectPath, const QVariantMap &immutableProperties);
