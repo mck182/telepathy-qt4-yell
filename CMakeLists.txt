@@ -119,6 +119,48 @@ else(${PYTHON_SHORT_VERSION} VERSION_GREATER ${REQUIRED_PY} OR ${PYTHON_SHORT_VE
     message(SEND_ERROR "Python >= ${REQUIRED_PY} is required")
 endif(${PYTHON_SHORT_VERSION} VERSION_GREATER ${REQUIRED_PY} OR ${PYTHON_SHORT_VERSION} VERSION_EQUAL ${REQUIRED_PY})
 
+# Check for Qt4 Glib support
+include(CheckCXXSourceCompiles)
+set(CMAKE_REQUIRED_INCLUDES ${QT_INCLUDES})
+set(CMAKE_REQUIRED_DEFINITIONS "")
+set(CMAKE_REQUIRED_FLAGS "")
+
+CHECK_CXX_SOURCE_COMPILES("
+#include <QtCore/QtGlobal>
+int main()
+{
+#if defined(QT_NO_GLIB)
+#error \"Qt was compiled with Glib disabled\"
+#endif
+return 0;
+}"
+QT4_GLIB_SUPPORT)
+macro_log_feature(QT4_GLIB_SUPPORT "Qt4 Glib Support"
+                  "QtCore library using Glib's main event loop"
+                  "http://qt.nokia.com/" FALSE ""
+                  "Needed, together with Telepathy-Glib, to build most of the unit tests")
+
+find_package(GLIB2)
+find_package(GObject)
+find_package(DBus)
+
+# Find telepathy-glib
+set(TELEPATHY_GLIB_MIN_VERSION 0.13.0)
+find_package(TelepathyGlib)
+macro_log_feature(TELEPATHYGLIB_FOUND "Telepathy-glib"
+                  "Glib bindings for Telepathy"
+                  "http://telepathy.freedesktop.org/" FALSE "0.13.0"
+                  "Needed, together with Qt Glib integration, to build most of the unit tests")
+
+find_program(GLIB_GENMARSHAL glib-genmarshal)
+
+# Enable glib-based tests only if Qt4 has GLib support and Telepathy-glib was found
+if(QT4_GLIB_SUPPORT AND TELEPATHYGLIB_FOUND AND GLIB2_FOUND AND DBUS_FOUND)
+    set(ENABLE_TP_GLIB_TESTS 1)
+else(QT4_GLIB_SUPPORT AND TELEPATHYGLIB_FOUND AND GLIB2_FOUND AND DBUS_FOUND)
+    set(ENABLE_TP_GLIB_TESTS 0)
+endif(QT4_GLIB_SUPPORT AND TELEPATHYGLIB_FOUND AND GLIB2_FOUND AND DBUS_FOUND)
+
 # Add the source subdirectories
 add_subdirectory(TelepathyQt4Yell)
 add_subdirectory(tests)
