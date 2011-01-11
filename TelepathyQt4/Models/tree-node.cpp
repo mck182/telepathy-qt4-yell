@@ -49,7 +49,9 @@ TreeNode::TreeNode()
 
 TreeNode::~TreeNode()
 {
-    mPriv->mParent->mPriv->mChildren.removeOne(this);
+    if (mPriv->mParent) {
+        mPriv->mParent->mPriv->mChildren.removeOne(this);
+    }
     delete mPriv;
 }
 
