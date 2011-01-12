@@ -931,7 +931,7 @@ Tp::ChannelClassSpec CallChannel::callClassSpec(const QVariantMap &additionalPro
     }
 }
 
-Tp::ChannelClassSpec audioCallClassSpec(const QVariantMap &additionalProperties)
+Tp::ChannelClassSpec CallChannel::audioCallClassSpec(const QVariantMap &additionalProperties)
 {
     static Tp::ChannelClassSpec spec;
 
@@ -948,7 +948,7 @@ Tp::ChannelClassSpec audioCallClassSpec(const QVariantMap &additionalProperties)
     }
 }
 
-Tp::ChannelClassSpec videoCallClassSpec(const QVariantMap &additionalProperties)
+Tp::ChannelClassSpec CallChannel::videoCallClassSpec(const QVariantMap &additionalProperties)
 {
     static Tp::ChannelClassSpec spec;
 
@@ -965,7 +965,7 @@ Tp::ChannelClassSpec videoCallClassSpec(const QVariantMap &additionalProperties)
     }
 }
 
-Tp::ChannelClassSpec videoCallWithAudioClassSpec(const QVariantMap &additionalProperties)
+Tp::ChannelClassSpec CallChannel::videoCallWithAudioClassSpec(const QVariantMap &additionalProperties)
 {
     static Tp::ChannelClassSpec spec;
 
