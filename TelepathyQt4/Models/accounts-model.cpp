@@ -144,7 +144,7 @@ void AccountsModel::onItemsAdded(TreeNode *parent, const QList<TreeNode *> &node
 {
     QModelIndex parentIndex = index(parent);
     int currentSize = rowCount(parentIndex);
-    debug() << "adding rows from" << currentSize << "to" << (currentSize + nodes.size());
+    debug() << "adding rows from" << currentSize << "to" << (currentSize + nodes.size() - 1);
     beginInsertRows(parentIndex, currentSize, currentSize + nodes.size() - 1);
     foreach (TreeNode *node, nodes) {
         parent->addChild(node);
