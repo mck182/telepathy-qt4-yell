@@ -60,6 +60,7 @@ endif (ENABLE_COMPILER_COVERAGE)
 target_link_libraries(telepathy-qt4-models
     ${QT_QTDBUS_LIBRARY}
     ${QT_QTCORE_LIBRARY}
+    ${QT_QTDECLARATIVE_LIBRARY}
     telepathy-qt4)
 
 # Set the correct version number
