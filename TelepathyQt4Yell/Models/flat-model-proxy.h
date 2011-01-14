@@ -25,7 +25,7 @@
 #error IN_TELEPATHY_QT4_HEADER
 #endif
 
-#include <TelepathyQt4/Models/Global>
+#include <TelepathyQt4Yell/Models/Global>
 
 #include <QAbstractProxyModel>
 

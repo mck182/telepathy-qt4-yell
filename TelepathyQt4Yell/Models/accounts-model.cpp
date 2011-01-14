@@ -18,17 +18,15 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#include <TelepathyQt4/Models/AccountsModel>
+#include <TelepathyQt4Yell/Models/AccountsModel>
 
-#include "TelepathyQt4/Models/_gen/accounts-model.moc.hpp"
-
-#include "TelepathyQt4/debug-internal.h"
+#include "TelepathyQt4Yell/Models/_gen/accounts-model.moc.hpp"
 
 #include <TelepathyQt4/ContactManager>
 #include <TelepathyQt4/PendingReady>
 
-#include <TelepathyQt4/Models/AccountsModelItem>
-#include <TelepathyQt4/Models/ContactModelItem>
+#include <TelepathyQt4Yell/Models/AccountsModelItem>
+#include <TelepathyQt4Yell/Models/ContactModelItem>
 
 namespace Tp
 {
@@ -144,7 +142,7 @@ void AccountsModel::onItemsAdded(TreeNode *parent, const QList<TreeNode *> &node
 {
     QModelIndex parentIndex = index(parent);
     int currentSize = rowCount(parentIndex);
-    debug() << "adding rows from" << currentSize << "to" << (currentSize + nodes.size() - 1);
+    //debug() << "adding rows from" << currentSize << "to" << (currentSize + nodes.size() - 1);
     beginInsertRows(parentIndex, currentSize, currentSize + nodes.size() - 1);
     foreach (TreeNode *node, nodes) {
         parent->addChild(node);

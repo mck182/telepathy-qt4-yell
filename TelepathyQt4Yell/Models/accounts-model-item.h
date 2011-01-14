@@ -25,7 +25,7 @@
 #error IN_TELEPATHY_QT4_HEADER
 #endif
 
-#include <TelepathyQt4/Models/TreeNode>
+#include <TelepathyQt4Yell/Models/TreeNode>
 
 #include <TelepathyQt4/Constants>
 #include <TelepathyQt4/Contact>

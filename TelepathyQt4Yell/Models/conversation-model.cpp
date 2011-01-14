@@ -18,11 +18,11 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#include <TelepathyQt4/Models/ConversationModel>
+#include <TelepathyQt4Yell/Models/ConversationModel>
 
-#include "TelepathyQt4/Models/_gen/conversation-model.moc.hpp"
+#include "TelepathyQt4Yell/Models/_gen/conversation-model.moc.hpp"
 
-#include <TelepathyQt4/Models/ConversationItem>
+#include <TelepathyQt4Yell/Models/ConversationItem>
 
 #include <TelepathyQt4/AvatarData>
 #include <TelepathyQt4/PendingReady>

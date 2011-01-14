@@ -5,7 +5,7 @@
 #define IN_TELEPATHY_QT4_HEADER
 #endif
 
-#include <TelepathyQt4/Models/flat-model-proxy.h>
+#include <TelepathyQt4Yell/Models/flat-model-proxy.h>
 
 #undef IN_TELEPATHY_QT4_HEADER
 

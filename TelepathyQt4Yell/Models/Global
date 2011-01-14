@@ -5,7 +5,7 @@
 #define IN_TELEPATHY_QT4_HEADER
 #endif
 
-#include <TelepathyQt4/Models/global.h>
+#include <TelepathyQt4Yell/Models/global.h>
 
 #undef IN_TELEPATHY_QT4_HEADER
 

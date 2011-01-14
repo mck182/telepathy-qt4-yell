@@ -25,7 +25,7 @@
 #error IN_TELEPATHY_QT4_HEADER
 #endif
 
-#include <TelepathyQt4/Models/AccountsModelItem>
+#include <TelepathyQt4Yell/Models/AccountsModelItem>
 
 #include <TelepathyQt4/Account>
 #include <TelepathyQt4/AccountManager>
