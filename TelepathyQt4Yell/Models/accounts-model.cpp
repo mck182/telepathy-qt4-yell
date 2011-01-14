@@ -28,10 +28,10 @@
 #include <TelepathyQt4Yell/Models/AccountsModelItem>
 #include <TelepathyQt4Yell/Models/ContactModelItem>
 
-namespace Tp
+namespace Tpy
 {
 
-struct TELEPATHY_QT4_MODELS_NO_EXPORT AccountsModel::Private
+struct TELEPATHY_QT4_YELL_MODELS_NO_EXPORT AccountsModel::Private
 {
     Private(const Tp::AccountManagerPtr &am)
         : mAM(am)
@@ -224,14 +224,14 @@ QVariant AccountsModel::data(const QModelIndex &index, int role) const
     return mPriv->node(index)->data(role);
 }
 
-AccountPtr AccountsModel::accountForIndex(const QModelIndex &index) const
+Tp::AccountPtr AccountsModel::accountForIndex(const QModelIndex &index) const
 {
     TreeNode *accountNode = mPriv->node(index);
     AccountsModelItem *item = qobject_cast<AccountsModelItem *>(accountNode);
     if (item) {
         return item->account();
     } else {
-        return AccountPtr();
+        return Tp::AccountPtr();
     }
 }
 

@@ -18,11 +18,11 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#ifndef _TelepathyQt4_Models_avatar_image_provider_h_HEADER_GUARD_
-#define _TelepathyQt4_Models_avatar_image_provider_h_HEADER_GUARD_
+#ifndef _TelepathyQt4Yell_Models_avatar_image_provider_h_HEADER_GUARD_
+#define _TelepathyQt4Yell_Models_avatar_image_provider_h_HEADER_GUARD_
 
-#ifndef IN_TELEPATHY_QT4_HEADER
-#error IN_TELEPATHY_QT4_HEADER
+#ifndef IN_TELEPATHY_QT4_YELL_MODELS_HEADER
+#error IN_TELEPATHY_QT4_YELL_MODELS_HEADER
 #endif
 
 #include <TelepathyQt4Yell/Models/Global>
@@ -32,19 +32,19 @@
 #include <QDeclarativeImageProvider>
 #include <QDeclarativeEngine>
 
-namespace Tp
+namespace Tpy
 {
 
-class TELEPATHY_QT4_MODELS_EXPORT AvatarImageProvider : public QDeclarativeImageProvider
+class TELEPATHY_QT4_YELL_MODELS_EXPORT AvatarImageProvider : public QDeclarativeImageProvider
 {
     Q_DISABLE_COPY(AvatarImageProvider)
 
 public:
-    AvatarImageProvider(const AccountManagerPtr &am);
+    AvatarImageProvider(const Tp::AccountManagerPtr &am);
     virtual ~AvatarImageProvider();
 
-    static QString urlFor(const AccountPtr &account);
-    static void registerProvider(QDeclarativeEngine *engine, const AccountManagerPtr &am);
+    static QString urlFor(const Tp::AccountPtr &account);
+    static void registerProvider(QDeclarativeEngine *engine, const Tp::AccountManagerPtr &am);
 
     virtual QImage requestImage(const QString &id, QSize *size, const QSize &requestedSize);
 
@@ -56,4 +56,4 @@ private:
 
 }
 
-#endif // _TelepathyQt4_Models_avatar_image_provider_h_HEADER_GUARD_
+#endif // _TelepathyQt4Yell_Models_avatar_image_provider_h_HEADER_GUARD_

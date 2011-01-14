@@ -18,11 +18,11 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#ifndef _TelepathyQt4_Models_conversation_model_h_HEADER_GUARD_
-#define _TelepathyQt4_Models_conversation_model_h_HEADER_GUARD_
+#ifndef _TelepathyQt4Yell_Models_conversation_model_h_HEADER_GUARD_
+#define _TelepathyQt4Yell_Models_conversation_model_h_HEADER_GUARD_
 
-#ifndef IN_TELEPATHY_QT4_HEADER
-#error IN_TELEPATHY_QT4_HEADER
+#ifndef IN_TELEPATHY_QT4_YELL_MODELS_HEADER
+#error IN_TELEPATHY_QT4_YELL_MODELS_HEADER
 #endif
 
 #include <TelepathyQt4Yell/Models/Global>
@@ -32,12 +32,12 @@
 
 #include <QAbstractListModel>
 
-namespace Tp
+namespace Tpy
 {
 
 class ConversationItem;
 
-class TELEPATHY_QT4_MODELS_EXPORT ConversationModel : public QAbstractListModel
+class TELEPATHY_QT4_YELL_MODELS_EXPORT ConversationModel : public QAbstractListModel
 {
     Q_OBJECT
     Q_DISABLE_COPY(ConversationModel)
@@ -52,7 +52,7 @@ public:
         ItemRole
     };
 
-    explicit ConversationModel(const ContactPtr &self, const TextChannelPtr &channel, QObject *parent = 0);
+    explicit ConversationModel(const Tp::ContactPtr &self, const Tp::TextChannelPtr &channel, QObject *parent = 0);
     virtual ~ConversationModel();
 
     virtual int rowCount(const QModelIndex &parent = QModelIndex()) const;
@@ -62,7 +62,7 @@ public:
     Q_INVOKABLE void connectChannelQueue();
 
 
-    ContactPtr selfContact() const;
+    Tp::ContactPtr selfContact() const;
 
 protected:
     // work around moc namespace limitations
@@ -88,4 +88,4 @@ private:
 
 }
 
-#endif // _TelepathyQt4_Models_conversation_model_h_HEADER_GUARD_
+#endif // _TelepathyQt4Yell_Models_conversation_model_h_HEADER_GUARD_

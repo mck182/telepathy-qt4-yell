@@ -22,10 +22,10 @@
 
 #include "TelepathyQt4Yell/Models/_gen/tree-node.moc.hpp"
 
-namespace Tp
+namespace Tpy
 {
 
-struct TELEPATHY_QT4_MODELS_NO_EXPORT TreeNode::Private
+struct TELEPATHY_QT4_YELL_MODELS_NO_EXPORT TreeNode::Private
 {
     Private() :
         mParent(0)

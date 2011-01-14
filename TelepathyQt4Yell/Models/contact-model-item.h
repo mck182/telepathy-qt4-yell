@@ -18,33 +18,33 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#ifndef _TelepathyQt4_Models_contact_model_item_h_HEADER_GUARD_
-#define _TelepathyQt4_Models_contact_model_item_h_HEADER_GUARD_
+#ifndef _TelepathyQt4Yell_Models_contact_model_item_h_HEADER_GUARD_
+#define _TelepathyQt4Yell_Models_contact_model_item_h_HEADER_GUARD_
 
-#ifndef IN_TELEPATHY_QT4_HEADER
-#error IN_TELEPATHY_QT4_HEADER
+#ifndef IN_TELEPATHY_QT4_YELL_MODELS_HEADER
+#error IN_TELEPATHY_QT4_YELL_MODELS_HEADER
 #endif
 
 #include <TelepathyQt4Yell/Models/TreeNode>
 
 #include <TelepathyQt4/Types>
 
-namespace Tp
+namespace Tpy
 {
 
-class TELEPATHY_QT4_MODELS_EXPORT ContactModelItem : public TreeNode
+class TELEPATHY_QT4_YELL_MODELS_EXPORT ContactModelItem : public TreeNode
 {
     Q_OBJECT
     Q_DISABLE_COPY(ContactModelItem)
 
 public:
-    ContactModelItem(const ContactPtr &contact);
+    ContactModelItem(const Tp::ContactPtr &contact);
     virtual ~ContactModelItem();
 
     Q_INVOKABLE virtual QVariant data(int role) const;
     Q_INVOKABLE virtual bool setData(int role, const QVariant &value);
 
-    ContactPtr contact() const;
+    Tp::ContactPtr contact() const;
 
 public Q_SLOTS:
     void onChanged();
@@ -57,4 +57,4 @@ private:
 
 }
 
-#endif // _TelepathyQt4_Models_contact_model_item_h_HEADER_GUARD_
+#endif // _TelepathyQt4Yell_Models_contact_model_item_h_HEADER_GUARD_

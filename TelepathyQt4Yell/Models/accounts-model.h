@@ -18,11 +18,11 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#ifndef _TelepathyQt4_Models_accounts_model_h_HEADER_GUARD_
-#define _TelepathyQt4_Models_accounts_model_h_HEADER_GUARD_
+#ifndef _TelepathyQt4Yell_Models_accounts_model_h_HEADER_GUARD_
+#define _TelepathyQt4Yell_Models_accounts_model_h_HEADER_GUARD_
 
-#ifndef IN_TELEPATHY_QT4_HEADER
-#error IN_TELEPATHY_QT4_HEADER
+#ifndef IN_TELEPATHY_QT4_YELL_MODELS_HEADER
+#error IN_TELEPATHY_QT4_YELL_MODELS_HEADER
 #endif
 
 #include <TelepathyQt4Yell/Models/AccountsModelItem>
@@ -34,10 +34,10 @@
 
 #include <QAbstractListModel>
 
-namespace Tp
+namespace Tpy
 {
 
-class TELEPATHY_QT4_MODELS_EXPORT AccountsModel : public QAbstractItemModel
+class TELEPATHY_QT4_YELL_MODELS_EXPORT AccountsModel : public QAbstractItemModel
 {
     Q_OBJECT
     Q_DISABLE_COPY(AccountsModel)
@@ -97,7 +97,7 @@ public:
     virtual int rowCount(const QModelIndex &parent = QModelIndex()) const;
     virtual int columnCount(const QModelIndex &parent = QModelIndex()) const;
     virtual QVariant data(const QModelIndex &index, int role) const;
-    AccountPtr accountForIndex(const QModelIndex &index) const;
+    Tp::AccountPtr accountForIndex(const QModelIndex &index) const;
 
     virtual Qt::ItemFlags flags(const QModelIndex &index) const;
     virtual bool setData(const QModelIndex &index, const QVariant &value, int role = Qt::EditRole);
@@ -127,4 +127,4 @@ private:
 
 }
 
-#endif // _TelepathyQt4_Models_accounts_model_h_HEADER_GUARD_
+#endif // _TelepathyQt4Yell_Models_accounts_model_h_HEADER_GUARD_

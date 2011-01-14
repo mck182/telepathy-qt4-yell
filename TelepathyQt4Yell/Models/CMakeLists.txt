@@ -1,7 +1,7 @@
 # It gets inherited from the previous directory, hence it has to be removed explicitely
-remove_definitions(-DBUILDING_TELEPATHY_QT4)
+remove_definitions(-DBUILDING_TELEPATHY_QT4_YELL)
 # We are building Telepathy-Qt4-Models
-add_definitions(-DBUILDING_TELEPATHY_QT4_MODELS)
+add_definitions(-DBUILDING_TELEPATHY_QT4_YELL_MODELS)
 
 # Set source files
 set(telepathy_qt4_models_SRCS

@@ -31,23 +31,23 @@
 #include <QPixmap>
 #include <QtAlgorithms>
 
-namespace Tp
+namespace Tpy
 {
 
-struct TELEPATHY_QT4_MODELS_NO_EXPORT ConversationModel::Private
+struct TELEPATHY_QT4_YELL_MODELS_NO_EXPORT ConversationModel::Private
 {
-    Private(const ContactPtr &self, const TextChannelPtr &channel)
+    Private(const Tp::ContactPtr &self, const Tp::TextChannelPtr &channel)
         : mSelf(self),
           mChannel(channel)
     {
     }
 
-    ContactPtr mSelf;
-    TextChannelPtr mChannel;
+    Tp::ContactPtr mSelf;
+    Tp::TextChannelPtr mChannel;
     QList<const ConversationItem *> mItems;
 };
 
-ConversationModel::ConversationModel(const ContactPtr &self, const TextChannelPtr &channel, QObject *parent)
+ConversationModel::ConversationModel(const Tp::ContactPtr &self, const Tp::TextChannelPtr &channel, QObject *parent)
     : QAbstractListModel(parent),
       mPriv(new Private(self,channel))
 {
@@ -127,7 +127,7 @@ void ConversationModel::sendMessage(const QString &text)
     mPriv->mChannel->send(item->text());
 }
 
-ContactPtr ConversationModel::selfContact() const
+Tp::ContactPtr ConversationModel::selfContact() const
 {
     return mPriv->mSelf;
 }
@@ -182,7 +182,7 @@ void ConversationModel::onChatStateChanged(const Tp::ContactPtr &contact, Channe
         return;
     }
 
-    if (state == ChannelChatStateGone) {
+    if (state == Tp::ChannelChatStateGone) {
         QString message = QString::fromLatin1("%1 left the chat").arg(contact->alias());
         ConversationItem *item = new ConversationItem(contact, QDateTime::currentDateTime(), message,
                                                       ConversationItem::EVENT, this);

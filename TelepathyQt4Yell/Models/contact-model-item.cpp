@@ -30,17 +30,17 @@
 
 #include <QImage>
 
-namespace Tp
+namespace Tpy
 {
 
-struct TELEPATHY_QT4_MODELS_NO_EXPORT ContactModelItem::Private
+struct TELEPATHY_QT4_YELL_MODELS_NO_EXPORT ContactModelItem::Private
 {
     Private(const Tp::ContactPtr &contact)
         : mContact(contact)
     {
     }
 
-    ContactPtr mContact;
+    Tp::ContactPtr mContact;
 };
 
 ContactModelItem::ContactModelItem(const Tp::ContactPtr &contact)
@@ -168,7 +168,7 @@ void ContactModelItem::onChanged()
     emit changed(this);
 }
 
-ContactPtr ContactModelItem::contact() const
+Tp::ContactPtr ContactModelItem::contact() const
 {
     return mPriv->mContact;
 }

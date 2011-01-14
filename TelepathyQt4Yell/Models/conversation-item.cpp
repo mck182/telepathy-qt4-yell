@@ -24,12 +24,12 @@
 
 #include <TelepathyQt4/Contact>
 
-namespace Tp
+namespace Tpy
 {
 
-struct TELEPATHY_QT4_MODELS_NO_EXPORT ConversationItem::Private
+struct TELEPATHY_QT4_YELL_MODELS_NO_EXPORT ConversationItem::Private
 {
-    Private(const ContactPtr &contact,
+    Private(const Tp::ContactPtr &contact,
             const QDateTime &time,
             const QString &text,
             Type type)
@@ -40,13 +40,13 @@ struct TELEPATHY_QT4_MODELS_NO_EXPORT ConversationItem::Private
     {
     }
 
-    ContactPtr mContact;
+    Tp::ContactPtr mContact;
     QDateTime mTime;
     QString mText;
     Type mType;
 };
 
-ConversationItem::ConversationItem(const ContactPtr &contact,
+ConversationItem::ConversationItem(const Tp::ContactPtr &contact,
                                    const QDateTime &time,
                                    const QString &text,
                                    Type type,
@@ -61,7 +61,7 @@ ConversationItem::~ConversationItem()
     delete mPriv;
 }
 
-ContactPtr ConversationItem::contact() const
+Tp::ContactPtr ConversationItem::contact() const
 {
     return mPriv->mContact;
 }

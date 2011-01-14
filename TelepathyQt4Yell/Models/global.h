@@ -19,27 +19,27 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#ifndef _TelepathyQt4_Models_global_h_HEADER_GUARD_
-#define _TelepathyQt4_Models_global_h_HEADER_GUARD_
+#ifndef _TelepathyQt4Yell_Models_global_h_HEADER_GUARD_
+#define _TelepathyQt4Yell_Models_global_h_HEADER_GUARD_
 
-#ifndef IN_TELEPATHY_QT4_HEADER
-#error IN_TELEPATHY_QT4_HEADER
+#ifndef IN_TELEPATHY_QT4_YELL_MODELS_HEADER
+#error IN_TELEPATHY_QT4_YELL_MODELS_HEADER
 #endif
 
 #include <QtGlobal>
 
-#ifdef BUILDING_TELEPATHY_QT4_MODELS
-#  define TELEPATHY_QT4_MODELS_EXPORT Q_DECL_EXPORT
+#ifdef BUILDING_TELEPATHY_QT4_YELL_MODELS
+#  define TELEPATHY_QT4_YELL_MODELS_EXPORT Q_DECL_EXPORT
 #else
-#  define TELEPATHY_QT4_MODELS_EXPORT Q_DECL_IMPORT
+#  define TELEPATHY_QT4_YELL_MODELS_EXPORT Q_DECL_IMPORT
 #endif
 
 #if !defined(Q_OS_WIN) && defined(QT_VISIBILITY_AVAILABLE)
-#  define TELEPATHY_QT4_MODELS_NO_EXPORT __attribute__((visibility("hidden")))
+#  define TELEPATHY_QT4_YELL_MODELS_NO_EXPORT __attribute__((visibility("hidden")))
 #endif
 
-#ifndef TELEPATHY_QT4_MODELS_NO_EXPORT
-#  define TELEPATHY_QT4_MODELS_NO_EXPORT
+#ifndef TELEPATHY_QT4_YELL_MODELS_NO_EXPORT
+#  define TELEPATHY_QT4_YELL_MODELS_NO_EXPORT
 #endif
 
 #endif

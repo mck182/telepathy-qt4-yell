@@ -29,12 +29,12 @@
 #include <TelepathyQt4/Account>
 #include <TelepathyQt4/ContactManager>
 
-namespace Tp
+namespace Tpy
 {
 
-struct TELEPATHY_QT4_MODELS_NO_EXPORT AccountsModelItem::Private
+struct TELEPATHY_QT4_YELL_MODELS_NO_EXPORT AccountsModelItem::Private
 {
-    Private(const AccountPtr &account)
+    Private(const Tp::AccountPtr &account)
         : mAccount(account)
     {
     }
@@ -42,30 +42,30 @@ struct TELEPATHY_QT4_MODELS_NO_EXPORT AccountsModelItem::Private
     void setStatus(const QString &value);
     void setStatusMessage(const QString &value);
 
-    AccountPtr mAccount;
+    Tp::AccountPtr mAccount;
 };
 
 void AccountsModelItem::Private::setStatus(const QString &value)
 {
-    Presence presence = mAccount->currentPresence().barePresence();
+    Tp::Presence presence = mAccount->currentPresence().barePresence();
     presence.setStatus(Tp::ConnectionPresenceTypeUnset, value, QString());
     mAccount->setRequestedPresence(presence);
 }
 
 void AccountsModelItem::Private::setStatusMessage(const QString &value)
 {
-    Presence presence = mAccount->currentPresence().barePresence();
+    Tp::Presence presence = mAccount->currentPresence().barePresence();
     presence.setStatus(Tp::ConnectionPresenceTypeUnset, QString(), value);
     mAccount->setRequestedPresence(presence);
 }
 
-AccountsModelItem::AccountsModelItem(const AccountPtr &account)
+AccountsModelItem::AccountsModelItem(const Tp::AccountPtr &account)
     : mPriv(new Private(account))
 {
     if (!mPriv->mAccount->connection().isNull()) {
         addKnownContacts();
 
-        ContactManagerPtr manager = account->connection()->contactManager();
+        Tp::ContactManagerPtr manager = account->connection()->contactManager();
         connect(manager.data(),
                 SIGNAL(allKnownContactsChanged(Tp::Contacts,Tp::Contacts,
                                                Tp::Channel::GroupMemberChangeDetails)),
@@ -134,7 +134,7 @@ AccountsModelItem::AccountsModelItem(const AccountPtr &account)
             SLOT(onConnectionChanged(Tp::ConnectionPtr)));
 }
 
-Tp::AccountsModelItem::~AccountsModelItem()
+AccountsModelItem::~AccountsModelItem()
 {
     delete mPriv;
 }
@@ -216,7 +216,7 @@ bool AccountsModelItem::setData(int role, const QVariant &value)
     }
 }
 
-Tp::AccountPtr Tp::AccountsModelItem::account() const
+Tp::AccountPtr AccountsModelItem::account() const
 {
      return mPriv->mAccount;
 }
@@ -233,8 +233,8 @@ void AccountsModelItem::setNickname(const QString &value)
 
 void AccountsModelItem::setPresence(int type, const QString &status, const QString &statusMessage)
 {
-    Presence presence;
-    presence.setStatus((ConnectionPresenceType) type, status, statusMessage);
+    Tp::Presence presence;
+    presence.setStatus((Tp::ConnectionPresenceType) type, status, statusMessage);
     mPriv->mAccount->setRequestedPresence(presence);
 }
 
@@ -252,7 +252,7 @@ void AccountsModelItem::onChanged()
 void AccountsModelItem::onContactsChanged(const Tp::Contacts &addedContacts,
         const Tp::Contacts &removedContacts)
 {
-    foreach (ContactPtr contact, removedContacts) {
+    foreach (Tp::ContactPtr contact, removedContacts) {
         for (int i = 0; i < size(); ++i) {
             ContactModelItem *item = qobject_cast<ContactModelItem *>(childAt(i));
             if (item->contact() == contact) {
@@ -263,7 +263,7 @@ void AccountsModelItem::onContactsChanged(const Tp::Contacts &addedContacts,
     }
 
     QList<TreeNode *> newNodes;
-    foreach (ContactPtr contact, addedContacts) {
+    foreach (Tp::ContactPtr contact, addedContacts) {
         //debug() << "contact added:" << qPrintable(contact->id());
         newNodes.append(new ContactModelItem(contact));
     }
@@ -282,12 +282,12 @@ void AccountsModelItem::onConnectionChanged(const Tp::ConnectionPtr &connection)
     // if the connection is invalid or disconnected, clear the contacts list
     if (connection.isNull()
             || !connection->isValid()
-            || connection->status() == ConnectionStatusDisconnected) {
+            || connection->status() == Tp::ConnectionStatusDisconnected) {
         emit childrenRemoved(this, 0, size() - 1);
         return;
     }
 
-    ContactManagerPtr manager = connection->contactManager();
+    Tp::ContactManagerPtr manager = connection->contactManager();
 
     connect(manager.data(),
             SIGNAL(allKnownContactsChanged(Tp::Contacts,Tp::Contacts,
@@ -302,15 +302,15 @@ void AccountsModelItem::clearContacts()
 {
     if (!mPriv->mAccount->connection().isNull() &&
         mPriv->mAccount->connection()->isValid()) {
-        ContactManagerPtr manager = mPriv->mAccount->connection()->contactManager();
-        Contacts contacts = manager->allKnownContacts();
+        Tp::ContactManagerPtr manager = mPriv->mAccount->connection()->contactManager();
+        Tp::Contacts contacts = manager->allKnownContacts();
 
         // remove the items no longer present
         for (int i = 0; i < size(); ++i) {
             bool exists = false;
             ContactModelItem *item = qobject_cast<ContactModelItem *>(childAt(i));
             if (item) {
-                ContactPtr itemContact = item->contact();
+                Tp::ContactPtr itemContact = item->contact();
                 if (contacts.contains(itemContact)) {
                     exists = true;
                 }
@@ -328,11 +328,11 @@ void AccountsModelItem::addKnownContacts()
     QList<TreeNode *> newNodes;
     if (!mPriv->mAccount->connection().isNull() &&
         mPriv->mAccount->connection()->isValid()) {
-        ContactManagerPtr manager = mPriv->mAccount->connection()->contactManager();
-        Contacts contacts = manager->allKnownContacts();
+        Tp::ContactManagerPtr manager = mPriv->mAccount->connection()->contactManager();
+        Tp::Contacts contacts = manager->allKnownContacts();
 
         // get the list of contacts in the children
-        QList<ContactPtr> contactItemsList;
+        QList<Tp::ContactPtr> contactItemsList;
         int numElems = size();
         for (int i = 0; i < numElems; ++i) {
             ContactModelItem *item = qobject_cast<ContactModelItem *>(childAt(i));
@@ -341,7 +341,7 @@ void AccountsModelItem::addKnownContacts()
             }
         }
 
-        foreach (ContactPtr contact, contacts) {
+        foreach (Tp::ContactPtr contact, contacts) {
             if (!contactItemsList.contains(contact)) {
                 //debug() << "new contact detected:" << qPrintable(contact->id());
                 newNodes.append(new ContactModelItem(contact));

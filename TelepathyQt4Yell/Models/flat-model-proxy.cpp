@@ -22,10 +22,10 @@
 
 #include "TelepathyQt4Yell/Models/_gen/flat-model-proxy.moc.hpp"
 
-namespace Tp
+namespace Tpy
 {
 
-struct TELEPATHY_QT4_MODELS_NO_EXPORT FlatModelProxy::Private
+struct TELEPATHY_QT4_YELL_MODELS_NO_EXPORT FlatModelProxy::Private
 {
     int offsetOf(const FlatModelProxy *model, int index) const;
 };
