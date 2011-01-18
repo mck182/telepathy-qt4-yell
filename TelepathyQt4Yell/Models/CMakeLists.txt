@@ -50,11 +50,11 @@ set(telepathy_qt4_models_HEADERS
 tpqt4_generate_mocs(${telepathy_qt4_models_MOC_SRCS})
 
 # Create library
-if (ENABLE_COMPILER_COVERAGE)
+# if (ENABLE_COMPILER_COVERAGE)
     add_library(telepathy-qt4-models STATIC ${telepathy_qt4_models_SRCS} ${telepathy_qt4_models_MOC_SRCS})
-else (ENABLE_COMPILER_COVERAGE)
-    add_library(telepathy-qt4-models SHARED ${telepathy_qt4_models_SRCS} ${telepathy_qt4_models_MOC_SRCS})
-endif (ENABLE_COMPILER_COVERAGE)
+# else (ENABLE_COMPILER_COVERAGE)
+#    add_library(telepathy-qt4-models SHARED ${telepathy_qt4_models_SRCS} ${telepathy_qt4_models_MOC_SRCS})
+# endif (ENABLE_COMPILER_COVERAGE)
 
 # Link
 target_link_libraries(telepathy-qt4-models
@@ -63,10 +63,15 @@ target_link_libraries(telepathy-qt4-models
     ${QT_QTDECLARATIVE_LIBRARY}
     telepathy-qt4)
 
+if (ENABLE_COMPILER_COVERAGE)
+    target_link_libraries(telepathy-qt4-yell gcov)
+endif (ENABLE_COMPILER_COVERAGE)
+
+
 # Set the correct version number
 set_target_properties(telepathy-qt4-models PROPERTIES
-    SOVERSION ${TP_QT4_ABI_VERSION}
-    VERSION ${TP_QT4_LIBRARY_VERSION})
+    SOVERSION ${TP_QT4_YELL_ABI_VERSION}
+    VERSION ${TP_QT4_YELL_LIBRARY_VERSION})
 
 # Install the library - watch out for the correct components
 if (WIN32)
