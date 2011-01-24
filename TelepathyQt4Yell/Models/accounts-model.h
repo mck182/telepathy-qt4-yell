@@ -87,6 +87,7 @@ public:
         AudioCallCapabilityRole,
         VideoCallCapabilityRole,
         UpgradeCallCapabilityRole,
+        FileTransferCapabilityRole,
 
         CustomRole // a placemark for custom roles in inherited models
     };

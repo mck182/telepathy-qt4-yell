@@ -27,6 +27,7 @@
 #include <TelepathyQt4/AvatarData>
 #include <TelepathyQt4/ContactCapabilities>
 #include <TelepathyQt4/ContactManager>
+#include <TelepathyQt4/RequestableChannelClassSpec>
 
 #include <QImage>
 
@@ -127,6 +128,14 @@ QVariant ContactModelItem::data(int role) const
             return mPriv->mContact->capabilities().streamedMediaVideoCalls();
         case AccountsModel::UpgradeCallCapabilityRole:
             return mPriv->mContact->capabilities().upgradingStreamedMediaCalls();
+        case AccountsModel::FileTransferCapabilityRole: {
+            foreach (const Tp::RequestableChannelClassSpec &rccSpec, mPriv->mContact->capabilities().allClassSpecs()) {
+                if (rccSpec.supports(Tp::RequestableChannelClassSpec::fileTransfer())) {
+                    return true;
+                }
+            }
+            return false;
+        }
         default:
             break;
     }
