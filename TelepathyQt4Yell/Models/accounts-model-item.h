@@ -51,7 +51,8 @@ public:
 
     Q_INVOKABLE void setNickname(const QString &value);
 
-    Q_INVOKABLE void setPresence(int type, const QString &status, const QString &statusMessage);
+    Q_INVOKABLE void setAutomaticPresence(int type, const QString &status, const QString &statusMessage);
+    Q_INVOKABLE void setRequestedPresence(int type, const QString &status, const QString &statusMessage);
 
     void clearContacts();
     void addKnownContacts();

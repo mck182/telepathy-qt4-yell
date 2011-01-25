@@ -231,7 +231,14 @@ void AccountsModelItem::setNickname(const QString &value)
     mPriv->mAccount->setNickname(value);
 }
 
-void AccountsModelItem::setPresence(int type, const QString &status, const QString &statusMessage)
+void AccountsModelItem::setAutomaticPresence(int type, const QString &status, const QString &statusMessage)
+{
+    Tp::Presence presence;
+    presence.setStatus((Tp::ConnectionPresenceType) type, status, statusMessage);
+    mPriv->mAccount->setAutomaticPresence(presence);
+}
+
+void AccountsModelItem::setRequestedPresence(int type, const QString &status, const QString &statusMessage)
 {
     Tp::Presence presence;
     presence.setStatus((Tp::ConnectionPresenceType) type, status, statusMessage);
