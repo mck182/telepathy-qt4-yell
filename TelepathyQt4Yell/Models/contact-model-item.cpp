@@ -70,15 +70,13 @@ ContactModelItem::ContactModelItem(const Tp::ContactPtr &contact)
             SIGNAL(infoFieldsChanged(Tp::Contact::InfoFields)),
             SLOT(onChanged()));
     connect(contact.data(),
-            SIGNAL(subscriptionStateChanged(Tp::Contact::PresenceState,
-                                            Tp::Channel::GroupMemberChangeDetails)),
+            SIGNAL(subscriptionStateChanged(Tp::Contact::PresenceState)),
             SLOT(onChanged()));
     connect(contact.data(),
-            SIGNAL(publishStateChanged(Tp::Contact::PresenceState,
-                                       Tp::Channel::GroupMemberChangeDetails)),
+            SIGNAL(publishStateChanged(Tp::Contact::PresenceState,QString)),
             SLOT(onChanged()));
     connect(contact.data(),
-            SIGNAL(blockStatusChanged(bool,Tp::Channel::GroupMemberChangeDetails)),
+            SIGNAL(blockStatusChanged(bool)),
             SLOT(onChanged()));
 }
 
