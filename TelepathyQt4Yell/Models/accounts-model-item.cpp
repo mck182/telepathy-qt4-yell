@@ -63,8 +63,6 @@ AccountsModelItem::AccountsModelItem(const Tp::AccountPtr &account)
     : mPriv(new Private(account))
 {
     if (!mPriv->mAccount->connection().isNull()) {
-        addKnownContacts();
-
         Tp::ContactManagerPtr manager = account->connection()->contactManager();
         connect(manager.data(),
                 SIGNAL(allKnownContactsChanged(Tp::Contacts,Tp::Contacts,
@@ -350,7 +348,7 @@ void AccountsModelItem::addKnownContacts()
 
         foreach (Tp::ContactPtr contact, contacts) {
             if (!contactItemsList.contains(contact)) {
-                //debug() << "new contact detected:" << qPrintable(contact->id());
+                //qDebug() << "new contact detected:" << qPrintable(contact->id());
                 newNodes.append(new ContactModelItem(contact));
             }
         }
