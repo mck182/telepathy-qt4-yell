@@ -1,5 +1,5 @@
 /*
- * This file is part of TelepathyQt4Yell
+ * This file is part of TelepathyQt4
  *
  * Copyright (C) 2010 Collabora Ltd. <http://www.collabora.co.uk/>
  *
@@ -18,31 +18,44 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#ifndef _TelepathyQt4Yell_types_h_HEADER_GUARD_
-#define _TelepathyQt4Yell_types_h_HEADER_GUARD_
+#ifndef _TelepathyQt4Yell_channel_factory_h_HEADER_GUARD_
+#define _TelepathyQt4Yell_channel_factory_h_HEADER_GUARD_
 
 #ifndef IN_TELEPATHY_QT4_YELL_HEADER
 #error IN_TELEPATHY_QT4_YELL_HEADER
 #endif
 
-#include <TelepathyQt4Yell/_gen/types.h>
+#include <TelepathyQt4Yell/Global>
+#include <TelepathyQt4Yell/Types>
 
-#include <TelepathyQt4/Types>
+#include <TelepathyQt4/ChannelFactory>
+
+class QDBusConnection;
 
 namespace Tpy
 {
 
-TELEPATHY_QT4_YELL_EXPORT void registerTypes();
+class TELEPATHY_QT4_YELL_EXPORT ChannelFactory : public Tp::ChannelFactory
+{
+    Q_DISABLE_COPY(ChannelFactory)
 
-class CallChannel;
-class CallContent;
-class CallStream;
-class ChannelFactory;
+public:
+    static ChannelFactoryPtr create(const QDBusConnection &bus);
 
-typedef Tp::SharedPtr<CallChannel> CallChannelPtr;
-typedef Tp::SharedPtr<CallContent> CallContentPtr;
-typedef Tp::SharedPtr<CallStream> CallStreamPtr;
-typedef Tp::SharedPtr<ChannelFactory> ChannelFactoryPtr;
+    virtual ~ChannelFactory();
+
+    template<typename Subclass>
+    void setSubclassForMediaCalls(const QVariantMap &additionalProps = QVariantMap())
+    {
+        setConstructorForMediaCalls(SubclassCtor<Subclass>::create(), additionalProps);
+    }
+
+    void setConstructorForMediaCalls(const ConstructorConstPtr &ctor,
+            const QVariantMap &additionalProps = QVariantMap());
+
+protected:
+    ChannelFactory(const QDBusConnection &bus);
+};
 
 } // Tpy
 
