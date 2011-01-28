@@ -4,6 +4,7 @@
 #define TP_QT4_ENABLE_LOWLEVEL_API
 
 #include <TelepathyQt4Yell/CallChannel>
+#include <TelepathyQt4Yell/ChannelFactory>
 
 #include <TelepathyQt4/ChannelFactory>
 #include <TelepathyQt4/Connection>
@@ -299,11 +300,9 @@ void TestCallChan::initTestCase()
     g_free(name);
     g_free(connPath);
 
-    Tp::ChannelFactoryPtr channelFactory =
-        Tp::ChannelFactory::create(QDBusConnection::sessionBus());
-    Tpy::CallChannel::registerWithChannelFactory(channelFactory);
     mConn = Tp::Connection::create(mConnName, mConnPath,
-            channelFactory, Tp::ContactFactory::create());
+            Tpy::ChannelFactory::create(QDBusConnection::sessionBus()),
+            Tp::ContactFactory::create());
     QCOMPARE(mConn->isReady(), false);
 
     QVERIFY(connect(mConn->lowlevel()->requestConnect(Tp::Connection::FeatureSelfContact),
