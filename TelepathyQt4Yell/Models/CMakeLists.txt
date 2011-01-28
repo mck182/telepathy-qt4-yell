@@ -1,6 +1,6 @@
 # It gets inherited from the previous directory, hence it has to be removed explicitely
 remove_definitions(-DBUILDING_TELEPATHY_QT4_YELL)
-# We are building Telepathy-Qt4-Models
+# We are building Telepathy-Qt4-Yell-Models
 add_definitions(-DBUILDING_TELEPATHY_QT4_YELL_MODELS)
 
 # Set source files
@@ -49,12 +49,8 @@ set(telepathy_qt4_yell_models_HEADERS
 
 tpqt4_generate_mocs(${telepathy_qt4_yell_models_MOC_SRCS})
 
-# Create library
-# if (ENABLE_COMPILER_COVERAGE)
-    add_library(telepathy-qt4-yell-models STATIC ${telepathy_qt4_yell_models_SRCS} ${telepathy_qt4_yell_models_MOC_SRCS})
-# else (ENABLE_COMPILER_COVERAGE)
-#    add_library(telepathy-qt4-yell-models SHARED ${telepathy_qt4_yell_models_SRCS} ${telepathy_qt4_yell_models_MOC_SRCS})
-# endif (ENABLE_COMPILER_COVERAGE)
+# Create the library
+add_library(telepathy-qt4-yell-models STATIC ${telepathy_qt4_yell_models_SRCS} ${telepathy_qt4_yell_models_MOC_SRCS})
 
 # Link
 target_link_libraries(telepathy-qt4-yell-models
