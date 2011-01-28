@@ -12,6 +12,7 @@ set(telepathy_qt4_yell_SRCS
     call-channel.cpp
     call-channel-internal.h
     channel.cpp
+    channel-class-spec.cpp
     types.cpp)
 
 # Exported headers for Tp-Qt4
@@ -20,11 +21,13 @@ set(telepathy_qt4_yell_HEADERS
     CallContent
     CallStream
     Channel
+    ChannelClassSpec
     Constants
     Global
     Types
     call-channel.h
     channel.h
+    channel-class-spec.h
     constants.h
     global.h
     types.h)
