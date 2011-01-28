@@ -138,3 +138,5 @@ endif (WIN32)
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/TelepathyQt4Yell.pc.in ${CMAKE_CURRENT_BINARY_DIR}/TelepathyQt4Yell.pc)
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/TelepathyQt4Yell-uninstalled.pc.in ${CMAKE_CURRENT_BINARY_DIR}/TelepathyQt4Yell-uninstalled.pc)
 install(FILES ${CMAKE_CURRENT_BINARY_DIR}/TelepathyQt4Yell.pc DESTINATION ${LIB_INSTALL_DIR}/pkgconfig COMPONENT headers)
+
+add_subdirectory(Models)

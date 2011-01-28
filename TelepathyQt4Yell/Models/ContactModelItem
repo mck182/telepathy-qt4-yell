@@ -1,0 +1,13 @@
+#ifndef _TelepathyQt4Yell_Models_ContactModelItem_HEADER_GUARD_
+#define _TelepathyQt4Yell_Models_ContactModelItem_HEADER_GUARD_
+
+#ifndef IN_TELEPATHY_QT4_YELL_MODELS_HEADER
+#define IN_TELEPATHY_QT4_YELL_MODELS_HEADER
+#endif
+
+#include <TelepathyQt4Yell/Models/contact-model-item.h>
+
+#undef IN_TELEPATHY_QT4_YELL_MODELS_HEADER
+
+#endif // _TelepathyQt4Yell_Models_ContactModelItem_HEADER_GUARD_
+// vim:set ft=cpp:
