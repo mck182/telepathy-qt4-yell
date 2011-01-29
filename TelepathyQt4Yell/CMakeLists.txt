@@ -147,3 +147,12 @@ configure_file(${CMAKE_CURRENT_SOURCE_DIR}/TelepathyQt4Yell-uninstalled.pc.in ${
 install(FILES ${CMAKE_CURRENT_BINARY_DIR}/TelepathyQt4Yell.pc DESTINATION ${LIB_INSTALL_DIR}/pkgconfig COMPONENT headers)
 
 add_subdirectory(Models)
+
+# If Farsight was found, install its pkg-config files as well, and go into the subdirectory
+if(FARSIGHT_COMPONENTS_FOUND)
+    configure_file(${CMAKE_CURRENT_SOURCE_DIR}/TelepathyQt4YellFarsight.pc.in ${CMAKE_CURRENT_BINARY_DIR}/TelepathyQt4YellFarsight.pc)
+    configure_file(${CMAKE_CURRENT_SOURCE_DIR}/TelepathyQt4YellFarsight-uninstalled.pc.in ${CMAKE_CURRENT_BINARY_DIR}/TelepathyQt4YellFarsight-uninstalled.pc)
+    install(FILES ${CMAKE_CURRENT_BINARY_DIR}/TelepathyQt4YellFarsight.pc DESTINATION ${LIB_INSTALL_DIR}/pkgconfig COMPONENT farsight_headers)
+endif(FARSIGHT_COMPONENTS_FOUND)
+
+add_subdirectory(Farsight)
