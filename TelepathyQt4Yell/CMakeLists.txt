@@ -26,6 +26,7 @@ set(telepathy_qt4_yell_HEADERS
     ChannelFactory
     Constants
     Global
+    PendingCallContent
     Types
     call-channel.h
     channel.h
