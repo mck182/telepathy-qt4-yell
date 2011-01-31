@@ -30,6 +30,8 @@
 #include <telepathy-glib/connection.h>
 #include <telepathy-glib/dbus.h>
 
+#include "TelepathyQt4Yell/Farsight/_gen/channel.moc.hpp"
+
 namespace Tpy
 {
 
