@@ -21,5 +21,8 @@ if(ENABLE_TP_GLIB_TESTS)
     target_link_libraries(example-cm-call
         tp-glib-tests-extensions
         ${TELEPATHY_GLIB_LIBRARIES}
+        ${GOBJECT_LIBRARIES}
+        ${GLIB2_LIBRARIES}
+        ${DBUS_GLIB_LIBRARIES}
     )
 endif(ENABLE_TP_GLIB_TESTS)

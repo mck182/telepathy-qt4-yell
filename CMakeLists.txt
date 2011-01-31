@@ -143,6 +143,7 @@ macro_log_feature(QT4_GLIB_SUPPORT "Qt4 Glib Support"
 find_package(GLIB2)
 find_package(GObject)
 find_package(DBus)
+find_package(DBusGLib)
 
 # Find telepathy-glib
 set(TELEPATHY_GLIB_MIN_VERSION 0.13.0)
