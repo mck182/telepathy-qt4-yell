@@ -96,9 +96,21 @@ void FarsightChannel::on_tf_channel_new_finish (GObject *source_object, GAsyncRe
     qDebug() << "    source_object=" << source_object;
     qDebug() << "    result=" << res;
 
-    // TfChannel *ret =
-    //g_object_unref(gchannel);
-    //gchannel = 0;
+    FarsightChannel * self = reinterpret_cast<FarsightChannel *> (user_data);
+
+    GError *error = NULL;
+    TfChannel *ret = (TfChannel *) TF_CHANNEL (g_async_initable_new_finish ( G_ASYNC_INITABLE (source_object), res, &error));
+    self->mTfChannel = ret;
+
+    if (error) {
+	qDebug() << "FarsightChannel::on_tf_channel_new_finish: error " << error->message;
+        g_clear_error (&error);
+        Q_EMIT self->farsightChannelCreated(true);
+    } else {
+        Q_EMIT self->farsightChannelCreated(false);
+    }
+
+    g_object_unref(source_object);
 }
 
 TfChannel *FarsightChannel::farsightChannel()
