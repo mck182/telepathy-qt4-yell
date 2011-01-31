@@ -257,7 +257,7 @@ void AccountsModelItem::onChanged()
 void AccountsModelItem::onContactsChanged(const Tp::Contacts &addedContacts,
         const Tp::Contacts &removedContacts)
 {
-    foreach (Tp::ContactPtr contact, removedContacts) {
+    foreach (const Tp::ContactPtr &contact, removedContacts) {
         for (int i = 0; i < size(); ++i) {
             ContactModelItem *item = qobject_cast<ContactModelItem *>(childAt(i));
             if (item->contact() == contact) {
@@ -267,10 +267,21 @@ void AccountsModelItem::onContactsChanged(const Tp::Contacts &addedContacts,
         }
     }
 
+    // get the list of contact ids in the children
+    QStringList idList;
+    int numElems = size();
+    for (int i = 0; i < numElems; ++i) {
+        ContactModelItem *item = qobject_cast<ContactModelItem *>(childAt(i));
+        if (item) {
+            idList.append(item->contact()->id());
+        }
+    }
+
     QList<TreeNode *> newNodes;
-    foreach (Tp::ContactPtr contact, addedContacts) {
-        //debug() << "contact added:" << qPrintable(contact->id());
-        newNodes.append(new ContactModelItem(contact));
+    foreach (const Tp::ContactPtr &contact, addedContacts) {
+        if (!idList.contains(contact->id())) {
+            newNodes.append(new ContactModelItem(contact));
+        }
     }
     emit childrenAdded(this, newNodes);
 }
@@ -336,19 +347,19 @@ void AccountsModelItem::addKnownContacts()
         Tp::ContactManagerPtr manager = mPriv->mAccount->connection()->contactManager();
         Tp::Contacts contacts = manager->allKnownContacts();
 
-        // get the list of contacts in the children
-        QList<Tp::ContactPtr> contactItemsList;
+        // get the list of contact ids in the children
+        QStringList idList;
         int numElems = size();
         for (int i = 0; i < numElems; ++i) {
             ContactModelItem *item = qobject_cast<ContactModelItem *>(childAt(i));
             if (item) {
-                contactItemsList.append(item->contact());
+                idList.append(item->contact()->id());
             }
         }
 
-        foreach (Tp::ContactPtr contact, contacts) {
-            if (!contactItemsList.contains(contact)) {
-                //qDebug() << "new contact detected:" << qPrintable(contact->id());
+        // only add the contact item if it is new
+        foreach (const Tp::ContactPtr &contact, contacts) {
+            if (!idList.contains(contact->id())) {
                 newNodes.append(new ContactModelItem(contact));
             }
         }
