@@ -57,12 +57,11 @@ target_link_libraries(telepathy-qt4-yell-models
     ${QT_QTDBUS_LIBRARY}
     ${QT_QTCORE_LIBRARY}
     ${QT_QTDECLARATIVE_LIBRARY}
-    telepathy-qt4)
+    ${TELEPATHY_QT4_LIBRARIES})
 
 if (ENABLE_COMPILER_COVERAGE)
     target_link_libraries(telepathy-qt4-yell-models gcov)
 endif (ENABLE_COMPILER_COVERAGE)
-
 
 # Set the correct version number
 set_target_properties(telepathy-qt4-yell-models PROPERTIES
