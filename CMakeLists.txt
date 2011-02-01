@@ -148,27 +148,27 @@ find_package(LibXml2)
 
 find_program(GLIB_GENMARSHAL glib-genmarshal)
 
-# Find tp-farsight
-set(TELEPATHY_FARSIGHT_MIN_VERSION "0.0.4")
-find_package(TelepathyFarsight)
-macro_log_feature(TELEPATHYFARSIGHT_FOUND "Telepathy-Farsight"
+# Find tp-farstream
+set(TELEPATHY_FARSTREAM "0.0.1")
+find_package(TelepathyFarstream)
+macro_log_feature(TELEPATHYFARSTREAM "Telepathy-Farstream"
                   "A Framework for dealing with audio/video conferencing protocols"
                   "http://farsight.freedesktop.org/wiki/" FALSE "0.0.4"
-                  "Needed, together with GStreamer, to build telepathy-qt4-farsight and some additional examples")
+                  "Needed, together with GStreamer, to build telepathy-qt4-yell-farstream and some additional examples")
 
 # Find GStreamer
 find_package(GStreamer)
 macro_log_feature(GSTREAMER_FOUND "GStreamer"
                   "An open source multimedia framework"
-                  "Needed, together with Tp-Farsight, to build telepathy-qt4-farsight and some additional examples"
+                  "Needed, together with Tp-Farstream, to build telepathy-qt4-yell-farstream and some additional examples"
                   "http://www.gstreamer.net/" FALSE)
 
-# Build TelepathyQt4-Farsight only if GStreamer, TelepathyFarsight and all of their dependencies were found
-if (TELEPATHYFARSIGHT_FOUND AND GSTREAMER_FOUND AND GLIB2_FOUND AND GOBJECT_FOUND AND DBUS_FOUND AND LIBXML2_FOUND)
-    set (FARSIGHT_COMPONENTS_FOUND 1)
-else (TELEPATHYFARSIGHT_FOUND AND GSTREAMER_FOUND AND GLIB2_FOUND AND GOBJECT_FOUND AND DBUS_FOUND AND LIBXML2_FOUND)
-    set (FARSIGHT_COMPONENTS_FOUND 0)
-endif (TELEPATHYFARSIGHT_FOUND AND GSTREAMER_FOUND AND GLIB2_FOUND AND GOBJECT_FOUND AND DBUS_FOUND AND LIBXML2_FOUND)
+# Build TelepathyQt4-Farstream only if GStreamer, TelepathyFarstream and all of their dependencies were found
+if (TELEPATHYFARSTREAM AND GSTREAMER_FOUND AND GLIB2_FOUND AND GOBJECT_FOUND AND DBUS_FOUND AND LIBXML2_FOUND)
+    set (FARSTREAM_COMPONENTS_FOUND 1)
+else (TELEPATHYFARSTREAM_FOUND AND GSTREAMER_FOUND AND GLIB2_FOUND AND GOBJECT_FOUND AND DBUS_FOUND AND LIBXML2_FOUND)
+    set (FARSTREAM_COMPONENTS_FOUND 0)
+endif (TELEPATHYFARSTREAM_FOUND AND GSTREAMER_FOUND AND GLIB2_FOUND AND GOBJECT_FOUND AND DBUS_FOUND AND LIBXML2_FOUND)
 
 # Find telepathy-glib
 set(TELEPATHY_GLIB_MIN_VERSION 0.13.0)
