@@ -120,7 +120,7 @@ void CallStream::Private::processRemoteMembersChanged()
 /**
  * \class CallStream
  * \ingroup clientchannel
- * \headerfile TelepathyQt4/call-channel.h <TelepathyQt4/CallChannel>
+ * \headerfile TelepathyQt4Yell/call-channel.h <TelepathyQt4Yell/CallStream>
  *
  * \brief The CallStream class provides an object representing a Telepathy
  * Call.Stream.
@@ -572,7 +572,7 @@ CallStreamPtr CallContent::Private::lookupStream(const QDBusObjectPath &streamPa
 /**
  * \class CallContent
  * \ingroup clientchannel
- * \headerfile TelepathyQt4Yell/call-channel.h <TelepathyQt4Yell/CallChannel>
+ * \headerfile TelepathyQt4Yell/call-channel.h <TelepathyQt4Yell/CallContent>
  *
  * \brief The CallContent class provides an object representing a Telepathy
  * Call.Content.
