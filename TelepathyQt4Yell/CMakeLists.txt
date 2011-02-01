@@ -148,11 +148,11 @@ install(FILES ${CMAKE_CURRENT_BINARY_DIR}/TelepathyQt4Yell.pc DESTINATION ${LIB_
 
 add_subdirectory(Models)
 
-# If Farsight was found, install its pkg-config files as well, and go into the subdirectory
-if(FARSIGHT_COMPONENTS_FOUND)
-    configure_file(${CMAKE_CURRENT_SOURCE_DIR}/TelepathyQt4YellFarsight.pc.in ${CMAKE_CURRENT_BINARY_DIR}/TelepathyQt4YellFarsight.pc)
-    configure_file(${CMAKE_CURRENT_SOURCE_DIR}/TelepathyQt4YellFarsight-uninstalled.pc.in ${CMAKE_CURRENT_BINARY_DIR}/TelepathyQt4YellFarsight-uninstalled.pc)
-    install(FILES ${CMAKE_CURRENT_BINARY_DIR}/TelepathyQt4YellFarsight.pc DESTINATION ${LIB_INSTALL_DIR}/pkgconfig COMPONENT farsight_headers)
-endif(FARSIGHT_COMPONENTS_FOUND)
+# If Farstream was found, install its pkg-config files as well, and go into the subdirectory
+if(FARSTREAM_COMPONENTS_FOUND)
+    configure_file(${CMAKE_CURRENT_SOURCE_DIR}/TelepathyQt4YellFarstream.pc.in ${CMAKE_CURRENT_BINARY_DIR}/TelepathyQt4YellFarstream.pc)
+    configure_file(${CMAKE_CURRENT_SOURCE_DIR}/TelepathyQt4YellFarstream-uninstalled.pc.in ${CMAKE_CURRENT_BINARY_DIR}/TelepathyQt4YellFarstream-uninstalled.pc)
+    install(FILES ${CMAKE_CURRENT_BINARY_DIR}/TelepathyQt4YellFarstream.pc DESTINATION ${LIB_INSTALL_DIR}/pkgconfig COMPONENT farstream_headers)
+endif(FARSTREAM_COMPONENTS_FOUND)
 
-add_subdirectory(Farsight)
+add_subdirectory(Farstream)
