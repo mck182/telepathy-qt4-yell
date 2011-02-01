@@ -36,11 +36,6 @@ namespace Tpy
 {
 
 FarstreamChannel::FarstreamChannel()
-    : mTfChannel(0)
-{
-}
-
-FarstreamChannel::~FarstreamChannel()
 {
 }
 
@@ -110,11 +105,6 @@ void FarstreamChannel::onTfChannelNewFinish(GObject *source_object, GAsyncResult
     }
 
     g_object_unref(source_object);
-}
-
-TfChannel *FarstreamChannel::farstreamChannel()
-{
-    return mTfChannel;
 }
 
 } // Tpy

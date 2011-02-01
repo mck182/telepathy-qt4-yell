@@ -45,7 +45,6 @@ class TELEPATHY_QT4_YELL_FS_EXPORT FarstreamChannel : public QObject
 
 public:
     FarstreamChannel();
-    virtual ~FarstreamChannel();
     void createFarstreamChannel(const CallChannelPtr &channel);
 
 Q_SIGNALS:
