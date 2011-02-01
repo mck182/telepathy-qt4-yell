@@ -149,11 +149,11 @@ find_package(LibXml2)
 find_program(GLIB_GENMARSHAL glib-genmarshal)
 
 # Find tp-farstream
-set(TELEPATHY_FARSTREAM "0.0.1")
+set(TELEPATHY_FARSTREAM "0.0.0.1")
 find_package(TelepathyFarstream)
-macro_log_feature(TELEPATHYFARSTREAM "Telepathy-Farstream"
+macro_log_feature(TELEPATHYFARSTREAM_FOUND "Telepathy-Farstream"
                   "A Framework for dealing with audio/video conferencing protocols"
-                  "http://farsight.freedesktop.org/wiki/" FALSE "0.0.4"
+                  "http://farsight.freedesktop.org/wiki/" FALSE "0.0.0.1"
                   "Needed, together with GStreamer, to build telepathy-qt4-yell-farstream and some additional examples")
 
 # Find GStreamer
@@ -164,7 +164,7 @@ macro_log_feature(GSTREAMER_FOUND "GStreamer"
                   "http://www.gstreamer.net/" FALSE)
 
 # Build TelepathyQt4-Farstream only if GStreamer, TelepathyFarstream and all of their dependencies were found
-if (TELEPATHYFARSTREAM AND GSTREAMER_FOUND AND GLIB2_FOUND AND GOBJECT_FOUND AND DBUS_FOUND AND LIBXML2_FOUND)
+if (TELEPATHYFARSTREAM_FOUND AND GSTREAMER_FOUND AND GLIB2_FOUND AND GOBJECT_FOUND AND DBUS_FOUND AND LIBXML2_FOUND)
     set (FARSTREAM_COMPONENTS_FOUND 1)
 else (TELEPATHYFARSTREAM_FOUND AND GSTREAMER_FOUND AND GLIB2_FOUND AND GOBJECT_FOUND AND DBUS_FOUND AND LIBXML2_FOUND)
     set (FARSTREAM_COMPONENTS_FOUND 0)
