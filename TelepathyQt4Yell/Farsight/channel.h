@@ -41,7 +41,7 @@ namespace Tpy
 class TELEPATHY_QT4_YELL_FS_EXPORT FarsightChannel : public QObject
 {
     Q_OBJECT
-    //Q_DISABLE_COPY(FarsightChannel)
+    Q_DISABLE_COPY(FarsightChannel)
 
 public:
     FarsightChannel();
@@ -54,11 +54,11 @@ Q_SIGNALS:
     void farsightChannelCreated(bool error);
 
 private:
-    static void on_tf_channel_new_finish(GObject *source_object, GAsyncResult *res, gpointer user_data);
+    static void onTfChannelNewFinish(GObject *source_object, GAsyncResult *res, gpointer user_data);
 
-    TfChannel * mTfChannel;
+    TfChannel *mTfChannel;
 };
 
-} // Tp
+} // Tpy
 
 #endif

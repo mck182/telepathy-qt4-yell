@@ -21,6 +21,8 @@
 
 #include <TelepathyQt4Yell/Farsight/Channel>
 
+#include "TelepathyQt4Yell/Farsight/_gen/channel.moc.hpp"
+
 #include <TelepathyQt4/Channel>
 #include <TelepathyQt4/Connection>
 #include <TelepathyQt4Yell/CallChannel>
@@ -30,13 +32,11 @@
 #include <telepathy-glib/connection.h>
 #include <telepathy-glib/dbus.h>
 
-#include "TelepathyQt4Yell/Farsight/_gen/channel.moc.hpp"
-
 namespace Tpy
 {
 
-FarsightChannel::FarsightChannel() :
-    mTfChannel(0)
+FarsightChannel::FarsightChannel() 
+    : mTfChannel(0)
 {
 }
 
@@ -87,24 +87,24 @@ void FarsightChannel::createFarsightChannel(const CallChannelPtr &channel)
         return;
     }
 
-    tf_channel_new_async(gchannel, FarsightChannel::on_tf_channel_new_finish, this);
+    tf_channel_new_async(gchannel, FarsightChannel::onTfChannelNewFinish, this);
 }
 
-void FarsightChannel::on_tf_channel_new_finish (GObject *source_object, GAsyncResult *res, gpointer user_data)
+void FarsightChannel::onTfChannelNewFinish(GObject *source_object, GAsyncResult *res, gpointer user_data)
 {
-    qDebug() << "FarsightChannel::on_tf_channel_new_finish: ";
+    qDebug() << "FarsightChannel::onTfChannelNewFinish: ";
     qDebug() << "    source_object=" << source_object;
     qDebug() << "    result=" << res;
 
-    FarsightChannel * self = reinterpret_cast<FarsightChannel *> (user_data);
+    FarsightChannel *self = reinterpret_cast<FarsightChannel *>(user_data);
 
     GError *error = NULL;
-    TfChannel *ret = (TfChannel *) TF_CHANNEL (g_async_initable_new_finish ( G_ASYNC_INITABLE (source_object), res, &error));
+    TfChannel *ret = /*(TfChannel *)*/ TF_CHANNEL(g_async_initable_new_finish(G_ASYNC_INITABLE(source_object), res, &error));
     self->mTfChannel = ret;
 
     if (error) {
-	qDebug() << "FarsightChannel::on_tf_channel_new_finish: error " << error->message;
-        g_clear_error (&error);
+	qDebug() << "FarsightChannel::onTfChannelNewFinish: error " << error->message;
+        g_clear_error(&error);
         Q_EMIT self->farsightChannelCreated(true);
     } else {
         Q_EMIT self->farsightChannelCreated(false);
