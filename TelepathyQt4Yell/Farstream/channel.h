@@ -19,39 +19,39 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#ifndef _TelepathyQt4Yell_Farsight_channel_h_HEADER_GUARD_
-#define _TelepathyQt4Yell_Farsight_channel_h_HEADER_GUARD_
+#ifndef _TelepathyQt4Yell_Farstream_channel_h_HEADER_GUARD_
+#define _TelepathyQt4Yell_Farstream_channel_h_HEADER_GUARD_
 
-#ifndef IN_TELEPATHY_QT4_YELL_FARSIGHT_HEADER
-#error IN_TELEPATHY_QT4_YELL_FARSIGHT_HEADER
+#ifndef IN_TELEPATHY_QT4_YELL_FARSTREAM_HEADER
+#error IN_TELEPATHY_QT4_YELL_FARSTREAM_HEADER
 #endif
 
 #include <QObject>
 
-#include <TelepathyQt4Yell/Farsight/global.h>
+#include <TelepathyQt4Yell/Farstream/global.h>
 
 #include <TelepathyQt4Yell/Types>
 
 #include <gst/gst.h>
-#include <telepathy-farsight/channel.h>
+#include <telepathy-farstream/channel.h>
 
 namespace Tpy
 {
 
-class TELEPATHY_QT4_YELL_FS_EXPORT FarsightChannel : public QObject
+class TELEPATHY_QT4_YELL_FS_EXPORT FarstreamChannel : public QObject
 {
     Q_OBJECT
-    Q_DISABLE_COPY(FarsightChannel)
+    Q_DISABLE_COPY(FarstreamChannel)
 
 public:
-    FarsightChannel();
-    virtual ~FarsightChannel();
+    FarstreamChannel();
+    virtual ~FarstreamChannel();
 
-    void createFarsightChannel(const CallChannelPtr &channel);
-    TfChannel *farsightChannel();
+    void createFarstreamChannel(const CallChannelPtr &channel);
+    TfChannel *farstreamChannel();
 
 Q_SIGNALS:
-    void farsightChannelCreated(bool error);
+    void farstreamChannelCreated(bool error);
 
 private:
     static void onTfChannelNewFinish(GObject *source_object, GAsyncResult *res, gpointer user_data);

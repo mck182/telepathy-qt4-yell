@@ -19,14 +19,14 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#include <TelepathyQt4Yell/Farsight/Channel>
+#include <TelepathyQt4Yell/Farstream/Channel>
 
-#include "TelepathyQt4Yell/Farsight/_gen/channel.moc.hpp"
+#include "TelepathyQt4Yell/Farstream/_gen/channel.moc.hpp"
 
 #include <TelepathyQt4/Channel>
 #include <TelepathyQt4/Connection>
 #include <TelepathyQt4Yell/CallChannel>
-#include <TelepathyQt4Yell/Farsight/global.h>
+#include <TelepathyQt4Yell/Farstream/global.h>
 
 #include <telepathy-glib/channel.h>
 #include <telepathy-glib/connection.h>
@@ -35,27 +35,27 @@
 namespace Tpy
 {
 
-FarsightChannel::FarsightChannel() 
+FarstreamChannel::FarstreamChannel()
     : mTfChannel(0)
 {
 }
 
-FarsightChannel::~FarsightChannel()
+FarstreamChannel::~FarstreamChannel()
 {
 }
 
-void FarsightChannel::createFarsightChannel(const CallChannelPtr &channel)
+void FarstreamChannel::createFarstreamChannel(const CallChannelPtr &channel)
 {
     if (!channel->handlerStreamingRequired()) {
         qWarning() << "Handler streaming not required";
-        Q_EMIT farsightChannelCreated(true);
+        Q_EMIT farstreamChannelCreated(true);
         return;
     }
 
     TpDBusDaemon *dbus = tp_dbus_daemon_dup(0);
     if (!dbus) {
         qWarning() << "Unable to connect to D-Bus";
-        Q_EMIT farsightChannelCreated(true);
+        Q_EMIT farstreamChannelCreated(true);
         return;
     }
 
@@ -68,7 +68,7 @@ void FarsightChannel::createFarsightChannel(const CallChannelPtr &channel)
     dbus = 0;
     if (!gconnection) {
         qWarning() << "Unable to construct TpConnection";
-        Q_EMIT farsightChannelCreated(true);
+        Q_EMIT farstreamChannelCreated(true);
         return;
     }
 
@@ -83,37 +83,37 @@ void FarsightChannel::createFarsightChannel(const CallChannelPtr &channel)
 
     if (!gchannel) {
         qWarning() << "Unable to construct TpChannel";
-        Q_EMIT farsightChannelCreated(true);
+        Q_EMIT farstreamChannelCreated(true);
         return;
     }
 
-    tf_channel_new_async(gchannel, FarsightChannel::onTfChannelNewFinish, this);
+    tf_channel_new_async(gchannel, FarstreamChannel::onTfChannelNewFinish, this);
 }
 
-void FarsightChannel::onTfChannelNewFinish(GObject *source_object, GAsyncResult *res, gpointer user_data)
+void FarstreamChannel::onTfChannelNewFinish(GObject *source_object, GAsyncResult *res, gpointer user_data)
 {
-    qDebug() << "FarsightChannel::onTfChannelNewFinish: ";
+    qDebug() << "FarstreamChannel::onTfChannelNewFinish: ";
     qDebug() << "    source_object=" << source_object;
     qDebug() << "    result=" << res;
 
-    FarsightChannel *self = reinterpret_cast<FarsightChannel *>(user_data);
+    FarstreamChannel *self = reinterpret_cast<FarstreamChannel *>(user_data);
 
     GError *error = NULL;
     TfChannel *ret = /*(TfChannel *)*/ TF_CHANNEL(g_async_initable_new_finish(G_ASYNC_INITABLE(source_object), res, &error));
     self->mTfChannel = ret;
 
     if (error) {
-	qDebug() << "FarsightChannel::onTfChannelNewFinish: error " << error->message;
+        qDebug() << "FarstreamChannel::onTfChannelNewFinish: error " << error->message;
         g_clear_error(&error);
-        Q_EMIT self->farsightChannelCreated(true);
+        Q_EMIT self->farstreamChannelCreated(true);
     } else {
-        Q_EMIT self->farsightChannelCreated(false);
+        Q_EMIT self->farstreamChannelCreated(false);
     }
 
     g_object_unref(source_object);
 }
 
-TfChannel *FarsightChannel::farsightChannel()
+TfChannel *FarstreamChannel::farstreamChannel()
 {
     return mTfChannel;
 }
