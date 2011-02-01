@@ -48,14 +48,14 @@ void FarstreamChannel::createFarstreamChannel(const CallChannelPtr &channel)
 {
     if (!channel->handlerStreamingRequired()) {
         qWarning() << "Handler streaming not required";
-        Q_EMIT farstreamChannelCreated(true);
+        Q_EMIT farstreamChannelCreated(0);
         return;
     }
 
     TpDBusDaemon *dbus = tp_dbus_daemon_dup(0);
     if (!dbus) {
         qWarning() << "Unable to connect to D-Bus";
-        Q_EMIT farstreamChannelCreated(true);
+        Q_EMIT farstreamChannelCreated(0);
         return;
     }
 
@@ -68,7 +68,7 @@ void FarstreamChannel::createFarstreamChannel(const CallChannelPtr &channel)
     dbus = 0;
     if (!gconnection) {
         qWarning() << "Unable to construct TpConnection";
-        Q_EMIT farstreamChannelCreated(true);
+        Q_EMIT farstreamChannelCreated(0);
         return;
     }
 
@@ -83,7 +83,7 @@ void FarstreamChannel::createFarstreamChannel(const CallChannelPtr &channel)
 
     if (!gchannel) {
         qWarning() << "Unable to construct TpChannel";
-        Q_EMIT farstreamChannelCreated(true);
+        Q_EMIT farstreamChannelCreated(0);
         return;
     }
 
@@ -99,15 +99,14 @@ void FarstreamChannel::onTfChannelNewFinish(GObject *source_object, GAsyncResult
     FarstreamChannel *self = reinterpret_cast<FarstreamChannel *>(user_data);
 
     GError *error = NULL;
-    TfChannel *ret = /*(TfChannel *)*/ TF_CHANNEL(g_async_initable_new_finish(G_ASYNC_INITABLE(source_object), res, &error));
-    self->mTfChannel = ret;
+    TfChannel *ret = TF_CHANNEL(g_async_initable_new_finish(G_ASYNC_INITABLE(source_object), res, &error));
 
     if (error) {
         qDebug() << "FarstreamChannel::onTfChannelNewFinish: error " << error->message;
         g_clear_error(&error);
-        Q_EMIT self->farstreamChannelCreated(true);
+        Q_EMIT self->farstreamChannelCreated(0);
     } else {
-        Q_EMIT self->farstreamChannelCreated(false);
+        Q_EMIT self->farstreamChannelCreated(ret);
     }
 
     g_object_unref(source_object);

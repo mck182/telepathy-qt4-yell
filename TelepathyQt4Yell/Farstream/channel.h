@@ -46,17 +46,13 @@ class TELEPATHY_QT4_YELL_FS_EXPORT FarstreamChannel : public QObject
 public:
     FarstreamChannel();
     virtual ~FarstreamChannel();
-
     void createFarstreamChannel(const CallChannelPtr &channel);
-    TfChannel *farstreamChannel();
 
 Q_SIGNALS:
-    void farstreamChannelCreated(bool error);
+    void farstreamChannelCreated(TfChannel *tfChannel);
 
 private:
     static void onTfChannelNewFinish(GObject *source_object, GAsyncResult *res, gpointer user_data);
-
-    TfChannel *mTfChannel;
 };
 
 } // Tpy
