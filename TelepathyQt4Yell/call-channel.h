@@ -131,6 +131,8 @@ public:
     QString name() const;
     Tp::MediaStreamType type() const;
 
+    CallContentDisposition disposition() const;
+
     CallStreams streams() const;
 
 Q_SIGNALS:

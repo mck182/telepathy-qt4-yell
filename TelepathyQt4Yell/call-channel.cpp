@@ -648,6 +648,16 @@ Tp::MediaStreamType CallContent::type() const
 }
 
 /**
+ * Return the disposition of this media content.
+ *
+ * \return The disposition of this media content.
+ */
+CallContentDisposition CallContent::disposition() const
+{
+    return (CallContentDisposition) mPriv->disposition;
+}
+
+/**
  * Return the media streams of this media content.
  *
  * \return A list of media streams of this media content.
@@ -675,8 +685,7 @@ void CallContent::gotMainProperties(QDBusPendingCallWatcher *watcher)
 
     mPriv->name = qdbus_cast<QString>(props[QLatin1String("Name")]);
     mPriv->type = qdbus_cast<uint>(props[QLatin1String("Type")]);
-
-    // TODO: handle other properties
+    mPriv->disposition = qdbus_cast<uint>(props[QLatin1String("Disposition")]);
 
     ObjectPathList streamsPaths = qdbus_cast<ObjectPathList>(props[QLatin1String("Streams")]);
     if (streamsPaths.size() != 0) {
