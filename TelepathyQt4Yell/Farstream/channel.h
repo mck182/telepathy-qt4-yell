@@ -49,9 +49,10 @@ public:
 
 Q_SIGNALS:
     void farstreamChannelCreated(TfChannel *tfChannel);
+    void farstreamChannelError();
 
 private:
-    static void onTfChannelNewFinish(GObject *source_object, GAsyncResult *res, gpointer user_data);
+    static void onTfChannelNewFinish(GObject *sourceObject, GAsyncResult *res, gpointer userData);
 };
 
 } // Tpy

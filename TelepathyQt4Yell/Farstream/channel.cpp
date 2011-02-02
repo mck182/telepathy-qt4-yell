@@ -43,14 +43,14 @@ void FarstreamChannel::createFarstreamChannel(const CallChannelPtr &channel)
 {
     if (!channel->handlerStreamingRequired()) {
         qWarning() << "Handler streaming not required";
-        Q_EMIT farstreamChannelCreated(0);
+        Q_EMIT farstreamChannelError();
         return;
     }
 
     TpDBusDaemon *dbus = tp_dbus_daemon_dup(0);
     if (!dbus) {
         qWarning() << "Unable to connect to D-Bus";
-        Q_EMIT farstreamChannelCreated(0);
+        Q_EMIT farstreamChannelError();
         return;
     }
 
@@ -63,7 +63,7 @@ void FarstreamChannel::createFarstreamChannel(const CallChannelPtr &channel)
     dbus = 0;
     if (!gconnection) {
         qWarning() << "Unable to construct TpConnection";
-        Q_EMIT farstreamChannelCreated(0);
+        Q_EMIT farstreamChannelError();
         return;
     }
 
@@ -78,33 +78,33 @@ void FarstreamChannel::createFarstreamChannel(const CallChannelPtr &channel)
 
     if (!gchannel) {
         qWarning() << "Unable to construct TpChannel";
-        Q_EMIT farstreamChannelCreated(0);
+        Q_EMIT farstreamChannelError();
         return;
     }
 
     tf_channel_new_async(gchannel, FarstreamChannel::onTfChannelNewFinish, this);
 }
 
-void FarstreamChannel::onTfChannelNewFinish(GObject *source_object, GAsyncResult *res, gpointer user_data)
+void FarstreamChannel::onTfChannelNewFinish(GObject *sourceObject, GAsyncResult *res, gpointer userData)
 {
     qDebug() << "FarstreamChannel::onTfChannelNewFinish: ";
-    qDebug() << "    source_object=" << source_object;
+    qDebug() << "    sourceObject=" << sourceObject;
     qDebug() << "    result=" << res;
 
-    FarstreamChannel *self = reinterpret_cast<FarstreamChannel *>(user_data);
+    FarstreamChannel *self = reinterpret_cast<FarstreamChannel *>(userData);
 
     GError *error = NULL;
-    TfChannel *ret = TF_CHANNEL(g_async_initable_new_finish(G_ASYNC_INITABLE(source_object), res, &error));
+    TfChannel *ret = TF_CHANNEL(g_async_initable_new_finish(G_ASYNC_INITABLE(sourceObject), res, &error));
 
     if (error) {
         qDebug() << "FarstreamChannel::onTfChannelNewFinish: error " << error->message;
         g_clear_error(&error);
-        Q_EMIT self->farstreamChannelCreated(0);
+        Q_EMIT self->farstreamChannelError();
     } else {
         Q_EMIT self->farstreamChannelCreated(ret);
     }
 
-    g_object_unref(source_object);
+    g_object_unref(sourceObject);
 }
 
 } // Tpy
