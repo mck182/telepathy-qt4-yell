@@ -178,7 +178,15 @@ public:
     bool awaitingLocalAnswer() const;
     bool awaitingRemoteAnswer() const;
 
+    CallState state() const;
+    CallFlags flags() const;
     bool handlerStreamingRequired() const;
+    StreamTransportType initialTransportType() const;
+    bool hasInitialAudio() const;
+    bool hasInitialVideo() const;
+    QString initialAudioName() const;
+    QString initialVideoName() const;
+    bool hasMutableContents() const;
 
     Tp::PendingOperation *accept();
     Tp::PendingOperation *hangup(CallStateChangeReason reason,

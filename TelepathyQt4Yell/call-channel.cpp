@@ -991,6 +991,27 @@ bool CallChannel::awaitingRemoteAnswer() const
 }
 
 /**
+ * Return the current state of this call.
+ *
+ * \return The current state of this call.
+ */
+CallState CallChannel::state() const
+{
+    return (CallState) mPriv->state;
+}
+
+/**
+ * Return the flags representing the status of this call as a whole, providing more specific
+ * information than state().
+ *
+ * \return The flags representing the status of this call.
+ */
+CallFlags CallChannel::flags() const
+{
+    return (CallFlags) mPriv->flags;
+}
+
+/**
  * Check whether media streaming by the handler is required for this channel.
  *
  * If \c false, all of the media streaming is done by some mechanism outside the scope
@@ -1001,6 +1022,71 @@ bool CallChannel::awaitingRemoteAnswer() const
 bool CallChannel::handlerStreamingRequired() const
 {
     return !mPriv->hardwareStreaming;
+}
+
+/**
+ * Return the initial transport type used for this call if set on a requested channel.
+ *
+ * Where not applicable, this property is defined to be #StreamTransportTypeUnknown, in
+ * particular, on CMs with hardware streaming.
+ *
+ * \return The initial transport type used for this call.
+ */
+StreamTransportType CallChannel::initialTransportType() const
+{
+    return (StreamTransportType) mPriv->initialTransportType;
+}
+
+/**
+ * Return whether an audio content has already been requested.
+ *
+ * \return \c true if an audio content has already been requested, \c false otherwise.
+ */
+bool CallChannel::hasInitialAudio() const
+{
+    return mPriv->initialAudio;
+}
+
+/**
+ * Return whether a video content has already been requested.
+ *
+ * \return \c true if an video content has already been requested, \c false otherwise.
+ */
+bool CallChannel::hasInitialVideo() const
+{
+    return mPriv->initialVideo;
+}
+
+/**
+ * Return the name of the initial audio content if hasInitialAudio() returns \c true.
+ *
+ * \return The name of the initial audio content.
+ */
+QString CallChannel::initialAudioName() const
+{
+    return mPriv->initialAudioName;
+}
+
+/**
+ * Return the name of the initial video content if hasInitialVideo() returns \c true.
+ *
+ * \return The name of the initial video content.
+ */
+QString CallChannel::initialVideoName() const
+{
+    return mPriv->initialVideoName;
+}
+
+/**
+ * Return whether a stream of a different content type can be added after the Channel has
+ * been requested.
+ *
+ * \return \c true if a stream of different content type can be added after the Channel has been
+ *         requested, \c false otherwise.
+ */
+bool CallChannel::hasMutableContents() const
+{
+    return mPriv->mutableContents;
 }
 
 /**
@@ -1199,9 +1285,16 @@ void CallChannel::gotMainProperties(QDBusPendingCallWatcher *watcher)
 
     QVariantMap props = reply.value();
 
+    // TODO bind CallStateReason/CallStateDetails/CallMembers
+    mPriv->state = qdbus_cast<uint>(props[QLatin1String("CallState")]);
+    mPriv->flags = qdbus_cast<uint>(props[QLatin1String("CallFlags")]);
     mPriv->hardwareStreaming = qdbus_cast<bool>(props[QLatin1String("HardwareStreaming")]);
-
-    // TODO: handle other properties
+    mPriv->initialTransportType = qdbus_cast<uint>(props[QLatin1String("InitialTransport")]);
+    mPriv->initialAudio = qdbus_cast<bool>(props[QLatin1String("Audio")]);
+    mPriv->initialVideo = qdbus_cast<bool>(props[QLatin1String("Video")]);
+    mPriv->initialAudioName = qdbus_cast<QString>(props[QLatin1String("AudioName")]);
+    mPriv->initialVideoName = qdbus_cast<QString>(props[QLatin1String("VideoName")]);
+    mPriv->mutableContents = qdbus_cast<bool>(props[QLatin1String("MutableContents")]);
 
     ObjectPathList contentsPaths = qdbus_cast<ObjectPathList>(props[QLatin1String("Contents")]);
     if (contentsPaths.size() > 0) {

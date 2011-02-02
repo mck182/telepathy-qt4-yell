@@ -132,7 +132,15 @@ struct TELEPATHY_QT4_YELL_NO_EXPORT CallChannel::Private
     Tp::ReadinessHelper *readinessHelper;
 
     // Introspection
+    uint state;
+    uint flags;
     bool hardwareStreaming;
+    uint initialTransportType;
+    bool initialAudio;
+    bool initialVideo;
+    QString initialAudioName;
+    QString initialVideoName;
+    bool mutableContents;
     CallContents contents;
     CallContents incompleteContents;
 
