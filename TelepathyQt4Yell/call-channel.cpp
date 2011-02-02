@@ -1470,7 +1470,7 @@ CallContentPtr CallChannel::lookupContent(const QDBusObjectPath &contentPath) co
 }
 
 /**
- * \fn void CallChannel::contentAdded(const Tp::CallContentPtr &content);
+ * \fn void CallChannel::contentAdded(const Tpy::CallContentPtr &content);
  *
  * This signal is emitted when a media content is added to this channel.
  *
@@ -1479,7 +1479,7 @@ CallContentPtr CallChannel::lookupContent(const QDBusObjectPath &contentPath) co
  */
 
 /**
- * \fn void CallChannel::contentRemoved(const Tp::CallContentPtr &content);
+ * \fn void CallChannel::contentRemoved(const Tpy::CallContentPtr &content);
  *
  * This signal is emitted when a media content is removed from this channel.
  *
