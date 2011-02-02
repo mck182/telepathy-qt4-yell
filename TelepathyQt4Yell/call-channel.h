@@ -205,6 +205,7 @@ public:
 Q_SIGNALS:
     void contentAdded(const Tpy::CallContentPtr &content);
     void contentRemoved(const Tpy::CallContentPtr &content);
+    void stateChanged(Tpy::CallState state);
 
     void localHoldStateChanged(Tp::LocalHoldState state, Tp::LocalHoldStateReason reason);
 
@@ -218,6 +219,8 @@ private Q_SLOTS:
     void onContentAdded(const QDBusObjectPath &contentPath);
     void onContentRemoved(const QDBusObjectPath &contentPath);
     void onContentReady(Tp::PendingOperation *op);
+    void onCallStateChanged(uint state, uint flags,
+            const Tpy::CallStateReason &stateReason, const QVariantMap &stateDetails);
 
     void gotLocalHoldState(QDBusPendingCallWatcher *);
     void onLocalHoldStateChanged(uint, uint);

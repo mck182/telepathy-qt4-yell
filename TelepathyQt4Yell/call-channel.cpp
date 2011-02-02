@@ -828,6 +828,10 @@ void CallChannel::Private::introspectContents(CallChannel::Private *self)
     parent->connect(self->callInterface,
             SIGNAL(ContentRemoved(QDBusObjectPath)),
             SLOT(onContentRemoved(QDBusObjectPath)));
+    parent->connect(self->callInterface,
+            SIGNAL(CallStateChanged(uint,uint,Tpy::CallStateReason,QVariantMap)),
+            SLOT(onCallStateChanged(uint,uint,Tpy::CallStateReason,QVariantMap)));
+    // TODO handle CallMembersChanged
 
     QDBusPendingCallWatcher *watcher =
         new QDBusPendingCallWatcher(
@@ -994,6 +998,7 @@ bool CallChannel::awaitingRemoteAnswer() const
  * Return the current state of this call.
  *
  * \return The current state of this call.
+ * \sa stateChanged()
  */
 CallState CallChannel::state() const
 {
@@ -1005,6 +1010,7 @@ CallState CallChannel::state() const
  * information than state().
  *
  * \return The flags representing the status of this call.
+ * \sa stateChanged()
  */
 CallFlags CallChannel::flags() const
 {
@@ -1387,6 +1393,18 @@ void CallChannel::onContentReady(Tp::PendingOperation *op)
     }
 }
 
+void CallChannel::onCallStateChanged(uint state, uint flags,
+        const Tpy::CallStateReason &stateReason, const QVariantMap &stateDetails)
+{
+    // TODO handle CallStateReason/Details
+    Q_UNUSED(stateReason);
+    Q_UNUSED(stateDetails);
+
+    mPriv->state = state;
+    mPriv->flags = flags;
+    emit stateChanged((CallState) state);
+}
+
 void CallChannel::gotLocalHoldState(QDBusPendingCallWatcher *watcher)
 {
     QDBusPendingReply<uint, uint> reply = *watcher;
@@ -1467,6 +1485,14 @@ CallContentPtr CallChannel::lookupContent(const QDBusObjectPath &contentPath) co
  *
  * \param content The media content that was removed.
  * \sa contents(), contentsForType()
+ */
+
+/**
+ * \fn void CallChannel::stateChanged(Tpy::CallState &state);
+ *
+ * This signal is emitted when the value of state() or flags() changes.
+ *
+ * \param state The new state.
  */
 
 /**
