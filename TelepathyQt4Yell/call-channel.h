@@ -180,6 +180,8 @@ public:
 
     CallState state() const;
     CallFlags flags() const;
+    CallStateReason stateReason() const;
+    QVariantMap stateDetails() const;
     bool handlerStreamingRequired() const;
     StreamTransportType initialTransportType() const;
     bool hasInitialAudio() const;

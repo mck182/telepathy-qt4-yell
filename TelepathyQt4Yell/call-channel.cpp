@@ -1018,6 +1018,28 @@ CallFlags CallChannel::flags() const
 }
 
 /**
+ * Return the reason for the last change to the state() and/or flags().
+ *
+ * \return The reason for the last change to the state() and/or flags().
+ * \sa stateChanged()
+ */
+CallStateReason CallChannel::stateReason() const
+{
+    return mPriv->stateReason;
+}
+
+/**
+ * Return optional extensible details for the state(), flags() and/or stateReason().
+ *
+ * \return The optional extensible details for the state(), flags() and/or stateReason().
+ * \sa stateChanged()
+ */
+QVariantMap CallChannel::stateDetails() const
+{
+    return mPriv->stateDetails;
+}
+
+/**
  * Check whether media streaming by the handler is required for this channel.
  *
  * If \c false, all of the media streaming is done by some mechanism outside the scope
@@ -1291,9 +1313,12 @@ void CallChannel::gotMainProperties(QDBusPendingCallWatcher *watcher)
 
     QVariantMap props = reply.value();
 
-    // TODO bind CallStateReason/CallStateDetails/CallMembers
+    // TODO bind CallMembers
     mPriv->state = qdbus_cast<uint>(props[QLatin1String("CallState")]);
     mPriv->flags = qdbus_cast<uint>(props[QLatin1String("CallFlags")]);
+    // TODO Add high-level classes for CallStateReason/Details
+    mPriv->stateReason = qdbus_cast<CallStateReason>(props[QLatin1String("CallStateReason")]);
+    mPriv->stateDetails = qdbus_cast<QVariantMap>(props[QLatin1String("CallStateDetails")]);
     mPriv->hardwareStreaming = qdbus_cast<bool>(props[QLatin1String("HardwareStreaming")]);
     mPriv->initialTransportType = qdbus_cast<uint>(props[QLatin1String("InitialTransport")]);
     mPriv->initialAudio = qdbus_cast<bool>(props[QLatin1String("Audio")]);
@@ -1396,12 +1421,16 @@ void CallChannel::onContentReady(Tp::PendingOperation *op)
 void CallChannel::onCallStateChanged(uint state, uint flags,
         const Tpy::CallStateReason &stateReason, const QVariantMap &stateDetails)
 {
-    // TODO handle CallStateReason/Details
-    Q_UNUSED(stateReason);
-    Q_UNUSED(stateDetails);
+    if (mPriv->state == state && mPriv->flags == flags && mPriv->stateReason == stateReason &&
+        mPriv->stateDetails == stateDetails) {
+        // nothing changed
+        return;
+    }
 
     mPriv->state = state;
     mPriv->flags = flags;
+    mPriv->stateReason = stateReason;
+    mPriv->stateDetails = stateDetails;
     emit stateChanged((CallState) state);
 }
 
@@ -1490,7 +1519,8 @@ CallContentPtr CallChannel::lookupContent(const QDBusObjectPath &contentPath) co
 /**
  * \fn void CallChannel::stateChanged(Tpy::CallState &state);
  *
- * This signal is emitted when the value of state() or flags() changes.
+ * This signal is emitted when the value of state(), flags(), stateReason() or stateDetails()
+ * changes.
  *
  * \param state The new state.
  */

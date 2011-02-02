@@ -134,6 +134,8 @@ struct TELEPATHY_QT4_YELL_NO_EXPORT CallChannel::Private
     // Introspection
     uint state;
     uint flags;
+    CallStateReason stateReason;
+    QVariantMap stateDetails;
     bool hardwareStreaming;
     uint initialTransportType;
     bool initialAudio;
