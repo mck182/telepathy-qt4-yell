@@ -789,7 +789,13 @@ CallChannel::Private::Private(CallChannel *parent)
       callInterface(parent->interface<Client::ChannelTypeCallInterface>()),
       properties(parent->interface<Tp::Client::DBus::PropertiesInterface>()),
       readinessHelper(parent->readinessHelper()),
+      state(CallStateUnknown),
+      flags((uint) -1),
       hardwareStreaming(false),
+      initialTransportType(StreamTransportTypeUnknown),
+      initialAudio(false),
+      initialVideo(false),
+      mutableContents(false),
       localHoldState(Tp::LocalHoldStateUnheld),
       localHoldStateReason(Tp::LocalHoldStateReasonNone)
 {
