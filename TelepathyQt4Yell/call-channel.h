@@ -131,6 +131,8 @@ public:
     QString name() const;
     Tp::MediaStreamType type() const;
 
+    CallContentDisposition disposition() const;
+
     CallStreams streams() const;
 
 Q_SIGNALS:
@@ -173,7 +175,18 @@ public:
 
     virtual ~CallChannel();
 
+    CallState state() const;
+    CallFlags flags() const;
+    CallStateReason stateReason() const;
+    QVariantMap stateDetails() const;
+
     bool handlerStreamingRequired() const;
+    StreamTransportType initialTransportType() const;
+    bool hasInitialAudio() const;
+    bool hasInitialVideo() const;
+    QString initialAudioName() const;
+    QString initialVideoName() const;
+    bool hasMutableContents() const;
 
     Tp::PendingOperation *accept();
     Tp::PendingOperation *hangup(CallStateChangeReason reason,
@@ -192,6 +205,7 @@ public:
 Q_SIGNALS:
     void contentAdded(const Tpy::CallContentPtr &content);
     void contentRemoved(const Tpy::CallContentPtr &content);
+    void stateChanged(Tpy::CallState state);
 
     void localHoldStateChanged(Tp::LocalHoldState state, Tp::LocalHoldStateReason reason);
 
@@ -205,6 +219,8 @@ private Q_SLOTS:
     void onContentAdded(const QDBusObjectPath &contentPath);
     void onContentRemoved(const QDBusObjectPath &contentPath);
     void onContentReady(Tp::PendingOperation *op);
+    void onCallStateChanged(uint state, uint flags,
+            const Tpy::CallStateReason &stateReason, const QVariantMap &stateDetails);
 
     void gotLocalHoldState(QDBusPendingCallWatcher *);
     void onLocalHoldStateChanged(uint, uint);

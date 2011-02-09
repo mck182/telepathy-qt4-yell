@@ -648,6 +648,16 @@ Tp::MediaStreamType CallContent::type() const
 }
 
 /**
+ * Return the disposition of this media content.
+ *
+ * \return The disposition of this media content.
+ */
+CallContentDisposition CallContent::disposition() const
+{
+    return (CallContentDisposition) mPriv->disposition;
+}
+
+/**
  * Return the media streams of this media content.
  *
  * \return A list of media streams of this media content.
@@ -675,8 +685,7 @@ void CallContent::gotMainProperties(QDBusPendingCallWatcher *watcher)
 
     mPriv->name = qdbus_cast<QString>(props[QLatin1String("Name")]);
     mPriv->type = qdbus_cast<uint>(props[QLatin1String("Type")]);
-
-    // TODO: handle other properties
+    mPriv->disposition = qdbus_cast<uint>(props[QLatin1String("Disposition")]);
 
     ObjectPathList streamsPaths = qdbus_cast<ObjectPathList>(props[QLatin1String("Streams")]);
     if (streamsPaths.size() != 0) {
@@ -780,7 +789,13 @@ CallChannel::Private::Private(CallChannel *parent)
       callInterface(parent->interface<Client::ChannelTypeCallInterface>()),
       properties(parent->interface<Tp::Client::DBus::PropertiesInterface>()),
       readinessHelper(parent->readinessHelper()),
+      state(CallStateUnknown),
+      flags((uint) -1),
       hardwareStreaming(false),
+      initialTransportType(StreamTransportTypeUnknown),
+      initialAudio(false),
+      initialVideo(false),
+      mutableContents(false),
       localHoldState(Tp::LocalHoldStateUnheld),
       localHoldStateReason(Tp::LocalHoldStateReasonNone)
 {
@@ -819,6 +834,10 @@ void CallChannel::Private::introspectContents(CallChannel::Private *self)
     parent->connect(self->callInterface,
             SIGNAL(ContentRemoved(QDBusObjectPath)),
             SLOT(onContentRemoved(QDBusObjectPath)));
+    parent->connect(self->callInterface,
+            SIGNAL(CallStateChanged(uint,uint,Tpy::CallStateReason,QVariantMap)),
+            SLOT(onCallStateChanged(uint,uint,Tpy::CallStateReason,QVariantMap)));
+    // TODO handle CallMembersChanged
 
     QDBusPendingCallWatcher *watcher =
         new QDBusPendingCallWatcher(
@@ -960,6 +979,51 @@ CallChannel::~CallChannel()
 }
 
 /**
+ * Return the current state of this call.
+ *
+ * \return The current state of this call.
+ * \sa stateChanged()
+ */
+CallState CallChannel::state() const
+{
+    return (CallState) mPriv->state;
+}
+
+/**
+ * Return the flags representing the status of this call as a whole, providing more specific
+ * information than state().
+ *
+ * \return The flags representing the status of this call.
+ * \sa stateChanged()
+ */
+CallFlags CallChannel::flags() const
+{
+    return (CallFlags) mPriv->flags;
+}
+
+/**
+ * Return the reason for the last change to the state() and/or flags().
+ *
+ * \return The reason for the last change to the state() and/or flags().
+ * \sa stateChanged()
+ */
+CallStateReason CallChannel::stateReason() const
+{
+    return mPriv->stateReason;
+}
+
+/**
+ * Return optional extensible details for the state(), flags() and/or stateReason().
+ *
+ * \return The optional extensible details for the state(), flags() and/or stateReason().
+ * \sa stateChanged()
+ */
+QVariantMap CallChannel::stateDetails() const
+{
+    return mPriv->stateDetails;
+}
+
+/**
  * Check whether media streaming by the handler is required for this channel.
  *
  * If \c false, all of the media streaming is done by some mechanism outside the scope
@@ -970,6 +1034,71 @@ CallChannel::~CallChannel()
 bool CallChannel::handlerStreamingRequired() const
 {
     return !mPriv->hardwareStreaming;
+}
+
+/**
+ * Return the initial transport type used for this call if set on a requested channel.
+ *
+ * Where not applicable, this property is defined to be #StreamTransportTypeUnknown, in
+ * particular, on CMs with hardware streaming.
+ *
+ * \return The initial transport type used for this call.
+ */
+StreamTransportType CallChannel::initialTransportType() const
+{
+    return (StreamTransportType) mPriv->initialTransportType;
+}
+
+/**
+ * Return whether an audio content has already been requested.
+ *
+ * \return \c true if an audio content has already been requested, \c false otherwise.
+ */
+bool CallChannel::hasInitialAudio() const
+{
+    return mPriv->initialAudio;
+}
+
+/**
+ * Return whether a video content has already been requested.
+ *
+ * \return \c true if an video content has already been requested, \c false otherwise.
+ */
+bool CallChannel::hasInitialVideo() const
+{
+    return mPriv->initialVideo;
+}
+
+/**
+ * Return the name of the initial audio content if hasInitialAudio() returns \c true.
+ *
+ * \return The name of the initial audio content.
+ */
+QString CallChannel::initialAudioName() const
+{
+    return mPriv->initialAudioName;
+}
+
+/**
+ * Return the name of the initial video content if hasInitialVideo() returns \c true.
+ *
+ * \return The name of the initial video content.
+ */
+QString CallChannel::initialVideoName() const
+{
+    return mPriv->initialVideoName;
+}
+
+/**
+ * Return whether a stream of a different content type can be added after the Channel has
+ * been requested.
+ *
+ * \return \c true if a stream of different content type can be added after the Channel has been
+ *         requested, \c false otherwise.
+ */
+bool CallChannel::hasMutableContents() const
+{
+    return mPriv->mutableContents;
 }
 
 /**
@@ -1168,9 +1297,19 @@ void CallChannel::gotMainProperties(QDBusPendingCallWatcher *watcher)
 
     QVariantMap props = reply.value();
 
+    // TODO bind CallMembers
+    mPriv->state = qdbus_cast<uint>(props[QLatin1String("CallState")]);
+    mPriv->flags = qdbus_cast<uint>(props[QLatin1String("CallFlags")]);
+    // TODO Add high-level classes for CallStateReason/Details
+    mPriv->stateReason = qdbus_cast<CallStateReason>(props[QLatin1String("CallStateReason")]);
+    mPriv->stateDetails = qdbus_cast<QVariantMap>(props[QLatin1String("CallStateDetails")]);
     mPriv->hardwareStreaming = qdbus_cast<bool>(props[QLatin1String("HardwareStreaming")]);
-
-    // TODO: handle other properties
+    mPriv->initialTransportType = qdbus_cast<uint>(props[QLatin1String("InitialTransport")]);
+    mPriv->initialAudio = qdbus_cast<bool>(props[QLatin1String("Audio")]);
+    mPriv->initialVideo = qdbus_cast<bool>(props[QLatin1String("Video")]);
+    mPriv->initialAudioName = qdbus_cast<QString>(props[QLatin1String("AudioName")]);
+    mPriv->initialVideoName = qdbus_cast<QString>(props[QLatin1String("VideoName")]);
+    mPriv->mutableContents = qdbus_cast<bool>(props[QLatin1String("MutableContents")]);
 
     ObjectPathList contentsPaths = qdbus_cast<ObjectPathList>(props[QLatin1String("Contents")]);
     if (contentsPaths.size() > 0) {
@@ -1263,6 +1402,22 @@ void CallChannel::onContentReady(Tp::PendingOperation *op)
     }
 }
 
+void CallChannel::onCallStateChanged(uint state, uint flags,
+        const Tpy::CallStateReason &stateReason, const QVariantMap &stateDetails)
+{
+    if (mPriv->state == state && mPriv->flags == flags && mPriv->stateReason == stateReason &&
+        mPriv->stateDetails == stateDetails) {
+        // nothing changed
+        return;
+    }
+
+    mPriv->state = state;
+    mPriv->flags = flags;
+    mPriv->stateReason = stateReason;
+    mPriv->stateDetails = stateDetails;
+    emit stateChanged((CallState) state);
+}
+
 void CallChannel::gotLocalHoldState(QDBusPendingCallWatcher *watcher)
 {
     QDBusPendingReply<uint, uint> reply = *watcher;
@@ -1328,7 +1483,7 @@ CallContentPtr CallChannel::lookupContent(const QDBusObjectPath &contentPath) co
 }
 
 /**
- * \fn void CallChannel::contentAdded(const Tp::CallContentPtr &content);
+ * \fn void CallChannel::contentAdded(const Tpy::CallContentPtr &content);
  *
  * This signal is emitted when a media content is added to this channel.
  *
@@ -1337,12 +1492,21 @@ CallContentPtr CallChannel::lookupContent(const QDBusObjectPath &contentPath) co
  */
 
 /**
- * \fn void CallChannel::contentRemoved(const Tp::CallContentPtr &content);
+ * \fn void CallChannel::contentRemoved(const Tpy::CallContentPtr &content);
  *
  * This signal is emitted when a media content is removed from this channel.
  *
  * \param content The media content that was removed.
  * \sa contents(), contentsForType()
+ */
+
+/**
+ * \fn void CallChannel::stateChanged(Tpy::CallState &state);
+ *
+ * This signal is emitted when the value of state(), flags(), stateReason() or stateDetails()
+ * changes.
+ *
+ * \param state The new state.
  */
 
 /**

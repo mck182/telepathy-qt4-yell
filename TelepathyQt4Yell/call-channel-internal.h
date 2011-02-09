@@ -103,6 +103,7 @@ struct TELEPATHY_QT4_YELL_NO_EXPORT CallContent::Private
     // Introspection
     QString name;
     uint type;
+    uint disposition;
     CallStreams streams;
     CallStreams incompleteStreams;
 };
@@ -131,7 +132,17 @@ struct TELEPATHY_QT4_YELL_NO_EXPORT CallChannel::Private
     Tp::ReadinessHelper *readinessHelper;
 
     // Introspection
+    uint state;
+    uint flags;
+    CallStateReason stateReason;
+    QVariantMap stateDetails;
     bool hardwareStreaming;
+    uint initialTransportType;
+    bool initialAudio;
+    bool initialVideo;
+    QString initialAudioName;
+    QString initialVideoName;
+    bool mutableContents;
     CallContents contents;
     CallContents incompleteContents;
 
