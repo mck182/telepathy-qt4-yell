@@ -960,28 +960,6 @@ CallChannel::~CallChannel()
 }
 
 /**
- * Return whether this channel is awaiting local answer.
- *
- * \return \c true if awaiting local answer, \c false otherwise.
- * \sa awaitingRemoteAnswer()
- */
-bool CallChannel::awaitingLocalAnswer() const
-{
-    return groupSelfHandleIsLocalPending();
-}
-
-/**
- * Return whether this channel is awaiting remote answer.
- *
- * \return \c true if awaiting remote answer, \c false otherwise.
- * \sa awaitingLocalAnswer()
- */
-bool CallChannel::awaitingRemoteAnswer() const
-{
-    return !groupRemotePendingContacts().isEmpty();
-}
-
-/**
  * Check whether media streaming by the handler is required for this channel.
  *
  * If \c false, all of the media streaming is done by some mechanism outside the scope

@@ -173,9 +173,6 @@ public:
 
     virtual ~CallChannel();
 
-    bool awaitingLocalAnswer() const;
-    bool awaitingRemoteAnswer() const;
-
     bool handlerStreamingRequired() const;
 
     Tp::PendingOperation *accept();

@@ -366,8 +366,6 @@ void TestCallChan::testOutgoingCall()
     QCOMPARE(mChan->groupContacts().size(), 2);
     QCOMPARE(mChan->groupLocalPendingContacts().size(), 0);
     QCOMPARE(mChan->groupRemotePendingContacts().size(), 0);
-    QCOMPARE(mChan->awaitingLocalAnswer(), false);
-    QCOMPARE(mChan->awaitingRemoteAnswer(), false);
     QVERIFY(mChan->groupContacts().contains(mConn->selfContact()));
     QVERIFY(mChan->groupContacts().contains(otherContact));
 
@@ -530,7 +528,6 @@ void TestCallChan::testIncomingCall()
     QCOMPARE(mChan->groupContacts().size(), 2);
     QCOMPARE(mChan->groupLocalPendingContacts().size(), 0);
     QCOMPARE(mChan->groupRemotePendingContacts().size(), 0);
-    QCOMPARE(mChan->awaitingLocalAnswer(), false);
     QVERIFY(mChan->groupContacts().contains(mConn->selfContact()));
 
     QCOMPARE(mChan->contents().size(), 1);
