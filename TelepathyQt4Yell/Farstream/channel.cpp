@@ -83,6 +83,7 @@ void FarstreamChannel::createFarstreamChannel(const CallChannelPtr &channel)
     }
 
     tf_channel_new_async(gchannel, FarstreamChannel::onTfChannelNewFinish, this);
+    g_object_unref(gchannel);
 }
 
 void FarstreamChannel::onTfChannelNewFinish(GObject *sourceObject, GAsyncResult *res, gpointer userData)
@@ -103,8 +104,6 @@ void FarstreamChannel::onTfChannelNewFinish(GObject *sourceObject, GAsyncResult 
     } else {
         Q_EMIT self->farstreamChannelCreated(ret);
     }
-
-    g_object_unref(sourceObject);
 }
 
 } // Tpy
