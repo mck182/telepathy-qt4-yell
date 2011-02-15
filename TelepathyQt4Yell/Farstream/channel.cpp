@@ -131,21 +131,13 @@ TfChannel *PendingTfChannel::tfChannel()
     return mPriv->mTfChannel;
 }
 
-struct TELEPATHY_QT4_YELL_FS_NO_EXPORT FarstreamChannelFactory::Private
-{
-    Private()
-    {
-    }
-};
-
 FarstreamChannelFactory::FarstreamChannelFactory()
-    : mPriv(new FarstreamChannelFactory::Private())
+    : mPriv(0)
 {    
 }
 
 FarstreamChannelFactory::~FarstreamChannelFactory()
 {
-    delete mPriv;
 }
 
 PendingTfChannel *FarstreamChannelFactory::create(const CallChannelPtr &channel)
