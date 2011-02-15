@@ -29,8 +29,8 @@
 #include <QObject>
 
 #include <TelepathyQt4Yell/Farstream/global.h>
-
 #include <TelepathyQt4Yell/Types>
+#include <TelepathyQt4/PendingOperation>
 
 #include <gst/gst.h>
 #include <telepathy-farstream/channel.h>
@@ -38,21 +38,43 @@
 namespace Tpy
 {
 
-class TELEPATHY_QT4_YELL_FS_EXPORT FarstreamChannel : public QObject
+class FarstreamChannelFactory;
+typedef Tp::SharedPtr<FarstreamChannelFactory> FarstreamChannelFactoryPtr;
+
+class TELEPATHY_QT4_YELL_FS_EXPORT PendingTfChannel : public Tp::PendingOperation
 {
     Q_OBJECT
-    Q_DISABLE_COPY(FarstreamChannel)
+    Q_DISABLE_COPY(PendingTfChannel)
 
 public:
-    FarstreamChannel();
-    void createFarstreamChannel(const CallChannelPtr &channel);
+    ~PendingTfChannel();
 
-Q_SIGNALS:
-    void farstreamChannelCreated(TfChannel *tfChannel);
-    void farstreamChannelError();
+    TfChannel *tfChannel();
 
 private:
-    static void onTfChannelNewFinish(GObject *sourceObject, GAsyncResult *res, gpointer userData);
+    friend class FarstreamChannelFactory;
+
+    PendingTfChannel(const FarstreamChannelFactoryPtr &fsc, const CallChannelPtr &channel);
+
+    struct Private;
+    friend struct Private;
+    Private *mPriv;
+};
+
+class TELEPATHY_QT4_YELL_FS_EXPORT FarstreamChannelFactory : public Tp::RefCounted
+{
+    Q_DISABLE_COPY(FarstreamChannelFactory)
+
+public:
+    FarstreamChannelFactory();
+    ~FarstreamChannelFactory();
+
+    PendingTfChannel *create(const CallChannelPtr &channel);
+
+private:
+    struct Private;
+    friend struct Private;
+    Private *mPriv;
 };
 
 } // Tpy
