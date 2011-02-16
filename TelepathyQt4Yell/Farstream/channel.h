@@ -45,7 +45,7 @@ class TELEPATHY_QT4_YELL_FS_EXPORT PendingTfChannel : public Tp::PendingOperatio
 public:
     ~PendingTfChannel();
 
-    TfChannel *tfChannel();
+    TfChannel *tfChannel() const;
 
 private:
     friend class FarstreamChannelFactory;

@@ -129,7 +129,7 @@ void PendingTfChannel::Private::onTfChannelNewFinish(GObject *sourceObject, GAsy
     self->setFinished();
 }
 
-TfChannel *PendingTfChannel::tfChannel()
+TfChannel *PendingTfChannel::tfChannel() const
 {
     return mPriv->mTfChannel;
 }
