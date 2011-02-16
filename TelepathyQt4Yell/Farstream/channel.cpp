@@ -25,12 +25,15 @@
 
 #include <TelepathyQt4/Channel>
 #include <TelepathyQt4/Connection>
+
 #include <TelepathyQt4Yell/CallChannel>
 #include <TelepathyQt4Yell/Farstream/global.h>
 
 #include <telepathy-glib/channel.h>
 #include <telepathy-glib/connection.h>
 #include <telepathy-glib/dbus.h>
+
+#include <gst/gst.h>
 
 namespace Tpy
 {
@@ -49,25 +52,28 @@ struct TELEPATHY_QT4_YELL_FS_NO_EXPORT PendingTfChannel::Private
     TfChannel *mTfChannel;
 };
 
-PendingTfChannel::PendingTfChannel(const FarstreamChannelFactoryPtr &fcf, const CallChannelPtr &channel)
+PendingTfChannel::PendingTfChannel(const FarstreamChannelFactoryPtr &fcf,
+        const CallChannelPtr &channel)
     : Tp::PendingOperation(fcf),
       mPriv(new PendingTfChannel::Private(channel))
 {
-
     if (!mPriv->mChannel->handlerStreamingRequired()) {
-        setFinishedWithError(TP_QT4_ERROR_NOT_AVAILABLE, QLatin1String("Handler streaming not required"));
+        setFinishedWithError(TP_QT4_ERROR_NOT_AVAILABLE,
+                QLatin1String("Handler streaming not required"));
         return;
     }
 
     TpDBusDaemon *dbus = tp_dbus_daemon_dup(0);
     if (!dbus) {
-        setFinishedWithError(TP_QT4_ERROR_NOT_AVAILABLE, QLatin1String("Unable to connect to D-Bus"));
+        setFinishedWithError(TP_QT4_ERROR_NOT_AVAILABLE,
+                QLatin1String("Unable to connect to D-Bus"));
         return;
     }
 
     Tp::ConnectionPtr connection = mPriv->mChannel->connection();
     if (connection.isNull()) {
-        setFinishedWithError(TP_QT4_ERROR_NOT_AVAILABLE, QLatin1String("Connection not available"));
+        setFinishedWithError(TP_QT4_ERROR_NOT_AVAILABLE,
+                QLatin1String("Connection not available"));
         g_object_unref(dbus);
         return;
     }
@@ -79,7 +85,8 @@ PendingTfChannel::PendingTfChannel(const FarstreamChannelFactoryPtr &fcf, const 
     g_object_unref(dbus);
     dbus = 0;
     if (!gconnection) {
-        setFinishedWithError(TP_QT4_ERROR_NOT_AVAILABLE, QLatin1String("Unable to construct TpConnection"));
+        setFinishedWithError(TP_QT4_ERROR_NOT_AVAILABLE,
+                QLatin1String("Unable to construct TpConnection"));
         return;
     }
 
@@ -92,7 +99,8 @@ PendingTfChannel::PendingTfChannel(const FarstreamChannelFactoryPtr &fcf, const 
     g_object_unref(gconnection);
     gconnection = 0;
     if (!gchannel) {
-        setFinishedWithError(TP_QT4_ERROR_NOT_AVAILABLE, QLatin1String("Unable to construct TpChannel"));
+        setFinishedWithError(TP_QT4_ERROR_NOT_AVAILABLE,
+                QLatin1String("Unable to construct TpChannel"));
         return;
     }
 
@@ -105,7 +113,8 @@ PendingTfChannel::~PendingTfChannel()
     delete mPriv;
 }
 
-void PendingTfChannel::Private::onTfChannelNewFinish(GObject *sourceObject, GAsyncResult *res, gpointer userData)
+void PendingTfChannel::Private::onTfChannelNewFinish(GObject *sourceObject,
+        GAsyncResult *res, gpointer userData)
 {
     qDebug() << "PendingTfChannel::Private::onTfChannelNewFinish: ";
     qDebug() << "    sourceObject=" << sourceObject;
@@ -114,9 +123,10 @@ void PendingTfChannel::Private::onTfChannelNewFinish(GObject *sourceObject, GAsy
     PendingTfChannel *self = reinterpret_cast<PendingTfChannel *>(userData);
 
     GError *error = NULL;
-    TfChannel *ret = TF_CHANNEL(g_async_initable_new_finish(G_ASYNC_INITABLE(sourceObject), res, &error));
+    TfChannel *ret = TF_CHANNEL(g_async_initable_new_finish(
+                G_ASYNC_INITABLE(sourceObject), res, &error));
     if (error) {
-        qDebug() << "FarstreamChannel::onTfChannelNewFinish: error " << error->message;
+        qDebug() << "PendingTfChannel::Private::onTfChannelNewFinish: error " << error->message;
         g_clear_error(&error);
         self->setFinishedWithError(TP_QT4_ERROR_NOT_AVAILABLE, QLatin1String(error->message));
         return;
@@ -126,24 +136,29 @@ void PendingTfChannel::Private::onTfChannelNewFinish(GObject *sourceObject, GAsy
     self->setFinished();
 }
 
-TfChannel *PendingTfChannel::tfChannel()
+TfChannel *PendingTfChannel::tfChannel() const
 {
     return mPriv->mTfChannel;
 }
 
+FarstreamChannelFactoryPtr FarstreamChannelFactory::create()
+{
+    return FarstreamChannelFactoryPtr(new FarstreamChannelFactory());
+}
+
 FarstreamChannelFactory::FarstreamChannelFactory()
     : mPriv(0)
-{    
+{
 }
 
 FarstreamChannelFactory::~FarstreamChannelFactory()
 {
 }
 
-PendingTfChannel *FarstreamChannelFactory::create(const CallChannelPtr &channel)
+PendingTfChannel *FarstreamChannelFactory::createTfChannel(const CallChannelPtr &channel)
 {
-    PendingTfChannel *pendingOperation = new PendingTfChannel(FarstreamChannelFactoryPtr(this), channel);
-    return pendingOperation;
+    PendingTfChannel *ptf = new PendingTfChannel(FarstreamChannelFactoryPtr(this), channel);
+    return ptf;
 }
 
 } // Tpy

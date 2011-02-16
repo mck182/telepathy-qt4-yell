@@ -25,7 +25,7 @@
 #error IN_TELEPATHY_QT4_YELL_FARSTREAM_HEADER
 #endif
 
-#include <TelepathyQt4/Types>
+#include <TelepathyQt4Yell/Types>
 
 namespace Tpy
 {
