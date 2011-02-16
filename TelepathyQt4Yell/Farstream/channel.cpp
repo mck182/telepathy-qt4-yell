@@ -25,12 +25,15 @@
 
 #include <TelepathyQt4/Channel>
 #include <TelepathyQt4/Connection>
+
 #include <TelepathyQt4Yell/CallChannel>
 #include <TelepathyQt4Yell/Farstream/global.h>
 
 #include <telepathy-glib/channel.h>
 #include <telepathy-glib/connection.h>
 #include <telepathy-glib/dbus.h>
+
+#include <gst/gst.h>
 
 namespace Tpy
 {
@@ -131,6 +134,11 @@ TfChannel *PendingTfChannel::tfChannel()
     return mPriv->mTfChannel;
 }
 
+FarstreamChannelFactoryPtr FarstreamChannelFactory::create()
+{
+    return FarstreamChannelFactoryPtr(new FarstreamChannelFactory());
+}
+
 FarstreamChannelFactory::FarstreamChannelFactory()
     : mPriv(0)
 {    
@@ -140,7 +148,7 @@ FarstreamChannelFactory::~FarstreamChannelFactory()
 {
 }
 
-PendingTfChannel *FarstreamChannelFactory::create(const CallChannelPtr &channel)
+PendingTfChannel *FarstreamChannelFactory::createTfChannel(const CallChannelPtr &channel)
 {
     PendingTfChannel *pendingOperation = new PendingTfChannel(FarstreamChannelFactoryPtr(this), channel);
     return pendingOperation;

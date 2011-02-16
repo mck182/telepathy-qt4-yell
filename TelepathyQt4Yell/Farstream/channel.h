@@ -26,20 +26,16 @@
 #error IN_TELEPATHY_QT4_YELL_FARSTREAM_HEADER
 #endif
 
-#include <QObject>
+#include <TelepathyQt4Yell/Farstream/Global>
+#include <TelepathyQt4Yell/Farstream/Types>
 
-#include <TelepathyQt4Yell/Farstream/global.h>
-#include <TelepathyQt4Yell/Types>
 #include <TelepathyQt4/PendingOperation>
+#include <TelepathyQt4/RefCounted>
 
-#include <gst/gst.h>
 #include <telepathy-farstream/channel.h>
 
 namespace Tpy
 {
-
-class FarstreamChannelFactory;
-typedef Tp::SharedPtr<FarstreamChannelFactory> FarstreamChannelFactoryPtr;
 
 class TELEPATHY_QT4_YELL_FS_EXPORT PendingTfChannel : public Tp::PendingOperation
 {
@@ -66,12 +62,14 @@ class TELEPATHY_QT4_YELL_FS_EXPORT FarstreamChannelFactory : public Tp::RefCount
     Q_DISABLE_COPY(FarstreamChannelFactory)
 
 public:
-    FarstreamChannelFactory();
+    static FarstreamChannelFactoryPtr create();
     ~FarstreamChannelFactory();
 
-    PendingTfChannel *create(const CallChannelPtr &channel);
+    PendingTfChannel *createTfChannel(const CallChannelPtr &channel);
 
 private:
+    FarstreamChannelFactory();
+
     struct Private;
     friend struct Private;
     Private *mPriv;
