@@ -16,6 +16,7 @@ if(FARSTREAM_COMPONENTS_FOUND)
     set(telepathy_qt4_yell_farstream_HEADERS
         Channel
         channel.h
+        Global
         global.h
         Types
         types.h)
