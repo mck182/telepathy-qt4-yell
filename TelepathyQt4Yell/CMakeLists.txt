@@ -147,3 +147,12 @@ configure_file(${CMAKE_CURRENT_SOURCE_DIR}/TelepathyQt4Yell-uninstalled.pc.in ${
 install(FILES ${CMAKE_CURRENT_BINARY_DIR}/TelepathyQt4Yell.pc DESTINATION ${LIB_INSTALL_DIR}/pkgconfig COMPONENT headers)
 
 add_subdirectory(Models)
+
+# If Farstream was found, install its pkg-config files as well, and go into the subdirectory
+if(FARSTREAM_COMPONENTS_FOUND)
+    configure_file(${CMAKE_CURRENT_SOURCE_DIR}/TelepathyQt4YellFarstream.pc.in ${CMAKE_CURRENT_BINARY_DIR}/TelepathyQt4YellFarstream.pc)
+    configure_file(${CMAKE_CURRENT_SOURCE_DIR}/TelepathyQt4YellFarstream-uninstalled.pc.in ${CMAKE_CURRENT_BINARY_DIR}/TelepathyQt4YellFarstream-uninstalled.pc)
+    install(FILES ${CMAKE_CURRENT_BINARY_DIR}/TelepathyQt4YellFarstream.pc DESTINATION ${LIB_INSTALL_DIR}/pkgconfig COMPONENT farstream_headers)
+endif(FARSTREAM_COMPONENTS_FOUND)
+
+add_subdirectory(Farstream)
