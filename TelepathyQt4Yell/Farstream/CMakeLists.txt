@@ -27,11 +27,9 @@ if(FARSTREAM_COMPONENTS_FOUND)
     tpqt4_generate_mocs(${telepathy_qt4_yell_farstream_MOC_SRCS})
 
     # Create the library
-    if (ENABLE_COMPILER_COVERAGE)
-        add_library(telepathy-qt4-yell-farstream STATIC ${telepathy_qt4_yell_farstream_SRCS} ${telepathy_qt4_yell_farstream_MOC_SRCS})
-    else (ENABLE_COMPILER_COVERAGE)
-        add_library(telepathy-qt4-yell-farstream SHARED ${telepathy_qt4_yell_farstream_SRCS} ${telepathy_qt4_yell_farstream_MOC_SRCS})
-    endif (ENABLE_COMPILER_COVERAGE)
+    add_library(telepathy-qt4-yell-farstream STATIC
+                ${telepathy_qt4_yell_farstream_SRCS} ${telepathy_qt4_yell_farstream_MOC_SRCS})
+
     # Link
     target_link_libraries(telepathy-qt4-yell-farstream
         ${QT_QTDBUS_LIBRARY}
@@ -40,18 +38,22 @@ if(FARSTREAM_COMPONENTS_FOUND)
         ${GSTREAMER_INTERFACE_LIBRARY}
         telepathy-qt4-yell)
 
+    if (ENABLE_COMPILER_COVERAGE)
+        target_link_libraries(telepathy-qt4-yell-farstream gcov)
+    endif (ENABLE_COMPILER_COVERAGE)
+
     # Set the correct version number
     set_target_properties(telepathy-qt4-yell-farstream PROPERTIES
-                                                      SOVERSION ${TP_QT4_YELL_ABI_VERSION}
-                                                      VERSION ${TP_QT4_YELL_LIBRARY_VERSION})
+                                                       SOVERSION ${TP_QT4_YELL_ABI_VERSION}
+                                                       VERSION ${TP_QT4_YELL_LIBRARY_VERSION})
 
     # Install the library - watch out for the correct components
     if (WIN32)
         install(TARGETS telepathy-qt4-yell-farstream RUNTIME DESTINATION ${LIB_INSTALL_DIR} COMPONENT farstream
-                                                    ARCHIVE DESTINATION ${LIB_INSTALL_DIR} COMPONENT farstream_headers)
+                                                     ARCHIVE DESTINATION ${LIB_INSTALL_DIR} COMPONENT farstream_headers)
     else (WIN32)
         install(TARGETS telepathy-qt4-yell-farstream LIBRARY DESTINATION ${LIB_INSTALL_DIR} COMPONENT farstream
-                                                    ARCHIVE DESTINATION ${LIB_INSTALL_DIR} COMPONENT farstream_headers)
+                                                     ARCHIVE DESTINATION ${LIB_INSTALL_DIR} COMPONENT farstream_headers)
     endif (WIN32)
 
     # Install headers
