@@ -1,5 +1,6 @@
 if(FARSTREAM_COMPONENTS_FOUND)
     include_directories(${TELEPATHY_FARSTREAM_INCLUDE_DIR}
+                        ${TELEPATHY_GLIB_INCLUDE_DIR}
                         ${GSTREAMER_INCLUDE_DIR}
                         ${GLIB2_INCLUDE_DIR}
                         ${LIBXML2_INCLUDE_DIR}
@@ -37,6 +38,7 @@ if(FARSTREAM_COMPONENTS_FOUND)
         ${QT_QTDBUS_LIBRARY}
         ${QT_QTCORE_LIBRARY}
         ${TELEPATHY_FARSTREAM_LIBRARIES}
+        ${TELEPATHY_GLIB_LIBRARIES}
         ${GSTREAMER_INTERFACE_LIBRARY}
         telepathy-qt4-yell)
 

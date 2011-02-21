@@ -163,13 +163,6 @@ macro_log_feature(GSTREAMER_FOUND "GStreamer"
                   "Needed, together with Tp-Farstream, to build telepathy-qt4-yell-farstream and some additional examples"
                   "http://www.gstreamer.net/" FALSE)
 
-# Build TelepathyQt4-Farstream only if GStreamer, TelepathyFarstream and all of their dependencies were found
-if (TELEPATHYFARSTREAM_FOUND AND GSTREAMER_FOUND AND GLIB2_FOUND AND GOBJECT_FOUND AND DBUS_FOUND AND LIBXML2_FOUND)
-    set (FARSTREAM_COMPONENTS_FOUND 1)
-else (TELEPATHYFARSTREAM_FOUND AND GSTREAMER_FOUND AND GLIB2_FOUND AND GOBJECT_FOUND AND DBUS_FOUND AND LIBXML2_FOUND)
-    set (FARSTREAM_COMPONENTS_FOUND 0)
-endif (TELEPATHYFARSTREAM_FOUND AND GSTREAMER_FOUND AND GLIB2_FOUND AND GOBJECT_FOUND AND DBUS_FOUND AND LIBXML2_FOUND)
-
 # Find telepathy-glib
 set(TELEPATHY_GLIB_MIN_VERSION 0.13.0)
 find_package(TelepathyGlib)
@@ -177,6 +170,13 @@ macro_log_feature(TELEPATHYGLIB_FOUND "Telepathy-glib"
                   "Glib bindings for Telepathy"
                   "http://telepathy.freedesktop.org/" FALSE "0.13.0"
                   "Needed, together with Qt Glib integration, to build most of the unit tests")
+
+# Build TelepathyQt4-Farstream only if GStreamer, TelepathyFarstream and all of their dependencies were found
+if (TELEPATHYFARSTREAM_FOUND AND TELEPATHYGLIB_FOUND AND GSTREAMER_FOUND AND GLIB2_FOUND AND GOBJECT_FOUND AND DBUS_FOUND AND LIBXML2_FOUND)
+    set (FARSTREAM_COMPONENTS_FOUND 1)
+else (TELEPATHYFARSTREAM_FOUND AND TELEPATHYGLIB_FOUND AND GSTREAMER_FOUND AND GLIB2_FOUND AND GOBJECT_FOUND AND DBUS_FOUND AND LIBXML2_FOUND)
+    set (FARSTREAM_COMPONENTS_FOUND 0)
+endif (TELEPATHYFARSTREAM_FOUND AND TELEPATHYGLIB_FOUND AND GSTREAMER_FOUND AND GLIB2_FOUND AND GOBJECT_FOUND AND DBUS_FOUND AND LIBXML2_FOUND)
 
 # Enable glib-based tests only if Qt4 has GLib support and Telepathy-glib was found
 if(QT4_GLIB_SUPPORT AND TELEPATHYGLIB_FOUND AND GLIB2_FOUND AND DBUS_FOUND)
