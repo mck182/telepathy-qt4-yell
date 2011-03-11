@@ -155,11 +155,8 @@ void AccountsModel::onItemsAdded(TreeNode *parent, const QList<TreeNode *> &node
 void AccountsModel::onItemsRemoved(TreeNode *parent, int first, int last)
 {
     QModelIndex parentIndex = index(parent);
-    QList<TreeNode *> removedItems;
-    beginRemoveRows(parentIndex, first, last);
-    for (int i = last; i >= first; i--) {
-        parent->childAt(i)->remove();
-    }
+    beginRemoveRows(index(parent->parent()), parentIndex.row(), parentIndex.row());
+    parent->remove();
     endRemoveRows();
     emit accountCountChanged();
 }

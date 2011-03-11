@@ -49,9 +49,6 @@ TreeNode::TreeNode()
 
 TreeNode::~TreeNode()
 {
-    if (mPriv->mParent) {
-        mPriv->mParent->mPriv->mChildren.removeOne(this);
-    }
     delete mPriv;
 }
 
@@ -120,6 +117,8 @@ void TreeNode::remove()
                    SIGNAL(childrenRemoved(TreeNode*,int,int)),
                    mPriv->mParent,
                    SIGNAL(childrenRemoved(TreeNode*,int,int)));
+
+        mPriv->mParent->mPriv->mChildren.removeOne(this);
     }
     deleteLater();
 }
