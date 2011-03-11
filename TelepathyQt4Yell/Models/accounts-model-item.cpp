@@ -68,6 +68,7 @@ AccountsModelItem::AccountsModelItem(const Tp::AccountPtr &account)
                 SIGNAL(allKnownContactsChanged(Tp::Contacts,Tp::Contacts,
                                                Tp::Channel::GroupMemberChangeDetails)),
                 SLOT(onContactsChanged(Tp::Contacts,Tp::Contacts)));
+        QTimer::singleShot(0, this, SLOT(addKnownContacts()));
     }
 
     connect(mPriv->mAccount.data(),
