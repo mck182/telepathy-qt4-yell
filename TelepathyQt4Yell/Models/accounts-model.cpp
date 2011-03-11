@@ -66,10 +66,12 @@ AccountsModel::AccountsModel(const Tp::AccountManagerPtr &am, QObject *parent)
             SLOT(onItemsRemoved(TreeNode*,int,int)));
 
     foreach (Tp::AccountPtr account, mPriv->mAM->allAccounts()) {
-        AccountsModelItem *item = new AccountsModelItem(account);
-        connect(item, SIGNAL(connectionStatusChanged(QString,int)),
-                this, SIGNAL(accountConnectionStatusChanged(QString,int)));
-        mPriv->mTree->addChild(item);
+        if(account->isEnabled() && account->connectionStatus() == Tp::ConnectionStatusConnected) {
+            AccountsModelItem *item = new AccountsModelItem(account);
+            connect(item, SIGNAL(connectionStatusChanged(QString,int)),
+                    this, SIGNAL(accountConnectionStatusChanged(QString,int)));
+            mPriv->mTree->addChild(item);
+        }
     }
 
     connect(mPriv->mAM.data(),
