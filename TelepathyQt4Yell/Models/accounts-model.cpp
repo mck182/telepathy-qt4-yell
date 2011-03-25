@@ -66,12 +66,10 @@ AccountsModel::AccountsModel(const Tp::AccountManagerPtr &am, QObject *parent)
             SLOT(onItemsRemoved(TreeNode*,int,int)));
 
     foreach (Tp::AccountPtr account, mPriv->mAM->allAccounts()) {
-        if(account->isEnabled() && account->connectionStatus() == Tp::ConnectionStatusConnected) {
-            AccountsModelItem *item = new AccountsModelItem(account);
-            connect(item, SIGNAL(connectionStatusChanged(QString,int)),
-                    this, SIGNAL(accountConnectionStatusChanged(QString,int)));
-            mPriv->mTree->addChild(item);
-        }
+        AccountsModelItem *item = new AccountsModelItem(account);
+        connect(item, SIGNAL(connectionStatusChanged(QString,int)),
+                this, SIGNAL(accountConnectionStatusChanged(QString,int)));
+        mPriv->mTree->addChild(item);
     }
 
     connect(mPriv->mAM.data(),
@@ -157,8 +155,10 @@ void AccountsModel::onItemsAdded(TreeNode *parent, const QList<TreeNode *> &node
 void AccountsModel::onItemsRemoved(TreeNode *parent, int first, int last)
 {
     QModelIndex parentIndex = index(parent);
-    beginRemoveRows(index(parent->parent()), parentIndex.row(), parentIndex.row());
-    parent->remove();
+    beginRemoveRows(parentIndex, first, last);
+    for (int i = last; i >= first; i--) {
+        parent->childAt(i)->remove();
+    }
     endRemoveRows();
     emit accountCountChanged();
 }
@@ -243,6 +243,17 @@ Tp::AccountPtr AccountsModel::accountForContactIndex(const QModelIndex &index) c
         return item->account();
     } else {
         return Tp::AccountPtr();
+    }
+}
+
+Tp::ContactPtr AccountsModel::contactForIndex(const QModelIndex& index) const
+{
+    TreeNode *contactNode = mPriv->node(index);
+    ContactModelItem *item = qobject_cast<ContactModelItem *>(contactNode);
+    if (item) {
+        return item->contact();
+    } else {
+        return Tp::ContactPtr();
     }
 }
 
