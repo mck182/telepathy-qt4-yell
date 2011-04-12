@@ -57,12 +57,12 @@ public:
     Q_INVOKABLE void setRequestedPresence(int type, const QString &status, const QString &statusMessage);
 
     void clearContacts();
+    void addKnownContacts();
 
 Q_SIGNALS:
     void connectionStatusChanged(const QString &accountId, int status);
 
 private Q_SLOTS:
-    void addKnownContacts();
     void onRemoved();
 
     void onChanged();
