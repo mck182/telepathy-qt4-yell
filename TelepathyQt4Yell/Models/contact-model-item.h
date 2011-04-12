@@ -29,6 +29,8 @@
 
 #include <TelepathyQt4/Types>
 
+#include <QtCore/QVariant> //needed for declare metatype
+
 namespace Tpy
 {
 
@@ -54,6 +56,8 @@ private:
     friend struct Private;
     Private *mPriv;
 };
+
+Q_DECLARE_METATYPE(ContactModelItem*);
 
 }
 
