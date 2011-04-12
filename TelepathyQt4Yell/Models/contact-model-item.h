@@ -57,8 +57,8 @@ private:
     Private *mPriv;
 };
 
-Q_DECLARE_METATYPE(ContactModelItem*);
-
 }
+
+Q_DECLARE_METATYPE(Tpy::ContactModelItem*);
 
 #endif // _TelepathyQt4Yell_Models_contact_model_item_h_HEADER_GUARD_

@@ -58,7 +58,7 @@ public:
 
     void clearContacts();
 
-Q_SLOTS:
+public Q_SLOTS:
     void addKnownContacts();
 
 Q_SIGNALS:
@@ -82,8 +82,8 @@ private:
     Private *mPriv;
 };
 
-Q_DECLARE_METATYPE(AccountsModelItem*);
-
 }
+
+Q_DECLARE_METATYPE(Tpy::AccountsModelItem*);
 
 #endif // _TelepathyQt4Yell_Models_accounts_model_item_h_HEADER_GUARD_
